@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>DapperContextTest</RootNamespace>
+    <TargetFrameworks>net48;net8.0;net9.0</TargetFrameworks>
+    <OptionStrict>On</OptionStrict>
+  </PropertyGroup>
+
+</Project>

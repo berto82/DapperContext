@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>DapperAuditContext</RootNamespace>
+    <TargetFrameworks>net48;net8.0;net9.0</TargetFrameworks>
+    <OptionStrict>On</OptionStrict>
+    <Title>DapperAuditContext</Title>
+    <Description>A simple collections of functions and method for CRUD operation in Dapper for generic item with an integrated audit system.</Description>
+    <Copyright>2025 Roberto Faccani</Copyright>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="SQL\AuditTable.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="LICENSE.txt">
+      <PackagePath>\</PackagePath>
+      <Pack>True</Pack>
+    </EmbeddedResource>
+    <EmbeddedResource Include="README.md">
+      <PackagePath>\</PackagePath>
+      <Pack>True</Pack>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SQL\AuditTable.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CompareNETObjects" Version="4.83.0" />
+    <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="172.64.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DapperContext\DapperContext.vbproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
