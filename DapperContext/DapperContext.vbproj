@@ -15,7 +15,9 @@
     <PackageId>$(RootNamespace).$(AssemblyName)</PackageId>
     <AssemblyName>$(RootNamespace).$(MSBuildProjectName)</AssemblyName>
     <Version>0.1.0.0-alpha1</Version>
-    <PackageProjectUrl>https://github.com/berto82/DapperContext</PackageProjectUrl>
+    <PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperContext</PackageProjectUrl>
+    <PackageTags>dapper;orm;dbcontext;</PackageTags>
+    <RepositoryUrl>https://github.com/berto82/DapperContext</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
