@@ -1,10 +1,21 @@
 Imports System.Data
 Imports System.Reflection
+Imports System.Xml
 Imports Dapper
 Imports Dapper.Contrib.Extensions
 Imports Microsoft.Data.SqlClient
 Imports Microsoft.Extensions.Configuration
 
+#Region "DapperContext"
+
+''' <summary>
+''' DapperContext class for managing database connections and operations.
+''' </summary>
+''' <remarks></remarks>
+''' <summary>
+''' DapperContext class for managing database connections and operations.
+''' </summary>
+''' <remarks></remarks>
 Public Class DapperContext
     Implements IDisposable
 
@@ -16,12 +27,7 @@ Public Class DapperContext
     ''' Create a new instance of DapperContext with the default connection string.
     ''' </summary>
     Public Sub New()
-        Dim cnString As String = New ConfigurationBuilder().SetBasePath(IO.Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").
-            Build.GetConnectionString("DefaultConnection")
-
-        Me.Connection = New SqlConnection
-        Me.Connection.ConnectionString = cnString
-        Me.Connection.Open()
+        CreateConnection("DefaultConnection")
     End Sub
 
     ''' <summary>
@@ -34,11 +40,40 @@ Public Class DapperContext
     ''' </summary>
     ''' <param name="name"></param>
     Public Sub New(name As String)
-        Dim cnString As String = New ConfigurationBuilder().SetBasePath(IO.Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").
-            Build.GetConnectionString(name)
+        CreateConnection(name)
+    End Sub
+
+    Private Sub CreateConnection(name As String)
+
+        Dim cnString As String = String.Empty
+
+        If IO.File.Exists($"{IO.Directory.GetCurrentDirectory}\appsettings.json") Then
+            cnString = New ConfigurationBuilder().SetBasePath(IO.Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build.GetConnectionString(name)
+        ElseIf IO.File.Exists($"{IO.Directory.GetCurrentDirectory}\{Assembly.GetEntryAssembly.GetName.Name}.exe.config") Then
+            Dim doc As New XmlDocument
+            doc.Load($"{IO.Directory.GetCurrentDirectory}\{Assembly.GetEntryAssembly.GetName.Name}.exe.config")
+
+            Dim cnStringNode As XmlNode = doc.SelectSingleNode("//connectionStrings")
+            Dim configSourceAttribute As XmlAttribute = cnStringNode.Attributes("configSource")
+
+            If configSourceAttribute Is Nothing Then
+                cnStringNode = cnStringNode.SelectSingleNode($"add[@name=""{name}""]/@connectionString")
+            Else
+                doc.Load($"{IO.Directory.GetCurrentDirectory}\{configSourceAttribute.Value}")
+                cnStringNode = doc.SelectSingleNode($"//connectionStrings/add[@name=""{name}""]/@connectionString")
+            End If
+
+            cnString = cnStringNode.Value
+        End If
+
+        If cnString = String.Empty Then
+            Throw New ArgumentException("A connection string was not found in appsetting.json or in assembly config file")
+        End If
+
+        Dim cnStringBuilder As New SqlConnectionStringBuilder(cnString)
 
         Me.Connection = New SqlConnection
-        Me.Connection.ConnectionString = cnString
+        Me.Connection.ConnectionString = cnStringBuilder.ConnectionString
         Me.Connection.Open()
     End Sub
 
@@ -773,4 +808,6 @@ Public Class DapperContext
         GC.SuppressFinalize(Me)
     End Sub
 End Class
+#End Region
+
 #End Region
