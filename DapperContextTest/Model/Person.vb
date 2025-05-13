@@ -8,7 +8,6 @@ Namespace Model
         <Key>
         Public Property ID As Integer
         Public Property Name As String
-        <Audit(False)>
         Public Property Surname As String
 
     End Class
