@@ -13,8 +13,10 @@
     <PackageId>$(RootNamespace).$(AssemblyName)</PackageId>
     <AssemblyName>$(RootNamespace).$(MSBuildProjectName)</AssemblyName>
     <Version>0.1.0.0-alpha1</Version>
-    <PackageProjectUrl>https://github.com/berto82/DapperContext</PackageProjectUrl>
+    <PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperAuditContext</PackageProjectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageTags>dapper;orm;dbcontext;audit</PackageTags>
+    <RepositoryUrl>https://github.com/berto82/DapperContext</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
