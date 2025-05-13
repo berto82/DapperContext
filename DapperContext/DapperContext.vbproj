@@ -14,7 +14,7 @@
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageId>$(RootNamespace).$(AssemblyName)</PackageId>
     <AssemblyName>$(RootNamespace).$(MSBuildProjectName)</AssemblyName>
-    <Version>0.1.0.0</Version>
+    <Version>0.1.0.0-alpha1</Version>
   </PropertyGroup>
 
   <ItemGroup>
