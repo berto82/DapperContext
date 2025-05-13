@@ -1,12 +1,9 @@
 Imports System.IO
 Imports System.Reflection
 Imports KellermanSoftware.CompareNetObjects
-Imports Microsoft.Data.SqlClient
-Imports Microsoft.SqlServer.Management.Common
-Imports Microsoft.SqlServer.Management.Smo
 
 Public Class DapperAuditContext
-    Inherits DapperContext.DapperContext
+    Inherits DapperContext
 
     Public Enum AuditActionType
         Create
@@ -19,9 +16,7 @@ Public Class DapperAuditContext
 
         If result.Count = 0 Then
             Dim scriptCreateDB As String = GetFromResources("AuditTable.sql")
-            Dim serverConn As New ServerConnection(New SqlConnection(Connection.ConnectionString))
-            Dim sqlServer As New Server(serverConn)
-            sqlServer.ConnectionContext.ExecuteNonQuery(scriptCreateDB)
+            Execute(scriptCreateDB)
         End If
     End Sub
 
@@ -185,17 +180,36 @@ Public Class DapperAuditContext
 
     End Function
 
-
     Private Sub CreateAuditTrail(action As AuditActionType, keyFieldID As Long, oldObject As Object, newObject As Object)
 
         Dim compObjects As New CompareLogic
+        compObjects.Config.IgnoreCollectionOrder = True
         compObjects.Config.MaxDifferences = 99
+
+        Dim classAttr As AuditAttribute = CType(newObject.GetType().GetCustomAttributes(GetType(AuditAttribute), True), AuditAttribute()).FirstOrDefault
+
+        If classAttr Is Nothing Then
+            Return
+        End If
+
+        If classAttr.Include = False Then
+            Return
+        End If
+
+        For Each prop As PropertyInfo In newObject.GetType().GetProperties
+            Dim propAttr As AuditAttribute = CType(prop.GetCustomAttributes(GetType(AuditAttribute), True), AuditAttribute()).FirstOrDefault
+
+            If propAttr IsNot Nothing Then
+                If propAttr.Include = False Then
+                    compObjects.Config.MembersToIgnore.Add(prop.Name)
+                End If
+            End If
+        Next
 
         Dim compResult As ComparisonResult = compObjects.Compare(oldObject, newObject)
         Dim deltaList As New List(Of AuditDelta)
 
         For Each change As Difference In compResult.Differences
-
             Dim delta As New AuditDelta
             delta.FieldName = change.PropertyName
             delta.ValueBefore = change.Object1Value
@@ -221,7 +235,7 @@ Public Class DapperAuditContext
 
         Dim a As Assembly = Assembly.GetExecutingAssembly
 
-        Using s As Stream = a.GetManifestResourceStream($"{a.GetName.Name}.{resourceName}")
+        Using s As Stream = a.GetManifestResourceStream($"{[GetType].Namespace}.{resourceName}")
             Using reader As New StreamReader(s)
                 Return reader.ReadToEnd
             End Using
