@@ -25,17 +25,20 @@ Public Class DapperContext
     End Sub
 
     ''' <summary>
-    ''' Create a new instance of DapperContext with a custom connection string.
+    ''' Create a new instance of DapperContext with the specified connection string name.
     ''' </summary>
-    ''' <param name="connectionString"></param>
+    ''' <param name="name"></param>
     ''' <remarks></remarks>
     ''' <summary>
-    ''' Create a new instance of DapperContext with a custom connection string.
+    ''' Create a new instance of DapperContext with the specified connection string name.
     ''' </summary>
-    ''' <param name="connectionString"></param>
-    Public Sub New(connectionString As String)
+    ''' <param name="name"></param>
+    Public Sub New(name As String)
+        Dim cnString As String = New ConfigurationBuilder().SetBasePath(IO.Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").
+            Build.GetConnectionString(name)
+
         Me.Connection = New SqlConnection
-        Me.Connection.ConnectionString = connectionString
+        Me.Connection.ConnectionString = cnString
         Me.Connection.Open()
     End Sub
 
@@ -354,6 +357,7 @@ Public Class DapperContext
         Using transaction As IDbTransaction = Me.Connection.BeginTransaction
             Try
                 result = Me.Connection.DeleteAll(Of TEntity)(transaction)
+                transaction.Commit()
             Catch ex As Exception
                 transaction.Rollback()
                 Throw
@@ -385,6 +389,7 @@ Public Class DapperContext
         Using transaction As IDbTransaction = Me.Connection.BeginTransaction
             Try
                 result = Await Me.Connection.DeleteAllAsync(Of TEntity)(transaction)
+                transaction.Commit()
             Catch ex As Exception
                 transaction.Rollback()
                 Throw
@@ -414,6 +419,7 @@ Public Class DapperContext
         Using transaction As IDbTransaction = Me.Connection.BeginTransaction
             Try
                 result = Me.Connection.Execute(sql, param, transaction)
+                transaction.Commit()
             Catch ex As Exception
                 transaction.Rollback()
                 Throw
@@ -443,6 +449,7 @@ Public Class DapperContext
         Using transaction As IDbTransaction = Me.Connection.BeginTransaction
             Try
                 result = Await Me.Connection.ExecuteAsync(sql, param, transaction)
+                transaction.Commit()
             Catch ex As Exception
                 transaction.Rollback()
                 Throw
@@ -472,6 +479,7 @@ Public Class DapperContext
         Using transaction As IDbTransaction = Me.Connection.BeginTransaction
             Try
                 result = Me.Connection.ExecuteScalar(sql, param, transaction)
+                transaction.Commit()
             Catch ex As Exception
                 transaction.Rollback()
                 Throw
@@ -501,6 +509,7 @@ Public Class DapperContext
         Using transaction As IDbTransaction = Me.Connection.BeginTransaction
             Try
                 result = Await Me.Connection.ExecuteScalarAsync(sql, param, transaction)
+                transaction.Commit()
             Catch ex As Exception
                 transaction.Rollback()
                 Throw
@@ -533,6 +542,7 @@ Public Class DapperContext
         Using transaction As IDbTransaction = Me.Connection.BeginTransaction
             Try
                 result = Me.Connection.ExecuteScalar(Of T)(sql, param, transaction)
+                transaction.Commit()
             Catch ex As Exception
                 transaction.Rollback()
                 Throw
@@ -565,6 +575,7 @@ Public Class DapperContext
         Using transaction As IDbTransaction = Me.Connection.BeginTransaction
             Try
                 result = Await Me.Connection.ExecuteScalarAsync(Of T)(sql, param, transaction)
+                transaction.Commit()
             Catch ex As Exception
                 transaction.Rollback()
                 Throw
@@ -595,6 +606,7 @@ Public Class DapperContext
         Using transaction As IDbTransaction = Me.Connection.BeginTransaction
             Try
                 result = Me.Connection.Query(sql, param, transaction)
+                transaction.Commit()
             Catch ex As Exception
                 transaction.Rollback()
                 Throw
@@ -625,6 +637,7 @@ Public Class DapperContext
         Using transaction As IDbTransaction = Me.Connection.BeginTransaction
             Try
                 result = Await Me.Connection.QueryAsync(sql, param, transaction)
+                transaction.Commit()
             Catch ex As Exception
                 transaction.Rollback()
                 Throw
@@ -657,6 +670,7 @@ Public Class DapperContext
         Using transaction As IDbTransaction = Me.Connection.BeginTransaction
             Try
                 result = Me.Connection.Query(Of T)(sql, param, transaction)
+                transaction.Commit()
             Catch ex As Exception
                 transaction.Rollback()
                 Throw
@@ -689,6 +703,7 @@ Public Class DapperContext
         Using transaction As IDbTransaction = Me.Connection.BeginTransaction
             Try
                 result = Await Me.Connection.QueryAsync(Of T)(sql, param, transaction)
+                transaction.Commit()
             Catch ex As Exception
                 transaction.Rollback()
                 Throw
