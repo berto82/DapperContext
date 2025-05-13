@@ -2,9 +2,26 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <RootNamespace>DapperContextTest</RootNamespace>
+    <RootNamespace>BertoSoftware</RootNamespace>
     <TargetFrameworks>net48;net8.0;net9.0</TargetFrameworks>
     <OptionStrict>On</OptionStrict>
+    <Version>0.1.0.0</Version>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DapperAuditContext\DapperAuditContext.vbproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="app.config">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="app.connectionstring.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
 </Project>

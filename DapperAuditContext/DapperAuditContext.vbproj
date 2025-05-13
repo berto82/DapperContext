@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RootNamespace>DapperAuditContext</RootNamespace>
+    <RootNamespace>BertoSoftware</RootNamespace>
     <TargetFrameworks>net48;net8.0;net9.0</TargetFrameworks>
     <OptionStrict>On</OptionStrict>
     <Title>DapperAuditContext</Title>
@@ -10,6 +10,9 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageId>$(RootNamespace).$(AssemblyName)</PackageId>
+    <AssemblyName>$(RootNamespace).$(MSBuildProjectName)</AssemblyName>
+    <Version>0.1.0.0-alpha1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,7 +33,6 @@
 
   <ItemGroup>
     <PackageReference Include="CompareNETObjects" Version="4.83.0" />
-    <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="172.64.0" />
   </ItemGroup>
 
   <ItemGroup>

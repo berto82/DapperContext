@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RootNamespace>DapperContext</RootNamespace>
+    <RootNamespace>BertoSoftware</RootNamespace>
     <TargetFrameworks>net48;net8.0;net9.0</TargetFrameworks>
     <OptionStrict>On</OptionStrict>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -12,6 +12,9 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageId>$(RootNamespace).$(AssemblyName)</PackageId>
+    <AssemblyName>$(RootNamespace).$(MSBuildProjectName)</AssemblyName>
+    <Version>0.1.0.0-alpha1</Version>
   </PropertyGroup>
 
   <ItemGroup>
