@@ -2,6 +2,17 @@ Imports System.IO
 Imports System.Reflection
 Imports KellermanSoftware.CompareNetObjects
 
+''' <summary>
+''' DapperAuditContext is a DapperContext that creates an audit trail of all changes to the database.
+''' It uses the KellermanSoftware.CompareNetObjects library to compare objects and create a list of changes.
+''' The audit trail is stored in the AuditTable table in the database.
+''' </summary>
+''' <remarks></remarks>
+''' <summary>
+''' DapperAuditContext is a DapperContext that creates an audit trail of all changes to the database.
+''' It uses the KellermanSoftware.CompareNetObjects library to compare objects and create a list of changes.
+''' The audit trail is stored in the AuditTable table in the database.
+''' </summary>
 Public Class DapperAuditContext
     Inherits DapperContext
 
@@ -233,9 +244,7 @@ Public Class DapperAuditContext
 
     Private Function GetFromResources(resourceName As String) As String
 
-        Dim a As Assembly = Assembly.GetExecutingAssembly
-
-        Using s As Stream = a.GetManifestResourceStream($"{[GetType].Namespace}.{resourceName}")
+        Using s As Stream = Assembly.GetExecutingAssembly.GetManifestResourceStream($"{[GetType].Namespace}.{resourceName}")
             Using reader As New StreamReader(s)
                 Return reader.ReadToEnd
             End Using
