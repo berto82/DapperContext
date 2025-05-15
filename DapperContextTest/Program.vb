@@ -3,6 +3,8 @@ Imports System
 Module Program
     Sub Main(args As String())
 
+        DapperAuditContext.Config = AuditConfigurationBuilder.Create.StoreMode(AuditConfiguration.AuditStoreMode.File).Build
+
         'Add new value into Person Table without audit trail
         Using ctx As New DapperContext
 
