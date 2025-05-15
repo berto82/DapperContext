@@ -1,5 +1,7 @@
 Imports System.IO
 Imports System.Reflection
+Imports System.Text
+Imports System.Threading
 Imports KellermanSoftware.CompareNetObjects
 
 ''' <summary>
@@ -22,7 +24,10 @@ Public Class DapperAuditContext
         Delete
     End Enum
 
+    Public Shared Property Config As AuditConfiguration
+
     Public Sub New()
+
         Dim result = Query("SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE' AND TABLE_NAME='AuditTable'")
 
         If result.Count = 0 Then
@@ -231,6 +236,7 @@ Public Class DapperAuditContext
         Dim audit As New AuditTable
 
         audit.ActionType = CInt(action)
+        audit.User = GetCurrentUserName()
         audit.DataModel = newObject.GetType.Name
         audit.DateTimeStamp = Date.Now
         audit.KeyFieldID = keyFieldID
@@ -238,19 +244,41 @@ Public Class DapperAuditContext
         audit.ValueAfter = Text.Json.JsonSerializer.Serialize(newObject)
         audit.Changes = Text.Json.JsonSerializer.Serialize(deltaList)
 
-        MyBase.InsertOrUpdate(audit)
+        If Config.StoreMode = AuditConfiguration.AuditStoreMode.Database Then
+            MyBase.InsertOrUpdate(audit)
+        Else
+            Dim logDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AuditLogs")
+
+            If Not Directory.Exists(logDir) Then Directory.CreateDirectory(logDir)
+
+            Dim fullPath = Path.Combine(logDir, Config.FilePath)
+
+            Dim sb As New StringBuilder()
+            sb.AppendLine("-----")
+            sb.AppendLine($"Timestamp: {audit.DateTimeStamp:O}")
+            sb.AppendLine($"User:      {GetCurrentUserName()}")
+            sb.AppendLine($"Table:     {audit.DataModel}")
+            sb.AppendLine($"Action:    {CType(audit.ActionType, AuditActionType)}")
+            sb.AppendLine($"Keys:      {audit.KeyFieldID}")
+            If Not String.IsNullOrEmpty(audit.ValueBefore) Then sb.AppendLine($"Old:       {audit.ValueBefore}")
+            If Not String.IsNullOrEmpty(audit.ValueAfter) Then sb.AppendLine($"New:       {audit.ValueAfter}")
+            If Not String.IsNullOrEmpty(audit.Changes) Then sb.AppendLine($"Changes:    {audit.Changes}")
+
+            File.AppendAllText(fullPath, sb.ToString())
+        End If
 
     End Sub
 
     Private Function GetFromResources(resourceName As String) As String
-
         Using s As Stream = Assembly.GetExecutingAssembly.GetManifestResourceStream($"{[GetType].Namespace}.{resourceName}")
             Using reader As New StreamReader(s)
                 Return reader.ReadToEnd
             End Using
         End Using
+    End Function
 
-
+    Private Function GetCurrentUserName() As String
+        Return $"{Environment.UserDomainName}\{Environment.UserName}"
     End Function
 
 End Class

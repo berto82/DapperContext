@@ -1,5 +1,6 @@
 ﻿CREATE TABLE [dbo].[AuditTable](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[User] [nvarchar](255) NOT NULL,
 	[KeyFieldID] [int] NOT NULL,
 	[ActionType] [int] NOT NULL,
 	[DateTimeStamp] [datetime] NOT NULL,
