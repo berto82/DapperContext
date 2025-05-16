@@ -1,24 +1,33 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <RootNamespace>DapperContext</RootNamespace>
+    <RootNamespace>BertoSoftware</RootNamespace>
     <TargetFrameworks>net48;net8.0;net9.0</TargetFrameworks>
     <OptionStrict>On</OptionStrict>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>DapperContext</Title>
-    <Description>A simple collections of functions and method for CRUD operation in Dapper for generic item
-</Description>
+    <Description>A simple collections of functions and method for CRUD operation in Dapper for generic item</Description>
     <Copyright>Roberto Faccani</Copyright>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-  </PropertyGroup>
+    <PackageId>$(RootNamespace).$(AssemblyName)</PackageId>
+    <AssemblyName>$(RootNamespace).$(MSBuildProjectName)</AssemblyName>
+    <Version>0.2.0.0-alpha</Version>
+    <PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperContext</PackageProjectUrl>
+    <PackageTags>dapper;orm;dbcontext;</PackageTags>
+    <RepositoryUrl>https://github.com/berto82/DapperContext</RepositoryUrl>
+    <IncludeSymbols>False</IncludeSymbols>
+    <Authors>Roberto Faccani</Authors>
+    <Company>Roberto Faccani</Company>
+    <PackageReleaseNotes>v0.2.0.0-alpha
 
+- No changes</PackageReleaseNotes>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
   <ItemGroup>
     <None Remove="LICENSE.txt" />
     <None Remove="README.md" />
   </ItemGroup>
-
   <ItemGroup>
     <EmbeddedResource Include="LICENSE.txt">
       <Pack>True</Pack>
@@ -31,7 +40,6 @@
       <PackagePath>\</PackagePath>
     </EmbeddedResource>
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.66" />
     <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
@@ -39,5 +47,4 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.4" />
     <PackageReference Include="microsoft.extensions.configuration.Json" Version="9.0.4" />
   </ItemGroup>
-
 </Project>

@@ -1,7 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <RootNamespace>DapperAuditContext</RootNamespace>
+    <RootNamespace>BertoSoftware</RootNamespace>
     <TargetFrameworks>net48;net8.0;net9.0</TargetFrameworks>
     <OptionStrict>On</OptionStrict>
     <Title>DapperAuditContext</Title>
@@ -10,12 +9,28 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-  </PropertyGroup>
+    <PackageId>$(RootNamespace).$(AssemblyName)</PackageId>
+    <AssemblyName>$(RootNamespace).$(MSBuildProjectName)</AssemblyName>
+    <Version>0.2.0.0-alpha</Version>
+    <PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperAuditContext</PackageProjectUrl>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageTags>dapper;orm;dbcontext;audit</PackageTags>
+    <RepositoryUrl>https://github.com/berto82/DapperAuditContext</RepositoryUrl>
+    <IncludeSymbols>False</IncludeSymbols>
+    <Authors>Roberto Faccani</Authors>
+    <Company>Roberto Faccani</Company>
+    <PackageReleaseNotes>v0.2.0.0 apha
 
+Added fluent configuration where you can configure the following options:
+
+- Storage mode
+- Custom log file name
+- Custom table name</PackageReleaseNotes>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
   <ItemGroup>
     <None Remove="SQL\AuditTable.sql" />
   </ItemGroup>
-
   <ItemGroup>
     <EmbeddedResource Include="LICENSE.txt">
       <PackagePath>\</PackagePath>
@@ -27,16 +42,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SQL\AuditTable.sql" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="CompareNETObjects" Version="4.83.0" />
-    <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="172.64.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\DapperContext\DapperContext.vbproj" />
   </ItemGroup>
-
   <ItemGroup>
     <None Update="LICENSE.txt">
       <Pack>True</Pack>
@@ -47,5 +58,4 @@
       <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
-
 </Project>

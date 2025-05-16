@@ -1,92 +1,8 @@
-﻿# DapperAuditContext
+# DapperContext and DapperAuditContext
 
-A simple collections of functions and method for CRUD operation in Dapper for generic item with an integrated audit system.
-
-
-#### NOTE
-*This documentation is under development*
+A simple collections of functions and method for CRUD operation in Dapper for generic item with or without an integrated audit system.
 
 ## Version
-
-### 2025-05-16
-0.2.0 - Alpha version
-
-### New feature
-Added fluent configuration where you can configure the following options:
-
-- Storage mode
-- Custom log file name
-- Custom table name
-- Added username field in create script database
-    - *Warning: Migration script is not yet been implemented, so you have to add manually a new user field into AuditTable*
-    
-```sql
-ALTER TABLE dbo.AuditTable ADD Username nvarchar(255) NULL
-```
-
-Example:
-
-### VB.NET
-```vb
-Imports System
-
-Module Program
-    Sub Main(args As String())
-
-        DapperAuditContext.AuditSettings = AuditConfiguration.CreateNew.StoreMode(AuditStoreMode.File).Build
-
-        'Add new value into Person Table with an automatic audit trail, just use DapperAuditContext instead of DapperContext
-        Using ctx As New DapperAuditContext
-
-            Dim person As New Model.Person With {
-                .Name = "John",
-                .Surname = "Doe"
-            }
-
-            ctx.InsertOrUpdate(person)
-
-            'Changes a property after save
-            person.Surname = "Black"
-
-            'Saves the changes and adds a record in the control table with the difference between the previous save.
-            ctx.InsertOrUpdate(person)
-
-        End Using
-
-    End Sub
-End Module
-```
-
-### C#
-```cs
-using System;
-
-class Program
-{
-    static void Main(string[] args)
-    {
-        DapperAuditContext.AuditSettings = AuditConfiguration.CreateNew.StoreMode(AuditStoreMode.File).Build();
-
-        // Add new value into Person Table with an automatic audit trail, just use DapperAuditContext instead of DapperContext
-        using (var ctx = new DapperAuditContext())
-        {
-            var person = new Model.Person
-            {
-                Name = "John",
-                Surname = "Doe"
-            };
-
-            ctx.InsertOrUpdate(person);
-
-            // Changes a property after save
-            person.Surname = "Black";
-
-            // Saves the changes and adds a record in the control table with the difference between the previous save.
-            ctx.InsertOrUpdate(person);
-        }
-    }
-}
-```
 
 ### 2025-05-13
 0.1.0 - Alpha version
@@ -238,6 +154,8 @@ internal static partial class Program
     }
 }
 ```
+
+
 ## Dipendencies 
 
  - You have to install Dapper.Contrib and assign to a model the [Key] attribute on ID field
