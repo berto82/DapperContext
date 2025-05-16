@@ -5,7 +5,7 @@
     <RootNamespace>BertoSoftware</RootNamespace>
     <TargetFrameworks>net48;net8.0;net9.0</TargetFrameworks>
     <OptionStrict>On</OptionStrict>
-    <Version>0.1.0.0</Version>
+    <Version>0.2.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
