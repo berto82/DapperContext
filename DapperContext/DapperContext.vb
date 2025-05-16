@@ -79,6 +79,26 @@ Public Class DapperContext
 
     Public Property Connection As IDbConnection
 
+    Public Function DatabaseExist(dbName As String) As Boolean
+        Dim result As String
+
+        Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+            Try
+                result = Me.Connection.Query(Of String)("SELECT name FROM master.sys.databases WHERE name = @p0", New With {.p0 = dbName}, transaction).FirstOrDefault
+                transaction.Commit()
+
+                Return result <> String.Empty
+            Catch ex As Exception
+                transaction.Rollback()
+                Throw
+            End Try
+        End Using
+
+        Return False
+
+    End Function
+
+
     ''' <summary>
     ''' Get a single entity by its ID.
     ''' </summary>
