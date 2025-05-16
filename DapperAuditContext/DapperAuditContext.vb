@@ -1,7 +1,6 @@
 Imports System.IO
 Imports System.Reflection
 Imports System.Text
-Imports System.Threading
 Imports KellermanSoftware.CompareNetObjects
 
 ''' <summary>
@@ -24,16 +23,29 @@ Public Class DapperAuditContext
         Delete
     End Enum
 
-    Public Shared Property Config As AuditConfiguration
+    Public Shared Property AuditSettings As AuditConfiguration
 
     Public Sub New()
 
-        Dim result = Query("SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE' AND TABLE_NAME='AuditTable'")
+        Dim useDatabase As Boolean = True
 
-        If result.Count = 0 Then
-            Dim scriptCreateDB As String = GetFromResources("AuditTable.sql")
-            Execute(scriptCreateDB)
+        If AuditSettings Is Nothing Then
+            AuditSettings = AuditConfiguration.CreateNew.StoreMode(AuditStoreMode.Database).Build
+        Else
+            If AuditSettings.StoreLogMode = AuditStoreMode.File Then
+                useDatabase = False
+            End If
         End If
+
+        If useDatabase = True Then
+            Dim result = Query("SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE' AND TABLE_NAME='AuditTable'")
+
+            If result.Count = 0 Then
+                Dim scriptCreateDB As String = GetFromResources("AuditTable.sql")
+                Execute(scriptCreateDB)
+            End If
+        End If
+
     End Sub
 
     ''' <summary>
@@ -236,7 +248,7 @@ Public Class DapperAuditContext
         Dim audit As New AuditTable
 
         audit.ActionType = CInt(action)
-        audit.User = GetCurrentUserName()
+        audit.Username = GetCurrentUserName()
         audit.DataModel = newObject.GetType.Name
         audit.DateTimeStamp = Date.Now
         audit.KeyFieldID = keyFieldID
@@ -244,19 +256,19 @@ Public Class DapperAuditContext
         audit.ValueAfter = Text.Json.JsonSerializer.Serialize(newObject)
         audit.Changes = Text.Json.JsonSerializer.Serialize(deltaList)
 
-        If Config.StoreMode = AuditConfiguration.AuditStoreMode.Database Then
+        If AuditSettings.StoreLogMode = AuditStoreMode.Database Then
             MyBase.InsertOrUpdate(audit)
         Else
             Dim logDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AuditLogs")
 
             If Not Directory.Exists(logDir) Then Directory.CreateDirectory(logDir)
 
-            Dim fullPath = Path.Combine(logDir, Config.FilePath)
+            Dim fullPath = Path.Combine(logDir, AuditSettings.FilePath)
 
             Dim sb As New StringBuilder()
             sb.AppendLine("-----")
             sb.AppendLine($"Timestamp: {audit.DateTimeStamp:O}")
-            sb.AppendLine($"User:      {GetCurrentUserName()}")
+            sb.AppendLine($"User:      {audit.Username}")
             sb.AppendLine($"Table:     {audit.DataModel}")
             sb.AppendLine($"Action:    {CType(audit.ActionType, AuditActionType)}")
             sb.AppendLine($"Keys:      {audit.KeyFieldID}")
