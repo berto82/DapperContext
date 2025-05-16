@@ -5,8 +5,13 @@ Module Program
 
         DapperAuditContext.AuditSettings = AuditConfiguration.CreateNew.StoreMode(AuditStoreMode.File).Build
 
+        Dim dbName As String = New DapperAuditContext().Connection.Database
+        Dim dbExist As Boolean = New DapperAuditContext().DatabaseExist(dbName)
+
+
         'Add new value into Person Table with an automatic audit trail, just use DapperAuditContext instead of DapperContext
         Using ctx As New DapperAuditContext
+
 
             Dim person As New Model.Person With {
                 .Name = "John",
