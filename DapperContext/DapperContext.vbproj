@@ -12,7 +12,7 @@
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageId>$(RootNamespace).$(AssemblyName)</PackageId>
     <AssemblyName>$(RootNamespace).$(MSBuildProjectName)</AssemblyName>
-    <Version>0.2.1.0</Version>
+    <Version>0.2.1-alpha</Version>
     <PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperContext</PackageProjectUrl>
     <PackageTags>dapper;orm;dbcontext;</PackageTags>
     <RepositoryUrl>https://github.com/berto82/DapperContext</RepositoryUrl>
@@ -23,6 +23,8 @@
 
 - No changes</PackageReleaseNotes>
     <RepositoryType>git</RepositoryType>
+    <FileVersion>0.2.1</FileVersion>
+    <AssemblyVersion>0.2.1</AssemblyVersion>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="LICENSE.txt" />
