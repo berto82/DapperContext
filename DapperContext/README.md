@@ -4,6 +4,11 @@ A simple collections of functions and method for CRUD operation in Dapper for ge
 
 ## Version
 
+### 2025-05-16
+0.2.0 - Alpha version
+
+- No changes
+
 ### 2025-05-13
 0.1.0 - Alpha version
 
