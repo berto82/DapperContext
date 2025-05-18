@@ -4,13 +4,13 @@ Module Program
     Sub Main(args As String())
 
         Try
-            DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NET4x).WithConnectionName("pippo").Build
-            DapperAuditContext.AuditSettings = AuditConfiguration.CreateNew.StoreMode(AuditStoreMode.File).Build
+            DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NETCore).Build
+            '     DapperAuditContext.AuditSettings = AuditConfiguration.CreateNew.StoreMode(AuditStoreMode.File).Build
 
-            Dim dbExist As Boolean = New DapperContext().DatabaseExist
+            Dim dbExist As Boolean = New DapperContextSqlServer().DatabaseExist
 
             'Add new value into Person Table with an automatic audit trail, just use DapperAuditContext instead of DapperContext
-            Using ctx As New DapperAuditContext
+            Using ctx As New DapperAuditContextSqlServer
 
 
                 Dim person As New Model.Person With {
