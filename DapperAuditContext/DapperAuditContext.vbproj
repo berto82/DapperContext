@@ -16,7 +16,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageTags>dapper;orm;dbcontext;audit</PackageTags>
     <RepositoryUrl>https://github.com/berto82/DapperAuditContext</RepositoryUrl>
-    <IncludeSymbols>False</IncludeSymbols>
+    <IncludeSymbols>True</IncludeSymbols>
     <Authors>Roberto Faccani</Authors>
     <Company>Roberto Faccani</Company>
     <PackageReleaseNotes>v0.2.0.0 apha
@@ -29,6 +29,7 @@ Added fluent configuration where you can configure the following options:
     <RepositoryType>git</RepositoryType>
     <FileVersion>0.3.0</FileVersion>
     <AssemblyVersion>0.3.0</AssemblyVersion>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="LICENSE.txt">
