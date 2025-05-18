@@ -3,7 +3,6 @@ Imports System.Reflection
 Imports System.Xml
 Imports Dapper
 Imports Dapper.Contrib.Extensions
-Imports Microsoft.Data.SqlClient
 Imports Microsoft.Extensions.Configuration
 
 #Region "DapperContext"
@@ -12,24 +11,25 @@ Imports Microsoft.Extensions.Configuration
 ''' DapperContext class for managing database connections and operations.
 ''' </summary>
 ''' <remarks></remarks>
-Public Class DapperContext
+Public MustInherit Class DapperContext
     Implements IDisposable
 
     ''' <summary>
-    ''' 
+    ''' A fluent configuration setting about this context. You have should use directly the method <c>ContextConfiguration.CreateNew()</c> to create a new settings, otherwhere will be used a default settings.
+    ''' Remember to terminate with <c>Build()</c> to generate settings
     ''' </summary>
     ''' <returns></returns>
     Public Shared Property Settings As ContextConfiguration
 
     ''' <summary>
-    ''' Create a new instance of DapperContext with the default connection string.
+    ''' A connection database settings
     ''' </summary>
-    ''' <remarks></remarks>
-    Public Sub New()
-        CreateConnection()
-    End Sub
+    ''' <returns></returns>
+    Public Property Connection As IDbConnection
 
-    Private Sub CreateConnection()
+    Protected Friend Sub New() : End Sub
+
+    Protected Friend Function GetConnectionString() As String
 
         Dim cnString As String = Nothing
 
@@ -69,50 +69,31 @@ Public Class DapperContext
             Throw
         End Try
 
-        If cnString Is Nothing Then
-            Throw New ArgumentException($"A connection string was not found with name: {_Settings.ConnectionName}")
-        End If
+        Return cnString
 
-        Dim cnStringBuilder As New SqlConnectionStringBuilder(cnString)
+        'Dim cnStringBuilder As New SqlConnectionStringBuilder(cnString)
 
-        Me.Connection = New SqlConnection
-        Me.Connection.ConnectionString = cnStringBuilder.ConnectionString
-        Me.Connection.Open()
-    End Sub
+        'Me.Connection = New SqlConnection
+        'Me.Connection.ConnectionString = cnStringBuilder.ConnectionString
+        'Me.Connection.Open()
+    End Function
 
-    Public Property Connection As IDbConnection
-
+    ''' <summary>
+    ''' Check if the database exists
+    ''' </summary>
+    ''' <returns></returns>
     Public Function DatabaseExist() As Boolean
         Return DatabaseExist(Me.Connection.Database)
     End Function
 
-    Public Function DatabaseExist(dbName As String) As Boolean
-        Dim result As String
-
-        If _Settings.EnableTransaction = True Then
-            Using transaction As IDbTransaction = Me.Connection.BeginTransaction
-                Try
-                    result = Me.Connection.Query(Of String)("SELECT name FROM master.sys.databases WHERE name = @p0", New With {.p0 = dbName}, transaction).FirstOrDefault
-                    transaction.Commit()
-
-                    Return result <> String.Empty
-                Catch ex As Exception
-                    transaction.Rollback()
-                    Throw
-                End Try
-            End Using
-        Else
-            Try
-                result = Me.Connection.Query(Of String)("SELECT name FROM master.sys.databases WHERE name = @p0", New With {.p0 = dbName}).FirstOrDefault
-            Catch ex As Exception
-                Throw
-            End Try
-        End If
-
+    ''' <summary>
+    '''  Check if the database exists
+    ''' </summary>
+    ''' <param name="dbName">A name of database to be check</param>
+    ''' <returns></returns>
+    Public Overridable Function DatabaseExist(dbName As String) As Boolean
         Return False
-
     End Function
-
 
     ''' <summary>
     ''' Get a single entity by its ID.

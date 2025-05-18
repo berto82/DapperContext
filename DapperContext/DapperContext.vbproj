@@ -12,23 +12,30 @@
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageId>$(RootNamespace).$(AssemblyName)</PackageId>
     <AssemblyName>$(RootNamespace).$(MSBuildProjectName)</AssemblyName>
-    <Version>0.2.1-alpha</Version>
+    <Version>0.3.0-aplha</Version>
     <PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperContext</PackageProjectUrl>
     <PackageTags>dapper;orm;dbcontext;</PackageTags>
     <RepositoryUrl>https://github.com/berto82/DapperContext</RepositoryUrl>
-    <IncludeSymbols>False</IncludeSymbols>
+    <IncludeSymbols>True</IncludeSymbols>
     <Authors>Roberto Faccani</Authors>
     <Company>Roberto Faccani</Company>
     <PackageReleaseNotes>v0.2.0.0-alpha
 
 - No changes</PackageReleaseNotes>
     <RepositoryType>git</RepositoryType>
-    <FileVersion>0.2.1</FileVersion>
-    <AssemblyVersion>0.2.1</AssemblyVersion>
+    <FileVersion>0.3.0</FileVersion>
+    <AssemblyVersion>0.3.0</AssemblyVersion>
+    <ApplicationIcon>Icon-DapperContext.ico</ApplicationIcon>
+    <PackageIcon>Icon DapperContext.png</PackageIcon>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EnableNETAnalyzers>False</EnableNETAnalyzers>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="LICENSE.txt" />
     <None Remove="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Icon-DapperContext.ico" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="LICENSE.txt">
@@ -41,6 +48,12 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\Desktop\Icon DapperContext.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.66" />
