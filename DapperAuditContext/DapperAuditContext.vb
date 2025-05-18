@@ -14,7 +14,7 @@ Imports KellermanSoftware.CompareNetObjects
 ''' It uses the KellermanSoftware.CompareNetObjects library to compare objects and create a list of changes.
 ''' The audit trail is stored in the AuditTable table in the database.
 ''' </summary>
-Public Class DapperAuditContext
+Public MustInherit Class DapperAuditContext
     Inherits DapperContext
 
     Public Enum AuditActionType
@@ -25,25 +25,10 @@ Public Class DapperAuditContext
 
     Public Shared Property AuditSettings As AuditConfiguration
 
-    Public Sub New()
-
-        Dim useDatabase As Boolean = True
+    Protected Friend Sub New()
 
         If AuditSettings Is Nothing Then
-            AuditSettings = AuditConfiguration.CreateNew.StoreMode(AuditStoreMode.Database).Build
-        Else
-            If AuditSettings.StoreLogMode = AuditStoreMode.File Then
-                useDatabase = False
-            End If
-        End If
-
-        If useDatabase = True Then
-            Dim result = Query("SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE' AND TABLE_NAME='AuditTable'")
-
-            If result.Count = 0 Then
-                Dim scriptCreateDB As String = GetFromResources("AuditTable.sql")
-                Execute(scriptCreateDB)
-            End If
+            AuditSettings = AuditConfiguration.CreateNew.StoreMode(AuditStoreMode.File).Build
         End If
 
     End Sub
@@ -280,14 +265,6 @@ Public Class DapperAuditContext
         End If
 
     End Sub
-
-    Private Function GetFromResources(resourceName As String) As String
-        Using s As Stream = Assembly.GetExecutingAssembly.GetManifestResourceStream($"{[GetType].Namespace}.{resourceName}")
-            Using reader As New StreamReader(s)
-                Return reader.ReadToEnd
-            End Using
-        End Using
-    End Function
 
     Private Function GetCurrentUserName() As String
         Return $"{Environment.UserDomainName}\{Environment.UserName}"
