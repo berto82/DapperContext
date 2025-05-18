@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>BertoSoftware</RootNamespace>
+    <TargetFrameworks>net48;net8.0;net9.0</TargetFrameworks>
+    <OptionStrict>On</OptionStrict>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>DapperContext.SqlServer</Title>
+    <Description>A simple collections of functions and method for CRUD operation in Dapper for generic item</Description>
+    <Copyright>Roberto Faccani</Copyright>
+    <Version>0.3.0-aplha</Version>
+    <FileVersion>0.3.0</FileVersion>
+    <AssemblyVersion>0.3.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DapperContext\DapperContext.vbproj" />
+  </ItemGroup>
+
+</Project>
