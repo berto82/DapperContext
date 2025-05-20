@@ -1,0 +1,12 @@
+﻿CREATE TABLE `AuditTable` (
+	`ID` INT NOT NULL AUTO_INCREMENT,
+	`Username` VARCHAR(255) NOT NULL,
+	`KeyFieldID` INT NOT NULL,
+	`ActionType` INT NOT NULL,
+	`DateTimeStamp` DATETIME NOT NULL,
+	`DataModel` VARCHAR(50) NOT NULL,
+	`Changes` JSON NOT NULL,
+	`ValueBefore` JSON NOT NULL,
+	`ValueAfter` JSON NOT NULL,
+	PRIMARY KEY (`ID`)
+);

@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>BertoSoftware</RootNamespace>
+    <TargetFrameworks>net48;net8.0;net9.0</TargetFrameworks>
+    <OptionStrict>On</OptionStrict>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>DapperAuditContext.MySql</Title>
+    <Description>A simple collections of functions and method for CRUD operation in Dapper for generic item with an integrated audit system</Description>
+    <Copyright>Roberto Faccani</Copyright>
+    <Version>0.3.0-alpha</Version>
+    <FileVersion>0.3.0</FileVersion>
+    <AssemblyVersion>0.3.0</AssemblyVersion>
+    <PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperAuditContext.MySql</PackageProjectUrl>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageTags>dapper;orm;dbcontext;audit;mysql;mariadb</PackageTags>
+    <RepositoryUrl>https://github.com/berto82/DapperAuditContext</RepositoryUrl>
+    <IncludeSymbols>True</IncludeSymbols>
+    <Authors>Roberto Faccani</Authors>
+    <Company>Roberto Faccani</Company>
+    <PackageId>$(RootNamespace).$(AssemblyName)</PackageId>
+    <RepositoryType>git</RepositoryType>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>Icon-Dapper-Context.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="LICENSE.txt">
+      <PackagePath>\</PackagePath>
+      <Pack>True</Pack>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SQL\AuditTable.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\Icon-Dapper-Context.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MySqlConnector" Version="2.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DapperAuditContext\DapperAuditContext.vbproj" />
+  </ItemGroup>
+
+</Project>

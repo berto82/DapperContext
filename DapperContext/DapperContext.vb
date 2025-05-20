@@ -3,7 +3,6 @@ Imports System.Reflection
 Imports System.Xml
 Imports Dapper
 Imports Dapper.Contrib.Extensions
-Imports Microsoft.Data.SqlClient
 Imports Microsoft.Extensions.Configuration
 
 #Region "DapperContext"
@@ -12,92 +11,88 @@ Imports Microsoft.Extensions.Configuration
 ''' DapperContext class for managing database connections and operations.
 ''' </summary>
 ''' <remarks></remarks>
-''' <summary>
-''' DapperContext class for managing database connections and operations.
-''' </summary>
-''' <remarks></remarks>
-Public Class DapperContext
+Public MustInherit Class DapperContext
     Implements IDisposable
 
     ''' <summary>
-    ''' Create a new instance of DapperContext with the default connection string.
+    ''' A fluent configuration setting about this context. You have should use directly the method <c>ContextConfiguration.CreateNew()</c> to create a new settings, otherwhere will be used a default settings.
+    ''' Remember to terminate with <c>Build()</c> to generate settings
     ''' </summary>
-    ''' <remarks></remarks>
-    ''' <summary>
-    ''' Create a new instance of DapperContext with the default connection string.
-    ''' </summary>
-    Public Sub New()
-        CreateConnection("DefaultConnection")
-    End Sub
+    ''' <returns></returns>
+    Public Shared Property Settings As ContextConfiguration
 
     ''' <summary>
-    ''' Create a new instance of DapperContext with the specified connection string name.
+    ''' A connection database settings
     ''' </summary>
-    ''' <param name="name"></param>
-    ''' <remarks></remarks>
-    ''' <summary>
-    ''' Create a new instance of DapperContext with the specified connection string name.
-    ''' </summary>
-    ''' <param name="name"></param>
-    Public Sub New(name As String)
-        CreateConnection(name)
-    End Sub
-
-    Private Sub CreateConnection(name As String)
-
-        Dim cnString As String = String.Empty
-
-        If IO.File.Exists($"{IO.Directory.GetCurrentDirectory}\appsettings.json") Then
-            cnString = New ConfigurationBuilder().SetBasePath(IO.Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build.GetConnectionString(name)
-        ElseIf IO.File.Exists($"{IO.Directory.GetCurrentDirectory}\{Assembly.GetEntryAssembly.GetName.Name}.exe.config") Then
-            Dim doc As New XmlDocument
-            doc.Load($"{IO.Directory.GetCurrentDirectory}\{Assembly.GetEntryAssembly.GetName.Name}.exe.config")
-
-            Dim cnStringNode As XmlNode = doc.SelectSingleNode("//connectionStrings")
-            Dim configSourceAttribute As XmlAttribute = cnStringNode.Attributes("configSource")
-
-            If configSourceAttribute Is Nothing Then
-                cnStringNode = cnStringNode.SelectSingleNode($"add[@name=""{name}""]/@connectionString")
-            Else
-                doc.Load($"{IO.Directory.GetCurrentDirectory}\{configSourceAttribute.Value}")
-                cnStringNode = doc.SelectSingleNode($"//connectionStrings/add[@name=""{name}""]/@connectionString")
-            End If
-
-            cnString = cnStringNode.Value
-        End If
-
-        If cnString = String.Empty Then
-            Throw New ArgumentException("A connection string was not found in appsetting.json or in assembly config file")
-        End If
-
-        Dim cnStringBuilder As New SqlConnectionStringBuilder(cnString)
-
-        Me.Connection = New SqlConnection
-        Me.Connection.ConnectionString = cnStringBuilder.ConnectionString
-        Me.Connection.Open()
-    End Sub
-
+    ''' <returns></returns>
     Public Property Connection As IDbConnection
 
-    Public Function DatabaseExist(dbName As String) As Boolean
-        Dim result As String
+    Protected Friend Sub New()
+        If _Settings Is Nothing Then
+            _Settings = ContextConfiguration.CreateNew.Build
+        End If
+    End Sub
 
-        Using transaction As IDbTransaction = Me.Connection.BeginTransaction
-            Try
-                result = Me.Connection.Query(Of String)("SELECT name FROM master.sys.databases WHERE name = @p0", New With {.p0 = dbName}, transaction).FirstOrDefault
-                transaction.Commit()
+    Protected Friend Function GetConnectionString() As String
 
-                Return result <> String.Empty
-            Catch ex As Exception
-                transaction.Rollback()
-                Throw
-            End Try
-        End Using
+        Dim cnString As String = Nothing
 
-        Return False
+        Try
+
+            Select Case _Settings.SettingsMode
+                Case SettingFileMode.NET4x
+                    Dim doc As New XmlDocument
+
+                    If _Settings.CustomConfigurationFile = String.Empty Then
+                        doc.Load($"{IO.Directory.GetCurrentDirectory}\{Assembly.GetEntryAssembly.GetName.Name}.exe.config")
+                    Else
+                        doc.Load($"{IO.Directory.GetCurrentDirectory}\{_Settings.CustomConfigurationFile}")
+                    End If
+
+                    Dim cnStringNode As XmlNode = doc.SelectSingleNode("//connectionStrings")
+                    Dim configSourceAttribute As XmlAttribute = cnStringNode.Attributes("configSource")
+
+                    If configSourceAttribute Is Nothing Then
+                        cnStringNode = cnStringNode.SelectSingleNode($"add[@name=""{_Settings.ConnectionName}""]/@connectionString")
+                    Else
+                        doc.Load($"{IO.Directory.GetCurrentDirectory}\{configSourceAttribute.Value}")
+                        cnStringNode = doc.SelectSingleNode($"//connectionStrings/add[@name=""{_Settings.ConnectionName}""]/@connectionString")
+                    End If
+
+                    cnString = cnStringNode?.Value
+                Case SettingFileMode.NETCore
+
+                    If _Settings.CustomConfigurationFile = String.Empty Then
+                        cnString = New ConfigurationBuilder().SetBasePath(IO.Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build.GetConnectionString(_Settings.ConnectionName)
+                    Else
+                        cnString = New ConfigurationBuilder().SetBasePath(IO.Directory.GetCurrentDirectory()).AddJsonFile(_Settings.CustomConfigurationFile).Build.GetConnectionString(_Settings.ConnectionName)
+                    End If
+
+            End Select
+        Catch ex As Exception
+            Throw
+        End Try
+
+        Return cnString
 
     End Function
 
+    ''' <summary>
+    ''' Check if the database exists
+    ''' </summary>
+    ''' <returns></returns>
+    Public Function DatabaseExist() As Boolean
+        Return DatabaseExist(Me.Connection.Database)
+    End Function
+
+    ''' <summary>
+    '''  Check if the database exists
+    ''' </summary>
+    ''' <param name="dbName">A name of database to be check</param>
+    ''' <returns></returns>
+    Public Overridable Function DatabaseExist(dbName As String) As Boolean
+        Return False
+    End Function
 
     ''' <summary>
     ''' Get a single entity by its ID.
@@ -106,27 +101,29 @@ Public Class DapperContext
     ''' <param name="id"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    ''' <summary>
-    ''' Get a single entity by its ID.
-    ''' </summary>
-    ''' <typeparam name="TEntity"></typeparam>
-    ''' <param name="id"></param>
-    ''' <returns></returns>
     Public Overridable Function [Get](Of TEntity As Class)(id As Object) As TEntity
 
         Dim result As TEntity
 
-        Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+        If _Settings.EnableTransaction = True Then
+            Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+                Try
+                    result = Me.Connection.Get(Of TEntity)(id, transaction)
+                    transaction.Commit()
+                Catch ex As Exception
+                    transaction.Rollback()
+                    Throw
+                End Try
 
+            End Using
+        Else
             Try
-                result = Me.Connection.Get(Of TEntity)(id, transaction)
-                transaction.Commit()
+                result = Me.Connection.Get(Of TEntity)(id)
             Catch ex As Exception
-                transaction.Rollback()
                 Throw
             End Try
+        End If
 
-        End Using
 
         Return result
 
@@ -139,27 +136,30 @@ Public Class DapperContext
     ''' <param name="id"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    ''' <summary>
-    ''' Get a single entity by its ID.
-    ''' </summary>
-    ''' <typeparam name="TEntity"></typeparam>
-    ''' <param name="id"></param>
-    ''' <returns></returns>
     Public Overridable Async Function GetAsync(Of TEntity As Class)(id As Object) As Task(Of TEntity)
 
         Dim result As TEntity
 
-        Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+        If _Settings.EnableTransaction = True Then
+            Using transaction As IDbTransaction = Me.Connection.BeginTransaction
 
+                Try
+                    result = Await Me.Connection.GetAsync(Of TEntity)(id, transaction)
+                    transaction.Commit()
+                Catch ex As Exception
+                    transaction.Rollback()
+                    Throw
+                End Try
+
+            End Using
+        Else
             Try
-                result = Await Me.Connection.GetAsync(Of TEntity)(id, transaction)
-                transaction.Commit()
+                result = Await Me.Connection.GetAsync(Of TEntity)(id)
             Catch ex As Exception
-                transaction.Rollback()
                 Throw
             End Try
+        End If
 
-        End Using
 
         Return result
 
@@ -171,26 +171,29 @@ Public Class DapperContext
     ''' <typeparam name="TEntity"></typeparam>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    ''' <summary>
-    ''' Get all entities of a specific type.
-    ''' </summary>
-    ''' <typeparam name="TEntity"></typeparam>
-    ''' <returns></returns>
     Public Overridable Function GetAll(Of TEntity As Class)() As IEnumerable(Of TEntity)
 
         Dim result As IEnumerable(Of TEntity)
 
-        Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+        If _Settings.EnableTransaction = True Then
+            Using transaction As IDbTransaction = Me.Connection.BeginTransaction
 
+                Try
+                    result = Me.Connection.GetAll(Of TEntity)(transaction)
+                    transaction.Commit()
+                Catch ex As Exception
+                    transaction.Rollback()
+                    Throw
+                End Try
+
+            End Using
+        Else
             Try
-                result = Me.Connection.GetAll(Of TEntity)(transaction)
-                transaction.Commit()
+                result = Me.Connection.GetAll(Of TEntity)
             Catch ex As Exception
-                transaction.Rollback()
                 Throw
             End Try
-
-        End Using
+        End If
 
         Return result
 
@@ -202,26 +205,30 @@ Public Class DapperContext
     ''' <typeparam name="TEntity"></typeparam>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    ''' <summary>
-    ''' Get all entities of a specific type.
-    ''' </summary>
-    ''' <typeparam name="TEntity"></typeparam>
-    ''' <returns></returns>
     Public Overridable Async Function GetAllAsync(Of TEntity As Class)() As Task(Of IEnumerable(Of TEntity))
 
         Dim result As IEnumerable(Of TEntity)
 
-        Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+        If _Settings.EnableTransaction = True Then
+            Using transaction As IDbTransaction = Me.Connection.BeginTransaction
 
+                Try
+                    result = Await Me.Connection.GetAllAsync(Of TEntity)(transaction)
+                    transaction.Commit()
+                Catch ex As Exception
+                    transaction.Rollback()
+                    Throw
+                End Try
+
+            End Using
+        Else
             Try
-                result = Await Me.Connection.GetAllAsync(Of TEntity)(transaction)
-                transaction.Commit()
+                result = Await Me.Connection.GetAllAsync(Of TEntity)
             Catch ex As Exception
-                transaction.Rollback()
                 Throw
             End Try
+        End If
 
-        End Using
 
         Return result
 
@@ -234,18 +241,40 @@ Public Class DapperContext
     ''' <param name="entity"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    ''' <summary>
-    ''' Insert or update an entity.
-    ''' </summary>
-    ''' <typeparam name="TEntity"></typeparam>
-    ''' <param name="entity"></param>
-    ''' <returns></returns>
     Public Overridable Function InsertOrUpdate(Of TEntity As Class)(entity As TEntity) As Long
 
         Dim result As Long = Nothing
 
-        Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+        If _Settings.EnableTransaction = True Then
+            Using transaction As IDbTransaction = Me.Connection.BeginTransaction
 
+                Try
+                    Dim isNew As Boolean = False
+
+                    Dim entityType As Type = entity.GetType
+                    Dim keyValue As Object = DapperContext.GetKeyFieldValue(entity)
+
+                    If CInt(keyValue) = 0 Then
+                        isNew = True
+                    End If
+
+                    If isNew = True Then
+                        result = Me.Connection.Insert(entity, transaction)
+                    Else
+                        If Me.Connection.Update(entity, transaction) Then
+                            result = CLng(keyValue)
+                        End If
+                    End If
+
+                    transaction.Commit()
+
+                Catch ex As Exception
+                    transaction.Rollback()
+                    Throw
+                End Try
+
+            End Using
+        Else
             Try
                 Dim isNew As Boolean = False
 
@@ -257,21 +286,17 @@ Public Class DapperContext
                 End If
 
                 If isNew = True Then
-                    result = Me.Connection.Insert(entity, transaction)
+                    result = Me.Connection.Insert(entity)
                 Else
-                    If Me.Connection.Update(entity, transaction) Then
+                    If Me.Connection.Update(entity) Then
                         result = CLng(keyValue)
                     End If
                 End If
-
-                transaction.Commit()
-
             Catch ex As Exception
-                transaction.Rollback()
                 Throw
             End Try
+        End If
 
-        End Using
 
         Return result
 
@@ -284,18 +309,40 @@ Public Class DapperContext
     ''' <param name="entity"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    ''' <summary>
-    ''' Insert or update an entity.
-    ''' </summary>
-    ''' <typeparam name="TEntity"></typeparam>
-    ''' <param name="entity"></param>
-    ''' <returns></returns>
     Public Overridable Async Function InsertOrUpdateAsync(Of TEntity As Class)(entity As TEntity) As Task(Of Long)
 
         Dim result As Long = Nothing
 
-        Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+        If _Settings.EnableTransaction = True Then
+            Using transaction As IDbTransaction = Me.Connection.BeginTransaction
 
+                Try
+                    Dim isNew As Boolean = False
+
+                    Dim entityType As Type = entity.GetType
+                    Dim keyValue As Object = DapperContext.GetKeyFieldValue(entity)
+
+                    If CInt(keyValue) = 0 Then
+                        isNew = True
+                    End If
+
+                    If isNew = True Then
+                        result = Await Me.Connection.InsertAsync(entity, transaction)
+                    Else
+                        If Await Me.Connection.UpdateAsync(entity, transaction) Then
+                            result = CLng(keyValue)
+                        End If
+                    End If
+
+                    transaction.Commit()
+
+                Catch ex As Exception
+                    transaction.Rollback()
+                    Throw
+                End Try
+
+            End Using
+        Else
             Try
                 Dim isNew As Boolean = False
 
@@ -307,21 +354,17 @@ Public Class DapperContext
                 End If
 
                 If isNew = True Then
-                    result = Await Me.Connection.InsertAsync(entity, transaction)
+                    result = Await Me.Connection.InsertAsync(entity)
                 Else
-                    If Await Me.Connection.UpdateAsync(entity, transaction) Then
+                    If Await Me.Connection.UpdateAsync(entity) Then
                         result = CLng(keyValue)
                     End If
                 End If
-
-                transaction.Commit()
-
             Catch ex As Exception
-                transaction.Rollback()
                 Throw
             End Try
+        End If
 
-        End Using
 
         Return result
 
@@ -334,26 +377,27 @@ Public Class DapperContext
     ''' <param name="entity"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    ''' <summary>
-    ''' Delete an entity.
-    ''' </summary>
-    ''' <typeparam name="TEntity"></typeparam>
-    ''' <param name="entity"></param>
-    ''' <returns></returns>
     Public Overridable Function Delete(Of TEntity As Class)(entity As TEntity) As Boolean
         Dim result As Boolean
 
-        Using transaction As IDbTransaction = Me.Connection.BeginTransaction
-
+        If _Settings.EnableTransaction = True Then
+            Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+                Try
+                    result = Me.Connection.Delete(entity, transaction)
+                    transaction.Commit()
+                Catch ex As Exception
+                    transaction.Rollback()
+                    Throw
+                End Try
+            End Using
+        Else
             Try
-                result = Me.Connection.Delete(entity, transaction)
-                transaction.Commit()
+                result = Me.Connection.Delete(entity)
             Catch ex As Exception
-                transaction.Rollback()
                 Throw
             End Try
+        End If
 
-        End Using
 
         Return result
 
@@ -366,26 +410,29 @@ Public Class DapperContext
     ''' <param name="entity"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    ''' <summary>
-    ''' Delete an entity.
-    ''' </summary>
-    ''' <typeparam name="TEntity"></typeparam>
-    ''' <param name="entity"></param>
-    ''' <returns></returns>
     Public Overridable Async Function DeleteAsync(Of TEntity As Class)(entity As TEntity) As Task(Of Boolean)
         Dim result As Boolean
 
-        Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+        If _Settings.EnableTransaction = True Then
+            Using transaction As IDbTransaction = Me.Connection.BeginTransaction
 
+                Try
+                    result = Await Me.Connection.DeleteAsync(entity, transaction)
+                    transaction.Commit()
+                Catch ex As Exception
+                    transaction.Rollback()
+                    Throw
+                End Try
+
+            End Using
+        Else
             Try
-                result = Await Me.Connection.DeleteAsync(entity, transaction)
-                transaction.Commit()
+                result = Await Me.Connection.DeleteAsync(entity)
             Catch ex As Exception
-                transaction.Rollback()
                 Throw
             End Try
+        End If
 
-        End Using
 
         Return result
 
@@ -397,27 +444,29 @@ Public Class DapperContext
     ''' <typeparam name="TEntity"></typeparam>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    ''' <summary>
-    ''' Delete all entities of a specific type.
-    ''' </summary>
-    ''' <typeparam name="TEntity"></typeparam>
-    ''' <returns></returns>
-    ''' </summary>
-    ''' <typeparam name="TEntity"></typeparam>
-    ''' <returns></returns>
     Public Overridable Function DeleteAll(Of TEntity As Class)() As Boolean
 
         Dim result As Boolean
 
-        Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+        If _Settings.EnableTransaction = True Then
+
+            Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+                Try
+                    result = Me.Connection.DeleteAll(Of TEntity)(transaction)
+                    transaction.Commit()
+                Catch ex As Exception
+                    transaction.Rollback()
+                    Throw
+                End Try
+            End Using
+        Else
             Try
-                result = Me.Connection.DeleteAll(Of TEntity)(transaction)
-                transaction.Commit()
+                result = Me.Connection.DeleteAll(Of TEntity)
             Catch ex As Exception
-                transaction.Rollback()
                 Throw
             End Try
-        End Using
+        End If
+
 
         Return result
 
@@ -429,27 +478,28 @@ Public Class DapperContext
     ''' <typeparam name="TEntity"></typeparam>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    ''' <summary>
-    ''' Delete all entities of a specific type.
-    ''' </summary>
-    ''' <typeparam name="TEntity"></typeparam>
-    ''' <returns></returns>
-    ''' </summary>
-    ''' <typeparam name="TEntity"></typeparam>
-    ''' <returns></returns>
     Public Overridable Async Function DeleteAllAsync(Of TEntity As Class)() As Task(Of Boolean)
 
         Dim result As Boolean
 
-        Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+        If _Settings.EnableTransaction = True Then
+            Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+                Try
+                    result = Await Me.Connection.DeleteAllAsync(Of TEntity)(transaction)
+                    transaction.Commit()
+                Catch ex As Exception
+                    transaction.Rollback()
+                    Throw
+                End Try
+            End Using
+        Else
             Try
-                result = Await Me.Connection.DeleteAllAsync(Of TEntity)(transaction)
-                transaction.Commit()
+                result = Await Me.Connection.DeleteAllAsync(Of TEntity)
             Catch ex As Exception
-                transaction.Rollback()
                 Throw
             End Try
-        End Using
+        End If
+
 
         Return result
 
@@ -462,24 +512,27 @@ Public Class DapperContext
     ''' <param name="param"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    ''' <summary>
-    ''' Execute a SQL command.
-    ''' </summary>
-    ''' <param name="sql"></param>
-    ''' <param name="param"></param>
-    ''' <returns></returns>
     Public Function Execute(sql As String, Optional param As Object = Nothing) As Integer
         Dim result As Integer
 
-        Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+        If _Settings.EnableTransaction = True Then
+            Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+                Try
+                    result = Me.Connection.Execute(sql, param, transaction)
+                    transaction.Commit()
+                Catch ex As Exception
+                    transaction.Rollback()
+                    Throw
+                End Try
+            End Using
+        Else
             Try
-                result = Me.Connection.Execute(sql, param, transaction)
-                transaction.Commit()
+                result = Me.Connection.Execute(sql, param)
             Catch ex As Exception
-                transaction.Rollback()
                 Throw
             End Try
-        End Using
+        End If
+
 
         Return result
 
@@ -492,24 +545,27 @@ Public Class DapperContext
     ''' <param name="param"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    ''' <summary>
-    ''' Execute a SQL command.
-    ''' </summary>
-    ''' <param name="sql"></param>
-    ''' <param name="param"></param>
-    ''' <returns></returns>
     Public Async Function ExecuteAsync(sql As String, Optional param As Object = Nothing) As Task(Of Integer)
         Dim result As Integer
 
-        Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+        If _Settings.EnableTransaction = True Then
+            Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+                Try
+                    result = Await Me.Connection.ExecuteAsync(sql, param, transaction)
+                    transaction.Commit()
+                Catch ex As Exception
+                    transaction.Rollback()
+                    Throw
+                End Try
+            End Using
+        Else
             Try
-                result = Await Me.Connection.ExecuteAsync(sql, param, transaction)
-                transaction.Commit()
+                result = Await Me.Connection.ExecuteAsync(sql, param)
             Catch ex As Exception
-                transaction.Rollback()
                 Throw
             End Try
-        End Using
+        End If
+
 
         Return result
 
@@ -522,24 +578,27 @@ Public Class DapperContext
     ''' <param name="param"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    ''' <summary>
-    ''' Execute a SQL command and return a single value.
-    ''' </summary>
-    ''' <param name="sql"></param>
-    ''' <param name="param"></param>
-    ''' <returns></returns>
     Public Function ExecuteScalar(sql As String, Optional param As Object = Nothing) As Object
         Dim result As Object
 
-        Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+        If _Settings.EnableTransaction = True Then
+            Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+                Try
+                    result = Me.Connection.ExecuteScalar(sql, param, transaction)
+                    transaction.Commit()
+                Catch ex As Exception
+                    transaction.Rollback()
+                    Throw
+                End Try
+            End Using
+        Else
             Try
-                result = Me.Connection.ExecuteScalar(sql, param, transaction)
-                transaction.Commit()
+                result = Me.Connection.ExecuteScalar(sql, param)
             Catch ex As Exception
-                transaction.Rollback()
                 Throw
             End Try
-        End Using
+        End If
+
 
         Return result
 
@@ -552,24 +611,27 @@ Public Class DapperContext
     ''' <param name="param"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    ''' <summary>
-    ''' Execute a SQL command and return a single value.
-    ''' </summary>
-    ''' <param name="sql"></param>
-    ''' <param name="param"></param>
-    ''' <returns></returns>
     Public Async Function ExecuteScalarAsync(sql As String, Optional param As Object = Nothing) As Task(Of Object)
         Dim result As Object
 
-        Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+        If _Settings.EnableTransaction = True Then
+            Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+                Try
+                    result = Await Me.Connection.ExecuteScalarAsync(sql, param, transaction)
+                    transaction.Commit()
+                Catch ex As Exception
+                    transaction.Rollback()
+                    Throw
+                End Try
+            End Using
+        Else
             Try
-                result = Await Me.Connection.ExecuteScalarAsync(sql, param, transaction)
-                transaction.Commit()
+                result = Await Me.Connection.ExecuteScalarAsync(sql, param)
             Catch ex As Exception
-                transaction.Rollback()
                 Throw
             End Try
-        End Using
+        End If
+
 
         Return result
 
@@ -583,26 +645,28 @@ Public Class DapperContext
     ''' <param name="param"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    ''' <summary>
-    ''' Execute a SQL command and return a single value.
-    ''' </summary>
-    ''' <typeparam name="T"></typeparam>
-    ''' <param name="sql"></param>
-    ''' <param name="param"></param>
-    ''' <returns></returns>
     Public Function ExecuteScalar(Of T)(sql As String, Optional param As Object = Nothing) As T
 
         Dim result As T
 
-        Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+        If _Settings.EnableTransaction = True Then
+            Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+                Try
+                    result = Me.Connection.ExecuteScalar(Of T)(sql, param, transaction)
+                    transaction.Commit()
+                Catch ex As Exception
+                    transaction.Rollback()
+                    Throw
+                End Try
+            End Using
+        Else
             Try
-                result = Me.Connection.ExecuteScalar(Of T)(sql, param, transaction)
-                transaction.Commit()
+                result = Me.Connection.ExecuteScalar(Of T)(sql, param)
             Catch ex As Exception
-                transaction.Rollback()
                 Throw
             End Try
-        End Using
+        End If
+
 
         Return result
 
@@ -616,26 +680,28 @@ Public Class DapperContext
     ''' <param name="param"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    ''' <summary>
-    ''' Execute a SQL command and return a single value.
-    ''' </summary>
-    ''' <typeparam name="T"></typeparam>
-    ''' <param name="sql"></param>
-    ''' <param name="param"></param>
-    ''' <returns></returns>
     Public Async Function ExecuteScalarAsync(Of T)(sql As String, Optional param As Object = Nothing) As Task(Of T)
 
         Dim result As T
 
-        Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+        If _Settings.EnableTransaction = True Then
+            Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+                Try
+                    result = Await Me.Connection.ExecuteScalarAsync(Of T)(sql, param, transaction)
+                    transaction.Commit()
+                Catch ex As Exception
+                    transaction.Rollback()
+                    Throw
+                End Try
+            End Using
+        Else
             Try
-                result = Await Me.Connection.ExecuteScalarAsync(Of T)(sql, param, transaction)
-                transaction.Commit()
+                result = Await Me.Connection.ExecuteScalarAsync(Of T)(sql, param)
             Catch ex As Exception
-                transaction.Rollback()
                 Throw
             End Try
-        End Using
+        End If
+
 
         Return result
 
@@ -648,25 +714,29 @@ Public Class DapperContext
     ''' <param name="param"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    ''' <summary>
-    ''' Execute a SQL command and return a collection of objects.
-    ''' </summary>
-    ''' <param name="sql"></param>
-    ''' <param name="param"></param>
-    ''' <returns></returns>
     Public Function Query(sql As String, Optional param As Object = Nothing) As IEnumerable(Of Object)
 
         Dim result As IEnumerable(Of Object)
 
-        Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+
+        If _Settings.EnableTransaction = True Then
+            Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+                Try
+                    result = Me.Connection.Query(sql, param, transaction)
+                    transaction.Commit()
+                Catch ex As Exception
+                    transaction.Rollback()
+                    Throw
+                End Try
+            End Using
+        Else
             Try
-                result = Me.Connection.Query(sql, param, transaction)
-                transaction.Commit()
+                result = Me.Connection.Query(sql, param)
             Catch ex As Exception
-                transaction.Rollback()
                 Throw
             End Try
-        End Using
+        End If
+
 
         Return result
 
@@ -679,25 +749,29 @@ Public Class DapperContext
     ''' <param name="param"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    ''' <summary>
-    ''' Execute a SQL command and return a collection of objects.
-    ''' </summary>
-    ''' <param name="sql"></param>
-    ''' <param name="param"></param>
-    ''' <returns></returns>
     Public Async Function QueryAsync(sql As String, Optional param As Object = Nothing) As Task(Of IEnumerable(Of Object))
 
         Dim result As IEnumerable(Of Object)
 
-        Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+
+        If _Settings.EnableTransaction = True Then
+            Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+                Try
+                    result = Await Me.Connection.QueryAsync(sql, param, transaction)
+                    transaction.Commit()
+                Catch ex As Exception
+                    transaction.Rollback()
+                    Throw
+                End Try
+            End Using
+        Else
             Try
-                result = Await Me.Connection.QueryAsync(sql, param, transaction)
-                transaction.Commit()
+                result = Await Me.Connection.QueryAsync(sql, param)
             Catch ex As Exception
-                transaction.Rollback()
                 Throw
             End Try
-        End Using
+        End If
+
 
         Return result
 
@@ -711,26 +785,28 @@ Public Class DapperContext
     ''' <param name="param"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    ''' <summary>
-    ''' Execute a SQL command and return a collection of objects.
-    ''' </summary>
-    ''' <typeparam name="T"></typeparam>
-    ''' <param name="sql"></param>
-    ''' <param name="param"></param>
-    ''' <returns></returns>
     Public Function Query(Of T As Class)(sql As String, Optional param As Object = Nothing) As IEnumerable(Of T)
 
         Dim result As IEnumerable(Of T)
 
-        Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+
+        If _Settings.EnableTransaction = True Then
+            Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+                Try
+                    result = Me.Connection.Query(Of T)(sql, param, transaction)
+                    transaction.Commit()
+                Catch ex As Exception
+                    transaction.Rollback()
+                    Throw
+                End Try
+            End Using
+        Else
             Try
-                result = Me.Connection.Query(Of T)(sql, param, transaction)
-                transaction.Commit()
+                result = Me.Connection.Query(Of T)(sql, param)
             Catch ex As Exception
-                transaction.Rollback()
                 Throw
             End Try
-        End Using
+        End If
 
         Return result
 
@@ -744,26 +820,28 @@ Public Class DapperContext
     ''' <param name="param"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    ''' <summary>
-    ''' Execute a SQL command and return a collection of objects.
-    ''' </summary>
-    ''' <typeparam name="T"></typeparam>
-    ''' <param name="sql"></param>
-    ''' <param name="param"></param>
-    ''' <returns></returns>
     Public Async Function QueryAsync(Of T As Class)(sql As String, Optional param As Object = Nothing) As Task(Of IEnumerable(Of T))
 
         Dim result As IEnumerable(Of T)
 
-        Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+        If _Settings.EnableTransaction = True Then
+            Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+                Try
+                    result = Await Me.Connection.QueryAsync(Of T)(sql, param, transaction)
+                    transaction.Commit()
+                Catch ex As Exception
+                    transaction.Rollback()
+                    Throw
+                End Try
+            End Using
+        Else
             Try
-                result = Await Me.Connection.QueryAsync(Of T)(sql, param, transaction)
-                transaction.Commit()
+                result = Await Me.Connection.QueryAsync(Of T)(sql, param)
             Catch ex As Exception
-                transaction.Rollback()
                 Throw
             End Try
-        End Using
+        End If
+
 
         Return result
 
@@ -776,13 +854,11 @@ Public Class DapperContext
     ''' <param name="entity"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    ''' <summary>
-    ''' Get the value of the key field of an entity.
-    ''' </summary>
-    ''' <typeparam name="TEntity"></typeparam>
-    ''' <param name="entity"></param>
-    ''' <returns></returns>
     Public Shared Function GetKeyFieldValue(Of TEntity As Class)(entity As TEntity) As Object
+
+        If entity Is Nothing Then
+            Throw New Exception("Entity was not found")
+        End If
 
         Dim entityType As Type = entity.GetType
         Dim keyValue As Object = Nothing
