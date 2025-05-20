@@ -1,8 +1,6 @@
 ![image](https://i.ibb.co/MjNLPyQ/Banner-Dapper-Context.png)
 
-> [!NOTE]
-> 
-> Documentation is still under development
+> NOTE: Documentation is still under development
 
 # DapperContext
 
@@ -33,22 +31,31 @@ To install the program simply download the nuget package(s) related to your need
 There are several nuget packages available that you can install.
 The packages are these:
 
-- DapperContext
+- **DapperContext**
   
   - This is the core package that is mandatory for other and **will not work alone**
 
-- DapperAuditContext
+- **DapperAuditContext**
   
   - This is the core audit package that is mandatory only if you need to trail changes and **will not work alone**
 
-- DapperContext.SqlServer ***(recommended package)***
+- **DapperContext.SqlServer**
   
   - This package allows you to connect to a Microsoft SQL Server and is dependent on the core package.
     With this package you can use all the functions available to you
 
-- DapperAuditContext.SqlServer ***(recommended package)***
+- **DapperAuditContext.SqlServer** 
   
   - Same that DapperContext.SqlServer but with a integated audit system
+
+- **DapperContext.MySql**
+  
+  - This package allows you to connect to a MySQL / MariaDB and is dependent on the core package.
+    With this package you can use all the functions available to you
+
+- DapperAuditContext.MySql
+  
+  - Same that DapperContext.MySql but with a integated audit system
 
 ## Installation
 
@@ -105,4 +112,30 @@ namespace Model
         public string Address { get; set; }
     }
 }
+```
+
+## Configuration
+
+In the main program you can define a settings globally for the project
+
+### VB.NET
+
+```vbnet
+   DapperContext.Settings = ContextConfiguration.CreateNew.
+         UseSettingsFileMode(SettingFileMode.NET4x).
+         WithConnectionName("MyConnection").
+         WithCustomConfigurationFile("app1.config").
+         DisableTransaction.
+         Build()
+```
+
+### C#
+
+```csharp
+   DapperContext.Settings = ContextConfiguration.CreateNew.
+         UseSettingsFileMode(SettingFileMode.NET4x).
+         WithConnectionName("MyConnection").
+         WithCustomConfigurationFile("app1.config").
+         DisableTransaction.
+         Build();
 ```

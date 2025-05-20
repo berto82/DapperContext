@@ -1,7 +1,7 @@
+Imports System.Data
 Imports System.IO
 Imports System.Reflection
 Imports Dapper
-Imports System.Data
 Imports Microsoft.Data.SqlClient
 
 Public Class DapperAuditContextSqlServer
