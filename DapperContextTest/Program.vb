@@ -8,8 +8,8 @@ Module Program
             DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NET4x).WithConnectionName("DocutechEntities").Build
 
             'SQL Server
-            ExampleNotAuditing()
-            ''      ExampleWithAuditing()
+            '  ExampleNotAuditing()
+            ExampleWithAuditing()
 
             'My SQL
             ' ExampleNotAudtingMySql()
