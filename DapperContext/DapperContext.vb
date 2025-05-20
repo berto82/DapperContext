@@ -27,7 +27,11 @@ Public MustInherit Class DapperContext
     ''' <returns></returns>
     Public Property Connection As IDbConnection
 
-    Protected Friend Sub New() : End Sub
+    Protected Friend Sub New()
+        If _Settings Is Nothing Then
+            _Settings = ContextConfiguration.CreateNew.Build
+        End If
+    End Sub
 
     Protected Friend Function GetConnectionString() As String
 
@@ -71,11 +75,6 @@ Public MustInherit Class DapperContext
 
         Return cnString
 
-        'Dim cnStringBuilder As New SqlConnectionStringBuilder(cnString)
-
-        'Me.Connection = New SqlConnection
-        'Me.Connection.ConnectionString = cnStringBuilder.ConnectionString
-        'Me.Connection.Open()
     End Function
 
     ''' <summary>
@@ -856,6 +855,10 @@ Public MustInherit Class DapperContext
     ''' <returns></returns>
     ''' <remarks></remarks>
     Public Shared Function GetKeyFieldValue(Of TEntity As Class)(entity As TEntity) As Object
+
+        If entity Is Nothing Then
+            Throw New Exception("Entity was not found")
+        End If
 
         Dim entityType As Type = entity.GetType
         Dim keyValue As Object = Nothing
