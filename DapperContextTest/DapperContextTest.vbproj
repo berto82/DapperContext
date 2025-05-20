@@ -12,8 +12,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DapperAuditContext.MySql\DapperAuditContext.MySql.vbproj" />
+    <ProjectReference Include="..\DapperAuditContext.SQLite\DapperAuditContext.SQLite.vbproj" />
     <ProjectReference Include="..\DapperAuditContext.SqlServer\DapperAuditContext.SqlServer.vbproj" />
     <ProjectReference Include="..\DapperContext.MySql\DapperContext.MySql.vbproj" />
+    <ProjectReference Include="..\DapperContext.SQLite\DapperContext.SQLite.vbproj" />
     <ProjectReference Include="..\DapperContext.SqlServer\DapperContext.SqlServer.vbproj" />
   </ItemGroup>
 
