@@ -5,7 +5,7 @@
     <RootNamespace>BertoSoftware</RootNamespace>
     <TargetFrameworks>net48;net8.0;net9.0</TargetFrameworks>
     <OptionStrict>On</OptionStrict>
-    <Version>0.3.0-aplha</Version>
+    <Version>0.3.0-alpha</Version>
     <FileVersion>0.3.0</FileVersion>
     <AssemblyVersion>0.3.0</AssemblyVersion>
   </PropertyGroup>
