@@ -8,7 +8,7 @@
     Private Sub New()
         _StoreLogMode = AuditStoreMode.Database
         _TableName = "AuditTable"
-        _FilePath = $"audit_{Date.UtcNow:yyyyMMdd}.log"
+        _FilePath = $"audit_{Date.Now:yyyyMMdd}.log"
     End Sub
 
     Public Shared Function CreateNew() As IAuditConfigurationBuilder
