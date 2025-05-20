@@ -1,5 +1,9 @@
 ![image](https://i.ibb.co/MjNLPyQ/Banner-Dapper-Context.png)
 
+> [!NOTE]
+> 
+> Documentation is still under development
+
 # DapperContext
 
 A simple collections of functions and method for CRUD operation in Dapper for generic item with or without an integrated audit system.
@@ -102,5 +106,3 @@ namespace Model
     }
 }
 ```
-
-
