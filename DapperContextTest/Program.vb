@@ -5,8 +5,10 @@ Module Program
     Sub Main(args As String())
 
         Try
+            DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NET4x).WithConnectionName("DocutechEntities").Build
+
             'SQL Server
-            '   ExampleNotAuditing()
+            ExampleNotAuditing()
             ''      ExampleWithAuditing()
 
             'My SQL
