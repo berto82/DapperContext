@@ -1,5 +1,7 @@
 Imports System.IO
 Imports System.Reflection
+Imports Dapper
+Imports System.Data
 Imports Microsoft.Data.SqlClient
 
 Public Class DapperAuditContextSqlServer
@@ -31,6 +33,34 @@ Public Class DapperAuditContextSqlServer
         End Try
 
     End Sub
+
+    Public Overrides Function DatabaseExist(dbName As String) As Boolean
+
+        Dim result As String
+
+        If Settings.EnableTransaction = True Then
+            Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+                Try
+                    result = Me.Connection.Query(Of String)("SELECT name FROM master.sys.databases WHERE name = @p0", New With {.p0 = dbName}, transaction).FirstOrDefault
+                    transaction.Commit()
+
+                    Return result <> String.Empty
+                Catch ex As Exception
+                    transaction.Rollback()
+                    Throw
+                End Try
+            End Using
+        Else
+            Try
+                result = Me.Connection.Query(Of String)("SELECT name FROM master.sys.databases WHERE name = @p0", New With {.p0 = dbName}).FirstOrDefault
+            Catch ex As Exception
+                Throw
+            End Try
+        End If
+
+        Return False
+
+    End Function
 
     Private Function GetFromResources(resourceName As String) As String
         Using s As Stream = Assembly.GetExecutingAssembly.GetManifestResourceStream($"{[GetType].Namespace}.{resourceName}")
