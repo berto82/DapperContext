@@ -19,7 +19,7 @@ Public Class DapperAuditContextMySql
             Me.Connection.Open()
 
             If AuditSettings.StoreLogMode = AuditStoreMode.Database Then
-                Dim result = Query("SELECT TOP 1 FROM infomrmation_schema.schemata WHERE schema_name='AuditTable'")
+                Dim result = Query($"SELECT * FROM information_schema.TABLES WHERE TABLE_SCHEMA = '{cnStringBuilder.Database}' AND TABLE_NAME ='audittable'")
 
                 If result.Count = 0 Then
                     Dim scriptCreateDB As String = GetFromResources("AuditTable.sql")
