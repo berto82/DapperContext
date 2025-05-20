@@ -11,7 +11,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DapperAuditContext.MySql\DapperAuditContext.MySql.vbproj" />
     <ProjectReference Include="..\DapperAuditContext.SqlServer\DapperAuditContext.SqlServer.vbproj" />
+    <ProjectReference Include="..\DapperContext.MySql\DapperContext.MySql.vbproj" />
     <ProjectReference Include="..\DapperContext.SqlServer\DapperContext.SqlServer.vbproj" />
   </ItemGroup>
 
