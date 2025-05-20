@@ -5,15 +5,15 @@
     <TargetFrameworks>net48;net8.0;net9.0</TargetFrameworks>
     <OptionStrict>On</OptionStrict>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Title>DapperContext.MySql</Title>
-    <Description>A simple collections of functions and method for CRUD operation in Dapper for generic item</Description>
+    <Title>DapperAuditContext.SQLite</Title>
+    <Description>A simple collections of functions and method for CRUD operation in Dapper for generic item with an integrated audit system</Description>
     <Copyright>Roberto Faccani</Copyright>
     <Version>0.3.2-alpha</Version>
     <FileVersion>0.3.2</FileVersion>
     <AssemblyVersion>0.3.2</AssemblyVersion>
-    <PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperContext.MySql</PackageProjectUrl>
+    <PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperAuditContext.SqlServer</PackageProjectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageTags>dapper;orm;dbcontext;mysql;mariadb</PackageTags>
+    <PackageTags>dapper;orm;dbcontext;audit;sqlite</PackageTags>
     <RepositoryUrl>https://github.com/berto82/DapperContext</RepositoryUrl>
     <IncludeSymbols>True</IncludeSymbols>
     <Authors>Roberto Faccani</Authors>
@@ -23,9 +23,13 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>Icon-Dapper-Context.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="SQL\AuditTable.sql" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\Icon-Dapper-Context.png">
@@ -43,11 +47,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MySqlConnector" Version="2.4.0" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="9.0.5" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DapperContext\DapperContext.vbproj" />
+    <ProjectReference Include="..\DapperAuditContext\DapperAuditContext.vbproj" />
   </ItemGroup>
 
 </Project>

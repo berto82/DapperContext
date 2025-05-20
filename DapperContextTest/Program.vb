@@ -5,16 +5,19 @@ Module Program
     Sub Main(args As String())
 
         Try
-            DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NET4x).WithConnectionName("DocutechEntities").Build
+            DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NETCore).WithConnectionName("SQLiteConnection").Build
 
             'SQL Server
             '  ExampleNotAuditing()
-            ExampleWithAuditing()
+            '  ExampleWithAuditing()
 
             'My SQL
             ' ExampleNotAudtingMySql()
+            'ExampleWithAuditingMySql()
 
-            ExampleWithAuditingMySql()
+            'SQLite
+            '     ExampleNotAuditingSQLite()
+            ExampleAuditingSQLite()
 
         Catch ex As Exception
             Console.WriteLine(ex.Message)
@@ -289,5 +292,133 @@ Module Program
 
     End Sub
 
+    Sub ExampleNotAuditingSQLite()
 
+        'Configure context setting or leave default
+        '***Uncomment this line if you want to configure settings
+        'DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NETCore).Build
+
+        'Create a record
+        Using ctx As New DapperContextSQLite
+
+            Dim person As New Model.Person With {
+                .Name = "John",
+                .Surname = "Doe"
+            }
+
+            ctx.InsertOrUpdate(person)
+
+        End Using
+
+        'Get a single record
+        Using ctx As New DapperContextSQLite
+
+            Dim person As Model.Person = ctx.Get(Of Model.Person)(1)
+
+            Console.WriteLine(String.Join(" | ", {person.ID, person.Name, person.Surname}))
+
+        End Using
+
+        'Get all record
+        Using ctx As New DapperContextSQLite
+
+            Dim lstPerson As List(Of Model.Person) = ctx.GetAll(Of Model.Person).ToList
+
+            lstPerson.ForEach(Sub(x) Console.WriteLine(String.Join(" | ", {x.ID, x.Name, x.Surname})))
+
+        End Using
+
+        'Update a record
+        Using ctx As New DapperContextSQLite
+
+            Dim person As Model.Person = ctx.Get(Of Model.Person)(1)
+
+            person.Surname = "Butt"
+
+            ctx.InsertOrUpdate(person)
+
+            Console.WriteLine(String.Join(" | ", {person.ID, person.Name, person.Surname}))
+
+        End Using
+
+        'Delete a record
+        Using ctx As New DapperContextSQLite
+
+            Dim person As Model.Person = ctx.Get(Of Model.Person)(1)
+
+            ctx.Delete(person)
+        End Using
+
+        'Delete all record
+        Using ctx As New DapperContextSQLite
+            ctx.DeleteAll(Of Model.Person)()
+        End Using
+
+    End Sub
+
+    Sub ExampleAuditingSQLite()
+
+        'Configure context setting or leave default
+        '***Uncomment this line if you want to configure settings
+        'DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NETCore).Build
+
+        DapperAuditContext.AuditSettings = AuditConfiguration.CreateNew.StoreMode(AuditStoreMode.Database).Build
+
+        'Create a record
+        Using ctx As New DapperAuditContextSQLite
+
+            Dim person As New Model.Person With {
+                .Name = "John",
+                .Surname = "Doe"
+            }
+
+            ctx.InsertOrUpdate(person)
+
+        End Using
+
+        'Get a single record
+        Using ctx As New DapperAuditContextSQLite
+
+            Dim person As Model.Person = ctx.Get(Of Model.Person)(1)
+
+            Console.WriteLine(String.Join(" | ", {person.ID, person.Name, person.Surname}))
+
+        End Using
+
+        'Get all record
+        Using ctx As New DapperAuditContextSQLite
+
+            Dim lstPerson As List(Of Model.Person) = ctx.GetAll(Of Model.Person).ToList
+
+            lstPerson.ForEach(Sub(x) Console.WriteLine(String.Join(" | ", {x.ID, x.Name, x.Surname})))
+
+        End Using
+
+        'Update a record
+        Using ctx As New DapperAuditContextSQLite
+
+            Dim person As Model.Person = ctx.Get(Of Model.Person)(1)
+
+            person.Surname = "Butt"
+
+            ctx.InsertOrUpdate(person)
+
+            Console.WriteLine(String.Join(" | ", {person.ID, person.Name, person.Surname}))
+
+        End Using
+
+        'Delete a record
+        Using ctx As New DapperAuditContextSQLite
+
+            Dim person As Model.Person = ctx.Get(Of Model.Person)(1)
+
+            ctx.Delete(person)
+        End Using
+
+        'Delete all record
+        Using ctx As New DapperAuditContextSQLite
+            ctx.DeleteAll(Of Model.Person)()
+        End Using
+
+    End Sub
 End Module

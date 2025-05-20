@@ -883,6 +883,8 @@ Public MustInherit Class DapperContext
         If Not disposedValue Then
             If disposing Then
                 ' TODO: eliminare lo stato gestito (oggetti gestiti)
+                Me.Connection.Close()
+                Me.Connection.Dispose()
             End If
 
             ' TODO: liberare risorse non gestite (oggetti non gestiti) ed eseguire l'override del finalizzatore

@@ -28,10 +28,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="LICENSE.txt">
-      <PackagePath>\</PackagePath>
-      <Pack>True</Pack>
-    </EmbeddedResource>
     <EmbeddedResource Include="SQL\AuditTable.sql" />
   </ItemGroup>
 
