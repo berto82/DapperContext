@@ -1,4 +1,5 @@
 Imports System.Data
+Imports System.Data.Common
 Imports Dapper
 Imports Microsoft.Data.SqlClient
 
@@ -9,7 +10,18 @@ Public Class DapperContextSqlServer
         Try
             Dim cnString As String = GetConnectionString()
 
-            Dim cnStringBuilder As New SqlConnectionStringBuilder(cnString)
+            Dim cnStringBuilder As New DbConnectionStringBuilder
+            cnStringBuilder.ConnectionString = cnString
+
+            Dim efConnectionString As Object = Nothing
+
+            If cnStringBuilder.TryGetValue("provider connection string", efConnectionString) = True Then
+                cnStringBuilder.ConnectionString = CStr(efConnectionString)
+            End If
+
+            If cnStringBuilder.ContainsKey("TrustServerCertificate") = False Then
+                cnStringBuilder.Add("TrustServerCertificate", True)
+            End If
 
             Me.Connection = New SqlConnection
             Me.Connection.ConnectionString = cnStringBuilder.ConnectionString
