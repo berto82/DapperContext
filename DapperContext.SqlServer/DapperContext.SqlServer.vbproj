@@ -8,7 +8,7 @@
     <Title>DapperContext.SqlServer</Title>
     <Description>A simple collections of functions and method for CRUD operation in Dapper for generic item</Description>
     <Copyright>Roberto Faccani</Copyright>
-    <Version>0.3.0-aplha</Version>
+    <Version>0.3.0-alpha</Version>
     <FileVersion>0.3.0</FileVersion>
     <AssemblyVersion>0.3.0</AssemblyVersion>
     <PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperContext.SqlServer</PackageProjectUrl>
@@ -23,6 +23,8 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageIcon>Icon DapperContext.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,6 +32,17 @@
       <PackagePath>\</PackagePath>
       <Pack>True</Pack>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\..\Desktop\Icon DapperContext.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
