@@ -11,7 +11,7 @@
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageId>$(RootNamespace).$(AssemblyName)</PackageId>
     <AssemblyName>$(RootNamespace).$(MSBuildProjectName)</AssemblyName>
-    <Version>0.3.2-alpha</Version>
+    <Version>0.4.0-beta</Version>
     <PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperAuditContext</PackageProjectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageTags>dapper;orm;dbcontext;audit</PackageTags>
@@ -27,8 +27,8 @@ Added fluent configuration where you can configure the following options:
 - Custom log file name
 - Custom table name</PackageReleaseNotes>
     <RepositoryType>git</RepositoryType>
-    <FileVersion>0.3.2</FileVersion>
-    <AssemblyVersion>0.3.2</AssemblyVersion>
+    <FileVersion>0.4.0</FileVersion>
+    <AssemblyVersion>0.4.0</AssemblyVersion>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageIcon>Icon-Dapper-Context.png</PackageIcon>
   </PropertyGroup>
