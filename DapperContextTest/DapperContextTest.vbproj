@@ -5,13 +5,16 @@
     <RootNamespace>BertoSoftware</RootNamespace>
     <TargetFrameworks>net48;net8.0;net9.0</TargetFrameworks>
     <OptionStrict>On</OptionStrict>
-    <Version>0.2.1-alpha</Version>
-    <FileVersion>0.2.1</FileVersion>
-    <AssemblyVersion>0.2.1</AssemblyVersion>
+    <Version>0.3.0-alpha</Version>
+    <FileVersion>0.3.0</FileVersion>
+    <AssemblyVersion>0.3.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DapperAuditContext\DapperAuditContext.vbproj" />
+    <ProjectReference Include="..\DapperAuditContext.MySql\DapperAuditContext.MySql.vbproj" />
+    <ProjectReference Include="..\DapperAuditContext.SqlServer\DapperAuditContext.SqlServer.vbproj" />
+    <ProjectReference Include="..\DapperContext.MySql\DapperContext.MySql.vbproj" />
+    <ProjectReference Include="..\DapperContext.SqlServer\DapperContext.SqlServer.vbproj" />
   </ItemGroup>
 
   <ItemGroup>
