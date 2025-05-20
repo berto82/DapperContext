@@ -75,6 +75,12 @@ PM > Install-Package BertoSoftware.DapperContext.SqlServer
 PM > Install-Package BertoSoftware.DapperContext.MySql
 ```
 
+#### SQLite
+
+```powershell
+PM > Install-Package BertoSoftware.DapperContext.SQLite
+```
+
 This package will install also all dependecies regard main core package and specified database connection
 
 ### Configuration
@@ -175,9 +181,9 @@ Imports BertoSoftware
 
 Module Program
   Sub Main(args As String())
- 
+
      DapperContext.Settings = ContextConfiguration.CreateNew().UseSettingsFileMode(SettingFileMode.NetCore).Build()
- 
+
     'Create a record
     Using ctx As New DapperContextSqlServer
 
@@ -233,7 +239,7 @@ Module Program
     Using ctx As New DapperContextSqlServer
         ctx.DeleteAll(Of Model.Person)()
     End Using
- 
+
  End Sub
 End Module
 ```
@@ -301,8 +307,6 @@ class Program
         }
     }
 }
-
-
 ```
 
 This example is provided with `DapperContext.SQLServer` installed package but you can change the class `DapperContextSqlServer` with your appropriate.
@@ -313,8 +317,11 @@ The classes avaiabile are these:
 |:------------------------------------- |:------------------------------------ |
 | BertoSoftware.DapperContext.SqlServer | BertoSoftware.DapperContextSqlServer |
 | BertoSoftware.DapperContext.MySql     | BertoSoftware.DapperContextMySql     |
+| BertoSoftware.DapperContext.SQLite    | BertoSoftware.DapperContextSQLite    |
 
 ---
+
+![](https://imgur.com/0wKgRot.png)
 
 # DapperAuditContext
 
