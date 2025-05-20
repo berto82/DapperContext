@@ -1,4 +1,4 @@
-![image](https://i.ibb.co/MjNLPyQ/Banner-Dapper-Context.png)
+![ ](https://i.imgur.com/uDCuPh1.png)
 
 > NOTE: Documentation is still under development
 
@@ -53,23 +53,81 @@ The packages are these:
   - This package allows you to connect to a MySQL / MariaDB and is dependent on the core package.
     With this package you can use all the functions available to you
 
-- DapperAuditContext.MySql
+- **DapperAuditContext.MySql**
   
   - Same that DapperContext.MySql but with a integated audit system
 
-## Installation
+## Getting started
 
-Install main core package via NuGet 
+### Providers
 
-```powershell
-PM > Install-Package BertoSoftware.DapperContext
-```
+#### SQL Server
 
 Install sql server package via NuGet
 
 ```powershell
 PM > Install-Package BertoSoftware.DapperContext.SqlServer
 ```
+
+#### MySQL
+
+```powershell
+PM > Install-Package BertoSoftware.DapperContext.MySql
+```
+
+#### SQLite
+
+```powershell
+PM > Install-Package BertoSoftware.DapperContext.SQLite
+```
+
+This package will install also all dependecies regard main core package and specified database connection
+
+### Configuration
+
+In the main program you can define a settings globally for the project
+
+#### VB.NET
+
+```vbnet
+   DapperContext.Settings = ContextConfiguration.CreateNew.
+         UseSettingsFileMode(SettingFileMode.NET4x).
+         WithConnectionName("MyConnection").
+         WithCustomConfigurationFile("app1.config").
+         DisableTransaction.
+         Build()
+```
+
+#### C#
+
+```csharp
+   DapperContext.Settings = ContextConfiguration.CreateNew.
+         UseSettingsFileMode(SettingFileMode.NET4x).
+         WithConnectionName("MyConnection").
+         WithCustomConfigurationFile("app1.config").
+         DisableTransaction.
+         Build();
+```
+
+You can configure different configuration parameters such as:
+
+```vbnet
+.UseSettingsFileMode(SettingsFileMode.Net4x)
+```
+
+With `.UseSettingsFileMode` you can select which configuration file should be loaded to look for the connection string.
+
+- `SettingFileMode.NET4x` load a file *"app.config" *and retrive appropriate connection string.
+
+- `SettingFileMode.NETCore` load a file *"appsettings.json"* and retrive a connection string
+
+With `.WithConnectionName("MyConnection")` will search a name of connection string you provide into parameter, if this settings is omitted will search a connection string with name *"DefaultConnection"*
+
+With `.WithCustomConfigurationFile("app1.config")` will search a file settings you provide into parameter, if this settings is omitted will search a default file like *"app.config"* or *"appsettings.json"*
+
+With `.DisableTransaction` will disable automatic SQL transaction
+
+You can terminate settings with `.Build()` method
 
 ## Examples
 
@@ -114,28 +172,157 @@ namespace Model
 }
 ```
 
-## Configuration
+### Console
 
-In the main program you can define a settings globally for the project
-
-### VB.NET
+#### VB.NET
 
 ```vbnet
-   DapperContext.Settings = ContextConfiguration.CreateNew.
-         UseSettingsFileMode(SettingFileMode.NET4x).
-         WithConnectionName("MyConnection").
-         WithCustomConfigurationFile("app1.config").
-         DisableTransaction.
-         Build()
+Imports BertoSoftware
+
+Module Program
+  Sub Main(args As String())
+
+     DapperContext.Settings = ContextConfiguration.CreateNew().UseSettingsFileMode(SettingFileMode.NetCore).Build()
+
+    'Create a record
+    Using ctx As New DapperContextSqlServer
+
+        Dim person As New Model.Person With {
+            .Name = "John",
+            .Surname = "Doe"
+        }
+
+        ctx.InsertOrUpdate(person)
+
+    End Using
+
+    'Get a single record
+    Using ctx As New DapperContextSqlServer
+
+        Dim person As Model.Person = ctx.Get(Of Model.Person)(1)
+
+        Console.WriteLine(String.Join(" | ", {person.ID, person.Name, person.Surname}))
+
+    End Using
+
+    'Get all record
+    Using ctx As New DapperContextSqlServer
+
+        Dim lstPerson As List(Of Model.Person) = ctx.GetAll(Of Model.Person).ToList
+
+        lstPerson.ForEach(Sub(x) Console.WriteLine(String.Join(" | ", {x.ID, x.Name, x.Surname})))
+
+    End Using
+
+    'Update a record
+    Using ctx As New DapperContextSqlServer
+
+        Dim person As Model.Person = ctx.Get(Of Model.Person)(1)
+
+        person.Surname = "Butt"
+
+        ctx.InsertOrUpdate(person)
+
+        Console.WriteLine(String.Join(" | ", {person.ID, person.Name, person.Surname}))
+
+    End Using
+
+    'Delete a record
+    Using ctx As New DapperContextSqlServer
+
+        Dim person As Model.Person = ctx.Get(Of Model.Person)(1)
+
+        ctx.Delete(person)
+    End Using
+
+    'Delete all record
+    Using ctx As New DapperContextSqlServer
+        ctx.DeleteAll(Of Model.Person)()
+    End Using
+
+ End Sub
+End Module
 ```
 
-### C#
+#### C#
 
 ```csharp
-   DapperContext.Settings = ContextConfiguration.CreateNew.
-         UseSettingsFileMode(SettingFileMode.NET4x).
-         WithConnectionName("MyConnection").
-         WithCustomConfigurationFile("app1.config").
-         DisableTransaction.
-         Build();
+using BertoSoftware;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        DapperContext.Settings = ContextConfiguration.CreateNew().UseSettingsFileMode(SettingFileMode.NetCore).Build();
+
+        // Create a record
+        using (var ctx = new DapperContextSqlServer())
+        {
+            var person = new Model.Person
+            {
+                Name = "John",
+                Surname = "Doe"
+            };
+
+            ctx.InsertOrUpdate(person);
+        }
+
+        // Get a single record
+        using (var ctx = new DapperContextSqlServer())
+        {
+            var person = ctx.Get<Model.Person>(1);
+            Console.WriteLine(string.Join(" | ", new[] { person.ID, person.Name, person.Surname }));
+        }
+
+        // Get all records
+        using (var ctx = new DapperContextSqlServer())
+        {
+            var lstPerson = ctx.GetAll<Model.Person>().ToList();
+            lstPerson.ForEach(x => Console.WriteLine(string.Join(" | ", new[] { x.ID, x.Name, x.Surname })));
+        }
+
+        // Update a record
+        using (var ctx = new DapperContextSqlServer())
+        {
+            var person = ctx.Get<Model.Person>(1);
+            person.Surname = "Butt";
+            ctx.InsertOrUpdate(person);
+            Console.WriteLine(string.Join(" | ", new[] { person.ID, person.Name, person.Surname }));
+        }
+
+        // Delete a record
+        using (var ctx = new DapperContextSqlServer())
+        {
+            var person = ctx.Get<Model.Person>(1);
+            ctx.Delete(person);
+        }
+
+        // Delete all records
+        using (var ctx = new DapperContextSqlServer())
+        {
+            ctx.DeleteAll<Model.Person>();
+        }
+    }
+}
 ```
+
+This example is provided with `DapperContext.SQLServer` installed package but you can change the class `DapperContextSqlServer` with your appropriate.
+
+The classes avaiabile are these:
+
+| Package name                          | Classes                              |
+|:------------------------------------- |:------------------------------------ |
+| BertoSoftware.DapperContext.SqlServer | BertoSoftware.DapperContextSqlServer |
+| BertoSoftware.DapperContext.MySql     | BertoSoftware.DapperContextMySql     |
+| BertoSoftware.DapperContext.SQLite    | BertoSoftware.DapperContextSQLite    |
+
+---
+
+![](https://imgur.com/0wKgRot.png)
+
+# DapperAuditContext
+
+> Documentation soon avaiable
