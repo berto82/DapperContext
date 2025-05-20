@@ -26,25 +26,19 @@
     <FileVersion>0.3.0</FileVersion>
     <AssemblyVersion>0.3.0</AssemblyVersion>
     <ApplicationIcon>Icon-DapperContext.ico</ApplicationIcon>
-    <PackageIcon>Icon DapperContext.png</PackageIcon>
+    <PackageIcon>Icon-Dapper-Context.png</PackageIcon>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EnableNETAnalyzers>False</EnableNETAnalyzers>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="LICENSE.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Icon-DapperContext.ico" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="LICENSE.txt">
+    <None Include="..\Icon-Dapper-Context.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\..\Desktop\Icon DapperContext.png">
+    </None>
+    <None Include="..\LICENSE.txt">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
