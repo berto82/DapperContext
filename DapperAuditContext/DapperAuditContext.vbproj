@@ -30,14 +30,17 @@ Added fluent configuration where you can configure the following options:
     <FileVersion>0.3.0</FileVersion>
     <AssemblyVersion>0.3.0</AssemblyVersion>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageIcon>Icon-Dapper-Context.png</PackageIcon>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Include="LICENSE.txt">
-      <PackagePath>\</PackagePath>
+    <None Include="..\Icon-Dapper-Context.png">
       <Pack>True</Pack>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Include="..\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
@@ -48,11 +51,5 @@ Added fluent configuration where you can configure the following options:
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DapperContext\DapperContext.vbproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="LICENSE.txt">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
   </ItemGroup>
 </Project>
