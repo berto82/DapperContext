@@ -8,9 +8,9 @@
     <Title>DapperAuditContext.SqlServer</Title>
     <Description>A simple collections of functions and method for CRUD operation in Dapper for generic item with an integrated audit system</Description>
     <Copyright>Roberto Faccani</Copyright>
-    <Version>0.4.1-beta</Version>
-    <FileVersion>0.4.1</FileVersion>
-    <AssemblyVersion>0.4.1</AssemblyVersion>
+    <Version>0.4.2-beta</Version>
+    <FileVersion>0.4.2</FileVersion>
+    <AssemblyVersion>0.4.2</AssemblyVersion>
     <PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperAuditContext.SqlServer</PackageProjectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageTags>dapper;orm;dbcontext;audit;sql server</PackageTags>
@@ -26,6 +26,9 @@
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageIcon>Icon-Dapper-Context.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>v0.4.2-beta
+
+Correct assembly filename</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
