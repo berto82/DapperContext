@@ -321,7 +321,7 @@ The classes avaiabile are these:
 
 ---
 
-![](https://imgur.com/0wKgRot.png)
+![](https://i.imgur.com/0wKgRot.png)
 
 # DapperAuditContext
 
