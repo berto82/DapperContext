@@ -153,7 +153,7 @@ Module Program
 
         'Show audit record
         Dim logDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AuditLogs")
-        Dim logFile As String = Path.Combine(logDir, DapperAuditContext.AuditSettings.FilePath)
+        Dim logFile As String = Path.Combine(logDir, DapperAuditContext.AuditSettings.FileName)
         Dim auditLog As String = IO.File.ReadAllText(logFile)
         Console.Write(auditLog)
 
