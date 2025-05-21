@@ -19,6 +19,7 @@
     <Authors>Roberto Faccani</Authors>
     <Company>Roberto Faccani</Company>
     <PackageId>$(RootNamespace).$(AssemblyName)</PackageId>
+	<AssemblyName>$(RootNamespace).$(MSBuildProjectName)</AssemblyName>
     <RepositoryType>git</RepositoryType>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
