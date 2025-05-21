@@ -2,13 +2,15 @@
     Implements IAuditConfigurationBuilder
 
     Public ReadOnly Property StoreLogMode As AuditStoreMode
-    Public ReadOnly Property FilePath As String
+    Public ReadOnly Property Path As String
+    Public ReadOnly Property FileName As String
     Public ReadOnly Property TableName As String
 
     Private Sub New()
         _StoreLogMode = AuditStoreMode.Database
         _TableName = "AuditTable"
-        _FilePath = $"audit_{Date.Now:yyyyMMdd}.log"
+        _Path = "AuditLogs"
+        _FileName = $"audit_{Date.Now:yyyyMMdd}.log"
     End Sub
 
     Public Shared Function CreateNew() As IAuditConfigurationBuilder
@@ -20,8 +22,13 @@
         Return Me
     End Function
 
-    Public Function WithCustomLogFilename(path As String) As IAuditConfigurationBuilder Implements IAuditConfigurationBuilder.WithCustomLogFilename
-        _FilePath = path
+    Public Function WithCustomLogPath(path As String) As IAuditConfigurationBuilder Implements IAuditConfigurationBuilder.WithCustomLogPath
+        _Path = path
+        Return Me
+    End Function
+
+    Public Function WithCustomLogFilename(filename As String) As IAuditConfigurationBuilder Implements IAuditConfigurationBuilder.WithCustomLogFilename
+        _FileName = filename
         Return Me
     End Function
 
@@ -33,5 +40,6 @@
     Public Function Build() As AuditConfiguration Implements IAuditConfigurationBuilder.Build
         Return Me
     End Function
+
 
 End Class

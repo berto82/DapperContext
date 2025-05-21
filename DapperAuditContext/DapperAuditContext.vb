@@ -249,11 +249,17 @@ Public MustInherit Class DapperAuditContext
         If AuditSettings.StoreLogMode = AuditStoreMode.Database Then
             MyBase.InsertOrUpdate(audit)
         Else
-            Dim logDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AuditLogs")
+            Dim logDir As String
+
+            If AuditSettings.Path Is Nothing Then
+                logDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AuditLogs")
+            Else
+                logDir = AuditSettings.Path
+            End If
 
             If Not Directory.Exists(logDir) Then Directory.CreateDirectory(logDir)
 
-            Dim fullPath = Path.Combine(logDir, AuditSettings.FilePath)
+            Dim fullPath = Path.Combine(logDir, AuditSettings.FileName)
 
             Dim sb As New StringBuilder()
             sb.AppendLine("-----")
