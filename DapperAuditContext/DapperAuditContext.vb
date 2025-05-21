@@ -24,6 +24,7 @@ Public MustInherit Class DapperAuditContext
     End Enum
 
     Public Shared Property AuditSettings As AuditConfiguration
+    Public Shared Property DisableAudit As Boolean
 
     Protected Friend Sub New()
 
@@ -194,6 +195,10 @@ Public MustInherit Class DapperAuditContext
     End Function
 
     Private Sub CreateAuditTrail(action As AuditActionType, keyFieldID As Long, oldObject As Object, newObject As Object)
+
+        If _DisableAudit = True Then
+            Return
+        End If
 
         Dim compObjects As New CompareLogic
         compObjects.Config.IgnoreCollectionOrder = True
