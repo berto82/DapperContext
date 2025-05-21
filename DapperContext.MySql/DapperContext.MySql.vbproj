@@ -26,6 +26,9 @@
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageIcon>Icon-Dapper-Context.png</PackageIcon>
+		<PackageReleaseNotes>v0.4.2-beta
+
+Correct assembly filename</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<ItemGroup>
