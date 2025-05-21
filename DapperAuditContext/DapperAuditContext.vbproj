@@ -11,7 +11,7 @@
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageId>$(RootNamespace).$(AssemblyName)</PackageId>
     <AssemblyName>$(RootNamespace).$(MSBuildProjectName)</AssemblyName>
-    <Version>0.4.0-beta</Version>
+    <Version>0.4.1-beta</Version>
     <PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperAuditContext</PackageProjectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageTags>dapper;orm;dbcontext;audit</PackageTags>
@@ -19,7 +19,11 @@
     <IncludeSymbols>True</IncludeSymbols>
     <Authors>Roberto Faccani</Authors>
     <Company>Roberto Faccani</Company>
-    <PackageReleaseNotes>v0.2.0.0 apha
+    <PackageReleaseNotes>v0.4.1-beta
+
+- Added global DisableAudit property
+
+v0.2.0.0 apha
 
 Added fluent configuration where you can configure the following options:
 
@@ -27,8 +31,8 @@ Added fluent configuration where you can configure the following options:
 - Custom log file name
 - Custom table name</PackageReleaseNotes>
     <RepositoryType>git</RepositoryType>
-    <FileVersion>0.4.0</FileVersion>
-    <AssemblyVersion>0.4.0</AssemblyVersion>
+    <FileVersion>0.4.1</FileVersion>
+    <AssemblyVersion>0.4.1</AssemblyVersion>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageIcon>Icon-Dapper-Context.png</PackageIcon>
   </PropertyGroup>

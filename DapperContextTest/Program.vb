@@ -363,6 +363,7 @@ Module Program
         'DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NETCore).Build
 
         DapperAuditContext.AuditSettings = AuditConfiguration.CreateNew.StoreMode(AuditStoreMode.Database).Build
+        DapperAuditContext.DisableAudit = True
 
         'Create a record
         Using ctx As New DapperAuditContextSQLite
