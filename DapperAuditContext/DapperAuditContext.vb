@@ -261,18 +261,20 @@ Public MustInherit Class DapperAuditContext
 
             Dim fullPath = Path.Combine(logDir, AuditSettings.FileName)
 
-            Dim sb As New StringBuilder()
-            sb.AppendLine("-----")
-            sb.AppendLine($"Timestamp: {audit.DateTimeStamp:O}")
-            sb.AppendLine($"User:      {audit.Username}")
-            sb.AppendLine($"Table:     {audit.DataModel}")
-            sb.AppendLine($"Action:    {CType(audit.ActionType, AuditActionType)}")
-            sb.AppendLine($"Keys:      {audit.KeyFieldID}")
-            If Not String.IsNullOrEmpty(audit.ValueBefore) Then sb.AppendLine($"Old:       {audit.ValueBefore}")
-            If Not String.IsNullOrEmpty(audit.ValueAfter) Then sb.AppendLine($"New:       {audit.ValueAfter}")
-            If Not String.IsNullOrEmpty(audit.Changes) Then sb.AppendLine($"Changes:    {audit.Changes}")
+            Using fs As New IO.FileStream(fullPath, FileMode.Append, FileAccess.ReadWrite, FileShare.ReadWrite)
+                Using sw As New IO.StreamWriter(fs, Encoding.Default) With {.AutoFlush = True}
+                    sw.WriteLine("-----")
+                    sw.WriteLine($"Timestamp: {audit.DateTimeStamp:O}")
+                    sw.WriteLine($"User:      {audit.Username}")
+                    sw.WriteLine($"Table:     {audit.DataModel}")
+                    sw.WriteLine($"Action:    {CType(audit.ActionType, AuditActionType)}")
+                    sw.WriteLine($"Keys:      {audit.KeyFieldID}")
+                    If Not String.IsNullOrEmpty(audit.ValueBefore) Then sw.WriteLine($"Old:       {audit.ValueBefore}")
+                    If Not String.IsNullOrEmpty(audit.ValueAfter) Then sw.WriteLine($"New:       {audit.ValueAfter}")
+                    If Not String.IsNullOrEmpty(audit.Changes) Then sw.WriteLine($"Changes:    {audit.Changes}")
+                End Using
+            End Using
 
-            File.AppendAllText(fullPath, sb.ToString())
         End If
 
     End Sub
