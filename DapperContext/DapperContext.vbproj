@@ -12,19 +12,19 @@
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageId>$(RootNamespace).$(AssemblyName)</PackageId>
     <AssemblyName>$(RootNamespace).$(MSBuildProjectName)</AssemblyName>
-    <Version>0.4.2-beta</Version>
+    <Version>0.4.3-beta</Version>
     <PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperContext</PackageProjectUrl>
     <PackageTags>dapper;orm;dbcontext;</PackageTags>
     <RepositoryUrl>https://github.com/berto82/DapperContext</RepositoryUrl>
     <IncludeSymbols>True</IncludeSymbols>
     <Authors>Roberto Faccani</Authors>
     <Company>Roberto Faccani</Company>
-    <PackageReleaseNotes>v0.2.0.0-alpha
+    <PackageReleaseNotes>v0.4.3-beta
 
-- No changes</PackageReleaseNotes>
+Improved connection to providers and disposing object</PackageReleaseNotes>
     <RepositoryType>git</RepositoryType>
-    <FileVersion>0.4.2</FileVersion>
-    <AssemblyVersion>0.4.2</AssemblyVersion>
+    <FileVersion>0.4.3</FileVersion>
+    <AssemblyVersion>0.4.3</AssemblyVersion>
     <ApplicationIcon>Icon-DapperContext.ico</ApplicationIcon>
     <PackageIcon>Icon-Dapper-Context.png</PackageIcon>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
