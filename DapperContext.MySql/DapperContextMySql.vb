@@ -14,7 +14,8 @@ Public Class DapperContextMySql
 
             Me.Connection = New MySqlConnection(cnString)
             Me.Connection.ConnectionString = cnStringBuilder.ConnectionString
-            Me.Connection.Open()
+
+            Me.Connect()
 
         Catch ex As Exception
             Throw
