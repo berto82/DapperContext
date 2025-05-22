@@ -25,7 +25,8 @@ Public Class DapperContextSqlServer
 
             Me.Connection = New SqlConnection
             Me.Connection.ConnectionString = cnStringBuilder.ConnectionString
-            Me.Connection.Open()
+
+            Me.Connect()
 
         Catch ex As Exception
             Throw

@@ -16,7 +16,8 @@ Public Class DapperAuditContextMySql
 
             Me.Connection = New MySqlConnection(cnString)
             Me.Connection.ConnectionString = cnStringBuilder.ConnectionString
-            Me.Connection.Open()
+
+            Me.Connect()
 
             If AuditSettings.StoreLogMode = AuditStoreMode.Database Then
                 Dim result = Query($"SELECT * FROM information_schema.TABLES WHERE TABLE_SCHEMA = '{cnStringBuilder.Database}' AND TABLE_NAME ='audittable'")

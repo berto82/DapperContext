@@ -13,7 +13,8 @@ Public Class DapperAuditContextSQLite
 
         Me.Connection = New SqliteConnection(cnString)
         Me.Connection.ConnectionString = cnStringBuilder.ConnectionString
-        Me.Connection.Open()
+
+        Me.Connect()
 
         If AuditSettings.StoreLogMode = AuditStoreMode.Database Then
             Dim result = Query("SELECT 1 FROM sqlite_master WHERE type='table' AND name='AuditTable'")

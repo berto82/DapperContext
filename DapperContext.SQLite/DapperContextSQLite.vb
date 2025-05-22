@@ -12,7 +12,8 @@ Public Class DapperContextSQLite
 
         Me.Connection = New SqliteConnection(cnString)
         Me.Connection.ConnectionString = cnStringBuilder.ConnectionString
-        Me.Connection.Open()
+
+        Me.Connect()
 
     End Sub
 

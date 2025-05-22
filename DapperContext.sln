@@ -7,7 +7,7 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DapperContext", "DapperCont
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DapperAuditContext", "DapperAuditContext\DapperAuditContext.vbproj", "{82068FE4-A141-44CB-BFE7-F29B51E2D2BA}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DapperContextTest", "DapperContextTest\DapperContextTest.vbproj", "{605A0AB5-F21F-42CD-81B9-820A050A3EEF}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DapperContextExample", "DapperContextTest\DapperContextExample.vbproj", "{605A0AB5-F21F-42CD-81B9-820A050A3EEF}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DapperContext.SqlServer", "DapperContext.SqlServer\DapperContext.SqlServer.vbproj", "{B97CA764-7D66-49F2-B86B-1C0D24DBD16A}"
 EndProject
@@ -29,6 +29,7 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DapperAuditContext.MySql", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementi di soluzione", "Elementi di soluzione", "{9DF70304-0A22-CE1E-AA12-D5904EE55694}"
 	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
 		Icon-Dapper-Context.png = Icon-Dapper-Context.png
 		LICENSE.txt = LICENSE.txt
 		README.md = README.md
