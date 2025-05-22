@@ -28,7 +28,9 @@ Public Class DapperAuditContextSqlServer
 
             Me.Connection = New SqlConnection
             Me.Connection.ConnectionString = cnStringBuilder.ConnectionString
-            Me.Connection.Open()
+
+            Me.Connect()
+
 
             If AuditSettings.StoreLogMode = AuditStoreMode.Database Then
                 Dim result = Query("SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE' AND TABLE_NAME='AuditTable'")

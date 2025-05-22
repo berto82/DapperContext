@@ -31,6 +31,27 @@ Public MustInherit Class DapperContext
         If _Settings Is Nothing Then
             _Settings = ContextConfiguration.CreateNew.Build
         End If
+
+    End Sub
+
+    Protected Friend Sub Connect()
+        If Me.Connection.State = ConnectionState.Closed Then
+            Try
+                Me.Connection.Open()
+            Catch ex As Exception
+                Throw
+            End Try
+        End If
+    End Sub
+
+    Protected Friend Sub Disconnect()
+        If Me.Connection.State = ConnectionState.Open Then
+            Try
+                Me.Connection.Close()
+            Catch ex As Exception
+                Throw
+            End Try
+        End If
     End Sub
 
     Protected Friend Function GetConnectionString() As String
@@ -105,6 +126,8 @@ Public MustInherit Class DapperContext
 
         Dim result As TEntity
 
+        Me.Connect()
+
         If _Settings.EnableTransaction = True Then
             Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                 Try
@@ -112,6 +135,7 @@ Public MustInherit Class DapperContext
                     transaction.Commit()
                 Catch ex As Exception
                     transaction.Rollback()
+                    Me.Disconnect()
                     Throw
                 End Try
 
@@ -120,10 +144,12 @@ Public MustInherit Class DapperContext
             Try
                 result = Me.Connection.Get(Of TEntity)(id)
             Catch ex As Exception
+                Me.Disconnect()
                 Throw
             End Try
         End If
 
+        Me.Disconnect()
 
         Return result
 
@@ -140,6 +166,8 @@ Public MustInherit Class DapperContext
 
         Dim result As TEntity
 
+        Me.Connect()
+
         If _Settings.EnableTransaction = True Then
             Using transaction As IDbTransaction = Me.Connection.BeginTransaction
 
@@ -148,6 +176,7 @@ Public MustInherit Class DapperContext
                     transaction.Commit()
                 Catch ex As Exception
                     transaction.Rollback()
+                    Me.Disconnect()
                     Throw
                 End Try
 
@@ -156,10 +185,12 @@ Public MustInherit Class DapperContext
             Try
                 result = Await Me.Connection.GetAsync(Of TEntity)(id)
             Catch ex As Exception
+                Me.Disconnect()
                 Throw
             End Try
         End If
 
+        Me.Disconnect()
 
         Return result
 
@@ -175,6 +206,8 @@ Public MustInherit Class DapperContext
 
         Dim result As IEnumerable(Of TEntity)
 
+        Me.Connect()
+
         If _Settings.EnableTransaction = True Then
             Using transaction As IDbTransaction = Me.Connection.BeginTransaction
 
@@ -183,6 +216,7 @@ Public MustInherit Class DapperContext
                     transaction.Commit()
                 Catch ex As Exception
                     transaction.Rollback()
+                    Me.Disconnect()
                     Throw
                 End Try
 
@@ -191,9 +225,12 @@ Public MustInherit Class DapperContext
             Try
                 result = Me.Connection.GetAll(Of TEntity)
             Catch ex As Exception
+                Me.Disconnect()
                 Throw
             End Try
         End If
+
+        Me.Disconnect()
 
         Return result
 
@@ -209,6 +246,8 @@ Public MustInherit Class DapperContext
 
         Dim result As IEnumerable(Of TEntity)
 
+        Me.Connect()
+
         If _Settings.EnableTransaction = True Then
             Using transaction As IDbTransaction = Me.Connection.BeginTransaction
 
@@ -217,6 +256,7 @@ Public MustInherit Class DapperContext
                     transaction.Commit()
                 Catch ex As Exception
                     transaction.Rollback()
+                    Me.Disconnect()
                     Throw
                 End Try
 
@@ -225,10 +265,12 @@ Public MustInherit Class DapperContext
             Try
                 result = Await Me.Connection.GetAllAsync(Of TEntity)
             Catch ex As Exception
+                Me.Disconnect()
                 Throw
             End Try
         End If
 
+        Me.Disconnect()
 
         Return result
 
@@ -244,6 +286,8 @@ Public MustInherit Class DapperContext
     Public Overridable Function InsertOrUpdate(Of TEntity As Class)(entity As TEntity) As Long
 
         Dim result As Long = Nothing
+
+        Me.Connect()
 
         If _Settings.EnableTransaction = True Then
             Using transaction As IDbTransaction = Me.Connection.BeginTransaction
@@ -270,6 +314,7 @@ Public MustInherit Class DapperContext
 
                 Catch ex As Exception
                     transaction.Rollback()
+                    Me.Disconnect()
                     Throw
                 End Try
 
@@ -293,10 +338,12 @@ Public MustInherit Class DapperContext
                     End If
                 End If
             Catch ex As Exception
+                Me.Disconnect()
                 Throw
             End Try
         End If
 
+        Me.Disconnect()
 
         Return result
 
@@ -312,6 +359,8 @@ Public MustInherit Class DapperContext
     Public Overridable Async Function InsertOrUpdateAsync(Of TEntity As Class)(entity As TEntity) As Task(Of Long)
 
         Dim result As Long = Nothing
+
+        Me.Connect()
 
         If _Settings.EnableTransaction = True Then
             Using transaction As IDbTransaction = Me.Connection.BeginTransaction
@@ -338,6 +387,7 @@ Public MustInherit Class DapperContext
 
                 Catch ex As Exception
                     transaction.Rollback()
+                    Me.Disconnect()
                     Throw
                 End Try
 
@@ -361,10 +411,12 @@ Public MustInherit Class DapperContext
                     End If
                 End If
             Catch ex As Exception
+                Me.Disconnect()
                 Throw
             End Try
         End If
 
+        Me.Disconnect()
 
         Return result
 
@@ -380,6 +432,8 @@ Public MustInherit Class DapperContext
     Public Overridable Function Delete(Of TEntity As Class)(entity As TEntity) As Boolean
         Dim result As Boolean
 
+        Me.Connect()
+
         If _Settings.EnableTransaction = True Then
             Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                 Try
@@ -387,6 +441,7 @@ Public MustInherit Class DapperContext
                     transaction.Commit()
                 Catch ex As Exception
                     transaction.Rollback()
+                    Me.Disconnect()
                     Throw
                 End Try
             End Using
@@ -394,10 +449,12 @@ Public MustInherit Class DapperContext
             Try
                 result = Me.Connection.Delete(entity)
             Catch ex As Exception
+                Me.Disconnect()
                 Throw
             End Try
         End If
 
+        Me.Disconnect()
 
         Return result
 
@@ -413,6 +470,8 @@ Public MustInherit Class DapperContext
     Public Overridable Async Function DeleteAsync(Of TEntity As Class)(entity As TEntity) As Task(Of Boolean)
         Dim result As Boolean
 
+        Me.Connect()
+
         If _Settings.EnableTransaction = True Then
             Using transaction As IDbTransaction = Me.Connection.BeginTransaction
 
@@ -421,6 +480,7 @@ Public MustInherit Class DapperContext
                     transaction.Commit()
                 Catch ex As Exception
                     transaction.Rollback()
+                    Me.Disconnect()
                     Throw
                 End Try
 
@@ -429,10 +489,10 @@ Public MustInherit Class DapperContext
             Try
                 result = Await Me.Connection.DeleteAsync(entity)
             Catch ex As Exception
+                Me.Disconnect()
                 Throw
             End Try
         End If
-
 
         Return result
 
@@ -448,6 +508,8 @@ Public MustInherit Class DapperContext
 
         Dim result As Boolean
 
+        Me.Connect()
+
         If _Settings.EnableTransaction = True Then
 
             Using transaction As IDbTransaction = Me.Connection.BeginTransaction
@@ -456,6 +518,7 @@ Public MustInherit Class DapperContext
                     transaction.Commit()
                 Catch ex As Exception
                     transaction.Rollback()
+                    Me.Disconnect()
                     Throw
                 End Try
             End Using
@@ -463,10 +526,12 @@ Public MustInherit Class DapperContext
             Try
                 result = Me.Connection.DeleteAll(Of TEntity)
             Catch ex As Exception
+                Me.Disconnect()
                 Throw
             End Try
         End If
 
+        Me.Disconnect()
 
         Return result
 
@@ -482,6 +547,8 @@ Public MustInherit Class DapperContext
 
         Dim result As Boolean
 
+        Me.Connect()
+
         If _Settings.EnableTransaction = True Then
             Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                 Try
@@ -489,6 +556,7 @@ Public MustInherit Class DapperContext
                     transaction.Commit()
                 Catch ex As Exception
                     transaction.Rollback()
+                    Me.Disconnect()
                     Throw
                 End Try
             End Using
@@ -496,10 +564,12 @@ Public MustInherit Class DapperContext
             Try
                 result = Await Me.Connection.DeleteAllAsync(Of TEntity)
             Catch ex As Exception
+                Me.Disconnect()
                 Throw
             End Try
         End If
 
+        Me.Disconnect()
 
         Return result
 
@@ -515,6 +585,8 @@ Public MustInherit Class DapperContext
     Public Function Execute(sql As String, Optional param As Object = Nothing) As Integer
         Dim result As Integer
 
+        Me.Connect()
+
         If _Settings.EnableTransaction = True Then
             Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                 Try
@@ -522,6 +594,7 @@ Public MustInherit Class DapperContext
                     transaction.Commit()
                 Catch ex As Exception
                     transaction.Rollback()
+                    Me.Disconnect()
                     Throw
                 End Try
             End Using
@@ -529,10 +602,12 @@ Public MustInherit Class DapperContext
             Try
                 result = Me.Connection.Execute(sql, param)
             Catch ex As Exception
+                Me.Disconnect()
                 Throw
             End Try
         End If
 
+        Me.Disconnect()
 
         Return result
 
@@ -548,6 +623,8 @@ Public MustInherit Class DapperContext
     Public Async Function ExecuteAsync(sql As String, Optional param As Object = Nothing) As Task(Of Integer)
         Dim result As Integer
 
+        Me.Connect()
+
         If _Settings.EnableTransaction = True Then
             Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                 Try
@@ -555,6 +632,7 @@ Public MustInherit Class DapperContext
                     transaction.Commit()
                 Catch ex As Exception
                     transaction.Rollback()
+                    Me.Disconnect()
                     Throw
                 End Try
             End Using
@@ -562,10 +640,12 @@ Public MustInherit Class DapperContext
             Try
                 result = Await Me.Connection.ExecuteAsync(sql, param)
             Catch ex As Exception
+                Me.Disconnect()
                 Throw
             End Try
         End If
 
+        Me.Disconnect()
 
         Return result
 
@@ -581,6 +661,8 @@ Public MustInherit Class DapperContext
     Public Function ExecuteScalar(sql As String, Optional param As Object = Nothing) As Object
         Dim result As Object
 
+        Me.Connect()
+
         If _Settings.EnableTransaction = True Then
             Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                 Try
@@ -588,6 +670,7 @@ Public MustInherit Class DapperContext
                     transaction.Commit()
                 Catch ex As Exception
                     transaction.Rollback()
+                    Me.Disconnect()
                     Throw
                 End Try
             End Using
@@ -595,10 +678,12 @@ Public MustInherit Class DapperContext
             Try
                 result = Me.Connection.ExecuteScalar(sql, param)
             Catch ex As Exception
+                Me.Disconnect()
                 Throw
             End Try
         End If
 
+        Me.Disconnect()
 
         Return result
 
@@ -614,6 +699,8 @@ Public MustInherit Class DapperContext
     Public Async Function ExecuteScalarAsync(sql As String, Optional param As Object = Nothing) As Task(Of Object)
         Dim result As Object
 
+        Me.Connect()
+
         If _Settings.EnableTransaction = True Then
             Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                 Try
@@ -621,6 +708,7 @@ Public MustInherit Class DapperContext
                     transaction.Commit()
                 Catch ex As Exception
                     transaction.Rollback()
+                    Me.Disconnect()
                     Throw
                 End Try
             End Using
@@ -628,10 +716,12 @@ Public MustInherit Class DapperContext
             Try
                 result = Await Me.Connection.ExecuteScalarAsync(sql, param)
             Catch ex As Exception
+                Me.Disconnect()
                 Throw
             End Try
         End If
 
+        Me.Disconnect()
 
         Return result
 
@@ -649,6 +739,8 @@ Public MustInherit Class DapperContext
 
         Dim result As T
 
+        Me.Connect()
+
         If _Settings.EnableTransaction = True Then
             Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                 Try
@@ -656,6 +748,7 @@ Public MustInherit Class DapperContext
                     transaction.Commit()
                 Catch ex As Exception
                     transaction.Rollback()
+                    Me.Disconnect()
                     Throw
                 End Try
             End Using
@@ -663,10 +756,12 @@ Public MustInherit Class DapperContext
             Try
                 result = Me.Connection.ExecuteScalar(Of T)(sql, param)
             Catch ex As Exception
+                Me.Disconnect()
                 Throw
             End Try
         End If
 
+        Me.Disconnect()
 
         Return result
 
@@ -684,6 +779,8 @@ Public MustInherit Class DapperContext
 
         Dim result As T
 
+        Me.Connect()
+
         If _Settings.EnableTransaction = True Then
             Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                 Try
@@ -691,6 +788,7 @@ Public MustInherit Class DapperContext
                     transaction.Commit()
                 Catch ex As Exception
                     transaction.Rollback()
+                    Me.Disconnect()
                     Throw
                 End Try
             End Using
@@ -698,10 +796,12 @@ Public MustInherit Class DapperContext
             Try
                 result = Await Me.Connection.ExecuteScalarAsync(Of T)(sql, param)
             Catch ex As Exception
+                Me.Disconnect()
                 Throw
             End Try
         End If
 
+        Me.Disconnect()
 
         Return result
 
@@ -718,6 +818,7 @@ Public MustInherit Class DapperContext
 
         Dim result As IEnumerable(Of Object)
 
+        Me.Connect()
 
         If _Settings.EnableTransaction = True Then
             Using transaction As IDbTransaction = Me.Connection.BeginTransaction
@@ -726,6 +827,7 @@ Public MustInherit Class DapperContext
                     transaction.Commit()
                 Catch ex As Exception
                     transaction.Rollback()
+                    Me.Disconnect()
                     Throw
                 End Try
             End Using
@@ -733,10 +835,12 @@ Public MustInherit Class DapperContext
             Try
                 result = Me.Connection.Query(sql, param)
             Catch ex As Exception
+                Me.Disconnect()
                 Throw
             End Try
         End If
 
+        Me.Disconnect()
 
         Return result
 
@@ -753,6 +857,7 @@ Public MustInherit Class DapperContext
 
         Dim result As IEnumerable(Of Object)
 
+        Me.Connect()
 
         If _Settings.EnableTransaction = True Then
             Using transaction As IDbTransaction = Me.Connection.BeginTransaction
@@ -761,6 +866,7 @@ Public MustInherit Class DapperContext
                     transaction.Commit()
                 Catch ex As Exception
                     transaction.Rollback()
+                    Me.Disconnect()
                     Throw
                 End Try
             End Using
@@ -768,10 +874,12 @@ Public MustInherit Class DapperContext
             Try
                 result = Await Me.Connection.QueryAsync(sql, param)
             Catch ex As Exception
+                Me.Disconnect()
                 Throw
             End Try
         End If
 
+        Me.Disconnect()
 
         Return result
 
@@ -789,6 +897,7 @@ Public MustInherit Class DapperContext
 
         Dim result As IEnumerable(Of T)
 
+        Me.Connect()
 
         If _Settings.EnableTransaction = True Then
             Using transaction As IDbTransaction = Me.Connection.BeginTransaction
@@ -797,6 +906,7 @@ Public MustInherit Class DapperContext
                     transaction.Commit()
                 Catch ex As Exception
                     transaction.Rollback()
+                    Me.Disconnect()
                     Throw
                 End Try
             End Using
@@ -804,9 +914,12 @@ Public MustInherit Class DapperContext
             Try
                 result = Me.Connection.Query(Of T)(sql, param)
             Catch ex As Exception
+                Me.Disconnect()
                 Throw
             End Try
         End If
+
+        Me.Disconnect()
 
         Return result
 
@@ -824,6 +937,8 @@ Public MustInherit Class DapperContext
 
         Dim result As IEnumerable(Of T)
 
+        Me.Connect()
+
         If _Settings.EnableTransaction = True Then
             Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                 Try
@@ -831,6 +946,7 @@ Public MustInherit Class DapperContext
                     transaction.Commit()
                 Catch ex As Exception
                     transaction.Rollback()
+                    Me.Disconnect()
                     Throw
                 End Try
             End Using
@@ -838,23 +954,18 @@ Public MustInherit Class DapperContext
             Try
                 result = Await Me.Connection.QueryAsync(Of T)(sql, param)
             Catch ex As Exception
+                Me.Disconnect()
                 Throw
             End Try
         End If
 
+        Me.Disconnect()
 
         Return result
 
     End Function
 
-    ''' <summary>
-    ''' Get the value of the key field of an entity.
-    ''' </summary>
-    ''' <typeparam name="TEntity"></typeparam>
-    ''' <param name="entity"></param>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Public Shared Function GetKeyFieldValue(Of TEntity As Class)(entity As TEntity) As Object
+    Protected Friend Shared Function GetKeyFieldValue(Of TEntity As Class)(entity As TEntity) As Object
 
         If entity Is Nothing Then
             Throw New Exception("Entity was not found")
@@ -883,7 +994,10 @@ Public MustInherit Class DapperContext
         If Not disposedValue Then
             If disposing Then
                 ' TODO: eliminare lo stato gestito (oggetti gestiti)
-                Me.Connection.Close()
+                If Me.Connection.State = ConnectionState.Open Then
+                    Me.Connection.Close()
+                End If
+
                 Me.Connection.Dispose()
             End If
 
@@ -906,6 +1020,7 @@ Public MustInherit Class DapperContext
         GC.SuppressFinalize(Me)
     End Sub
 End Class
+
 #End Region
 
 #End Region

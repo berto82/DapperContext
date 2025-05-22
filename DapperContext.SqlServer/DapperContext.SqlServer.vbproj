@@ -8,9 +8,9 @@
 		<Title>DapperContext.SqlServer</Title>
 		<Description>A simple collections of functions and method for CRUD operation in Dapper for generic item</Description>
 		<Copyright>Roberto Faccani</Copyright>
-		<Version>0.4.2-beta</Version>
-		<FileVersion>0.4.2</FileVersion>
-		<AssemblyVersion>0.4.2</AssemblyVersion>
+		<Version>0.4.3-beta</Version>
+		<FileVersion>0.4.3</FileVersion>
+		<AssemblyVersion>0.4.3</AssemblyVersion>
 		<PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperContext.SqlServer</PackageProjectUrl>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<PackageTags>dapper;orm;dbcontext;sql server</PackageTags>
@@ -26,9 +26,9 @@
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<PackageIcon>Icon-Dapper-Context.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageReleaseNotes>v0.4.2-beta
+		<PackageReleaseNotes>v0.4.3-beta
 
-Correct assembly filename</PackageReleaseNotes>
+Correct connection method</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<ItemGroup>
