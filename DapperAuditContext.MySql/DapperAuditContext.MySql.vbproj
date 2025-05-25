@@ -8,9 +8,9 @@
 		<Title>DapperAuditContext.MySql</Title>
 		<Description>A simple collections of functions and method for CRUD operation in Dapper for generic item with an integrated audit system</Description>
 		<Copyright>Roberto Faccani</Copyright>
-		<Version>0.4.3-beta</Version>
-		<FileVersion>0.4.3</FileVersion>
-		<AssemblyVersion>0.4.3</AssemblyVersion>
+		<Version>0.5.0-beta</Version>
+		<FileVersion>0.5.0</FileVersion>
+		<AssemblyVersion>0.5.0</AssemblyVersion>
 		<PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperAuditContext.MySql</PackageProjectUrl>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<PackageTags>dapper;orm;dbcontext;audit;mysql;mariadb</PackageTags>
