@@ -4,7 +4,7 @@
 	`KeyFieldID` INT NOT NULL,
 	`ActionType` INT NOT NULL,
 	`DateTimeStamp` DATETIME NOT NULL,
-	`DataModel` VARCHAR(50) NOT NULL,
+	`DataModel` VARCHAR(255) NOT NULL,
 	`Changes` JSON NOT NULL,
 	`ValueBefore` JSON NOT NULL,
 	`ValueAfter` JSON NOT NULL,
