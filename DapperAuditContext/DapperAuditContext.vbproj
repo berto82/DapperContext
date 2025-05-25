@@ -6,7 +6,7 @@
     <Title>DapperAuditContext</Title>
     <Description>A simple collections of functions and method for CRUD operation in Dapper for generic item with an integrated audit system.</Description>
     <Copyright>2025 Roberto Faccani</Copyright>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReadmeFile>README AUDIT.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageId>$(RootNamespace).$(AssemblyName)</PackageId>
@@ -37,7 +37,7 @@ Improved write method for create audit file</PackageReleaseNotes>
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="..\README.md">
+    <None Include="..\README AUDIT.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
