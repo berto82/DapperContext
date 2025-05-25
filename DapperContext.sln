@@ -30,9 +30,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementi di soluzione", "Elementi di soluzione", "{9DF70304-0A22-CE1E-AA12-D5904EE55694}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
-		Icon-Dapper-Context.png = Icon-Dapper-Context.png
-		LICENSE.txt = LICENSE.txt
-		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Oracle", "Oracle", "{E8DE9115-F8B0-4FAF-AECA-245016D90393}"
@@ -42,6 +39,20 @@ EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DapperContext.SQLite", "DapperContext.SQLite\DapperContext.SQLite.vbproj", "{B327F2B0-EF90-4B76-B573-718312DC51FF}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DapperAuditContext.SQLite", "DapperAuditContext.SQLite\DapperAuditContext.SQLite.vbproj", "{1B144819-E477-4BCC-9739-B231F6551140}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostgreSQL", "PostgreSQL", "{526FB1E5-FFAB-4EC5-899A-7CF1FC1679D0}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DapperContext.PostgreSQL", "DapperContext.PostgreSQL\DapperContext.PostgreSQL.vbproj", "{169D2985-301F-4A3A-AB4D-84A5E66D7E42}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DapperAuditContext.PostgreSQL", "DapperAuditContext.PostgreSQL\DapperAuditContext.PostgreSQL.vbproj", "{A7A09D2C-E449-4072-951F-A3F0DA1E2396}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{220E62B3-376D-4FA1-80CB-30345E35A355}"
+	ProjectSection(SolutionItems) = preProject
+		Icon-Dapper-Context.png = Icon-Dapper-Context.png
+		LICENSE.txt = LICENSE.txt
+		README AUDIT.md = README AUDIT.md
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,6 +96,14 @@ Global
 		{1B144819-E477-4BCC-9739-B231F6551140}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B144819-E477-4BCC-9739-B231F6551140}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B144819-E477-4BCC-9739-B231F6551140}.Release|Any CPU.Build.0 = Release|Any CPU
+		{169D2985-301F-4A3A-AB4D-84A5E66D7E42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{169D2985-301F-4A3A-AB4D-84A5E66D7E42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{169D2985-301F-4A3A-AB4D-84A5E66D7E42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{169D2985-301F-4A3A-AB4D-84A5E66D7E42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7A09D2C-E449-4072-951F-A3F0DA1E2396}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7A09D2C-E449-4072-951F-A3F0DA1E2396}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7A09D2C-E449-4072-951F-A3F0DA1E2396}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7A09D2C-E449-4072-951F-A3F0DA1E2396}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,6 +122,9 @@ Global
 		{FC21582B-B2D0-4CA9-8F67-2F9DADF24F1B} = {EA6531DF-1D8A-4CDA-A54E-41CF3A21781F}
 		{B327F2B0-EF90-4B76-B573-718312DC51FF} = {FC21582B-B2D0-4CA9-8F67-2F9DADF24F1B}
 		{1B144819-E477-4BCC-9739-B231F6551140} = {FC21582B-B2D0-4CA9-8F67-2F9DADF24F1B}
+		{526FB1E5-FFAB-4EC5-899A-7CF1FC1679D0} = {EA6531DF-1D8A-4CDA-A54E-41CF3A21781F}
+		{169D2985-301F-4A3A-AB4D-84A5E66D7E42} = {526FB1E5-FFAB-4EC5-899A-7CF1FC1679D0}
+		{A7A09D2C-E449-4072-951F-A3F0DA1E2396} = {526FB1E5-FFAB-4EC5-899A-7CF1FC1679D0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6D2B34C4-C87D-4B8A-B0F8-DF573C39571D}
