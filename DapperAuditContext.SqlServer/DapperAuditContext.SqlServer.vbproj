@@ -44,7 +44,7 @@ Correct connection method</PackageReleaseNotes>
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="..\README.md">
+    <None Include="..\README AUDIT.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
