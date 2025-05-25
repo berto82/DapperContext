@@ -5,16 +5,18 @@
     <RootNamespace>BertoSoftware</RootNamespace>
     <TargetFrameworks>net48;net8.0;net9.0</TargetFrameworks>
     <OptionStrict>On</OptionStrict>
-    <Version>0.4.3-beta</Version>
-    <FileVersion>0.4.3</FileVersion>
-    <AssemblyVersion>0.4.3</AssemblyVersion>
+    <Version>0.5.0-beta</Version>
+    <FileVersion>0.5.0</FileVersion>
+    <AssemblyVersion>0.5.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DapperAuditContext.MySql\DapperAuditContext.MySql.vbproj" />
+    <ProjectReference Include="..\DapperAuditContext.PostgreSQL\DapperAuditContext.PostgreSQL.vbproj" />
     <ProjectReference Include="..\DapperAuditContext.SQLite\DapperAuditContext.SQLite.vbproj" />
     <ProjectReference Include="..\DapperAuditContext.SqlServer\DapperAuditContext.SqlServer.vbproj" />
     <ProjectReference Include="..\DapperContext.MySql\DapperContext.MySql.vbproj" />
+    <ProjectReference Include="..\DapperContext.PostgreSQL\DapperContext.PostgreSQL.vbproj" />
     <ProjectReference Include="..\DapperContext.SQLite\DapperContext.SQLite.vbproj" />
     <ProjectReference Include="..\DapperContext.SqlServer\DapperContext.SqlServer.vbproj" />
   </ItemGroup>

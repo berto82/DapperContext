@@ -1,4 +1,7 @@
 Imports System.IO
+Imports BertoSoftware.Context.Configuration
+Imports BertoSoftware.Context.Tools
+Imports BertoSoftware.Context.Tools.Audit
 
 Module Program
 
@@ -16,7 +19,7 @@ Module Program
 
             'Configure audit setting or leave default
             '***Uncomment this line if you want to configure settings
-            DapperAuditContext.AuditSettings = AuditConfiguration.CreateNew.StoreMode(AuditStoreMode.File).Build
+            DapperAuditContext.AuditSettings = AuditConfiguration.CreateNew.StoreMode(AuditStoreMode.Database).Build
 
             'SQL Server
             Console.WriteLine("SQL Server Data Example")
@@ -39,8 +42,16 @@ Module Program
             ExecuteCRUDOperation()
             Console.WriteLine("---")
 
+            'PostgreSQL
+            'For Postgres tables, check name of table attribute on your model is in lower case, otherwhere will it not found table.
+            Console.WriteLine("PostgreSQL Data Example")
+            DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NETCore).WithConnectionName("PostgreSQLConnection").Build
+            ConnectToPostgreSQL(enableAudit)
+            ExecuteCRUDOperation()
+            Console.WriteLine("---")
+
             If enableAudit = True Then
-                If DapperAuditContext.AuditSettings.StoreLogMode = AuditStoreMode.File Then
+                If DapperAuditContext.AuditSettings.StoreLogMode <> AuditStoreMode.Database Then
                     ReadLogFile()
                 End If
             End If
@@ -68,6 +79,14 @@ Module Program
         End If
     End Sub
 
+    Public Sub ConnectToPostgreSQL(enableAudit As Boolean)
+        If enableAudit = False Then
+            ctx = New DapperContextPostgreSQL
+        Else
+            ctx = New DapperAuditContextPostgreSQL
+        End If
+    End Sub
+
     Public Sub ConnectToSQLite(enableAudit As Boolean)
 
         If enableAudit = False Then
@@ -82,31 +101,39 @@ Module Program
 
         Dim insertedRecordID As Long = InsertRecord()
 
-        GetRecordByID(insertedRecordID)
+        Dim person As Model.Person = GetRecordByID(insertedRecordID)
 
-        GetAllRecords()
+        Console.WriteLine(String.Join(" | ", {person.ID, person.Name, person.Surname}))
 
-        UpdateRecordByID(insertedRecordID)
+        Dim lstPerson As List(Of Model.Person) = GetAllRecords()
 
-        DeleteRecordByID(insertedRecordID)
+        lstPerson.ForEach(Sub(x) Console.WriteLine(String.Join(" | ", {x.ID, x.Name, x.Surname})))
+
+        UpdateRecord(person)
+
+        Console.WriteLine(String.Join(" | ", {person.ID, person.Name, person.Surname}))
+
+        DeleteRecord(person)
 
         DeleteAllRecords()
 
     End Sub
 
-    Private Sub GetRecordByID(id As Object)
+    Private Function GetRecordByID(id As Object) As Model.Person
         'Get a single record
         Dim person As Model.Person = ctx.Get(Of Model.Person)(id)
 
-        Console.WriteLine(String.Join(" | ", {person.ID, person.Name, person.Surname}))
-    End Sub
+        Return person
 
-    Private Sub GetAllRecords()
+    End Function
+
+    Private Function GetAllRecords() As List(Of Model.Person)
         'Get all record
         Dim lstPerson As List(Of Model.Person) = ctx.GetAll(Of Model.Person).ToList
 
-        lstPerson.ForEach(Sub(x) Console.WriteLine(String.Join(" | ", {x.ID, x.Name, x.Surname})))
-    End Sub
+        Return lstPerson
+
+    End Function
 
     Private Function InsertRecord() As Long
         'Create a record
@@ -115,37 +142,32 @@ Module Program
                 .Surname = "Doe"
             }
 
-        Return ctx.InsertOrUpdate(person)
+        Return CLng(ctx.InsertOrUpdate(person))
 
     End Function
 
-    Public Sub UpdateRecordByID(id As Object)
-        'Update a record
-        Dim person As Model.Person = ctx.Get(Of Model.Person)(id)
+    Public Function UpdateRecord(person As Model.Person) As Boolean
 
+        'Update a record
         person.Surname = "Butt"
 
-        ctx.InsertOrUpdate(person)
+        Return CBool(ctx.InsertOrUpdate(person))
 
-        Console.WriteLine(String.Join(" | ", {person.ID, person.Name, person.Surname}))
-    End Sub
+    End Function
 
-    Public Sub DeleteRecordByID(id As Long)
+    Public Function DeleteRecord(person As Model.Person) As Boolean
         'Delete a record
-        Dim person As Model.Person = ctx.Get(Of Model.Person)(id)
+        Return ctx.Delete(person)
+    End Function
 
-        ctx.Delete(person)
-    End Sub
-
-    Public Sub DeleteAllRecords()
+    Public Function DeleteAllRecords() As Boolean
         'Delete all record
-        ctx.DeleteAll(Of Model.Person)()
-    End Sub
+        Return ctx.DeleteAll(Of Model.Person)()
+    End Function
 
     Public Sub ReadLogFile()
         'Show audit record
-        Dim logDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AuditLogs")
-        Dim logFile As String = Path.Combine(logDir, DapperAuditContext.AuditSettings.FileName)
+        Dim logFile As String = Path.Combine(DapperAuditContext.AuditSettings.Path, DapperAuditContext.AuditSettings.FileName)
         Dim auditLog As String = IO.File.ReadAllText(logFile)
         Console.Write(auditLog)
 

@@ -2,28 +2,31 @@ Imports System.Data
 Imports Dapper
 Imports Microsoft.Data.Sqlite
 
-Public Class DapperContextSQLite
-    Inherits DapperContext
+Namespace Context.Tools
 
-    Public Sub New()
-        Dim cnString As String = GetConnectionString()
+    Public Class DapperContextSQLite
+        Inherits DapperContext
 
-        Dim cnStringBuilder As New SqliteConnectionStringBuilder(cnString)
+        Public Sub New()
+            Dim cnString As String = GetConnectionString()
 
-        Me.Connection = New SqliteConnection(cnString)
-        Me.Connection.ConnectionString = cnStringBuilder.ConnectionString
+            Dim cnStringBuilder As New SqliteConnectionStringBuilder(cnString)
 
-        Me.Connect()
+            Me.Connection = New SqliteConnection(cnString)
+            Me.Connection.ConnectionString = cnStringBuilder.ConnectionString
 
-    End Sub
+            Me.Connect()
 
-    Public Overrides Function DatabaseExist(dbName As String) As Boolean
+        End Sub
 
-        Dim result As Boolean
+        Public Overrides Function DatabaseExist(dbName As String) As Boolean
 
-        result = IO.File.Exists(CType(Me.Connection, SqliteConnection).DataSource)
+            Dim result As Boolean
 
-        Return result
+            result = IO.File.Exists(CType(Me.Connection, SqliteConnection).DataSource)
 
-    End Function
-End Class
+            Return result
+
+        End Function
+    End Class
+End Namespace

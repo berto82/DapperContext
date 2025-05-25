@@ -1,33 +1,36 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <RootNamespace>BertoSoftware</RootNamespace>
     <TargetFrameworks>net48;net8.0;net9.0</TargetFrameworks>
     <OptionStrict>On</OptionStrict>
-    <Title>DapperAuditContext</Title>
-    <Description>A simple collections of functions and method for CRUD operation in Dapper for generic item with an integrated audit system.</Description>
-    <Copyright>2025 Roberto Faccani</Copyright>
-    <PackageReadmeFile>README AUDIT.md</PackageReadmeFile>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <PackageId>$(RootNamespace).$(AssemblyName)</PackageId>
-    <AssemblyName>$(RootNamespace).$(MSBuildProjectName)</AssemblyName>
-    <Version>0.5.0-beta</Version>
-    <PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperAuditContext</PackageProjectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageTags>dapper;orm;dbcontext;audit</PackageTags>
+    <Title>DapperContext.SqlServer</Title>
+    <Description>A simple collections of functions and method for CRUD operation in Dapper for generic item</Description>
+    <Copyright>Roberto Faccani</Copyright>
+    <Version>0.5.0-beta</Version>
+    <FileVersion>0.5.0</FileVersion>
+    <AssemblyVersion>0.5.0</AssemblyVersion>
+    <PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperContext.PostgreSQL</PackageProjectUrl>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageTags>dapper;orm;dbcontext;postgreSQL;npgsql</PackageTags>
     <RepositoryUrl>https://github.com/berto82/DapperContext</RepositoryUrl>
     <IncludeSymbols>True</IncludeSymbols>
     <Authors>Roberto Faccani</Authors>
     <Company>Roberto Faccani</Company>
+    <PackageId>$(RootNamespace).$(AssemblyName)</PackageId>
+    <AssemblyName>$(RootNamespace).$(MSBuildProjectName)</AssemblyName>
+    <RepositoryType>git</RepositoryType>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageIcon>Icon-Dapper-Context.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>v0.5.0-beta
 
-Various fix and improvements</PackageReleaseNotes>
-    <RepositoryType>git</RepositoryType>
-    <FileVersion>0.5.0</FileVersion>
-    <AssemblyVersion>0.5.0</AssemblyVersion>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PackageIcon>Icon-Dapper-Context.png</PackageIcon>
+Added support for PostgreSQL databases</PackageReleaseNotes>
   </PropertyGroup>
+
   <ItemGroup>
     <None Include="..\Icon-Dapper-Context.png">
       <Pack>True</Pack>
@@ -37,15 +40,18 @@ Various fix and improvements</PackageReleaseNotes>
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="..\README AUDIT.md">
+    <None Include="..\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
+
   <ItemGroup>
-    <PackageReference Include="CompareNETObjects" Version="4.83.0" />
+    <PackageReference Include="Npgsql" Version="8.0.7" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\DapperContext\DapperContext.vbproj" />
   </ItemGroup>
+  
 </Project>

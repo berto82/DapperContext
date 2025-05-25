@@ -1,6 +1,9 @@
-﻿Public Class AuditDelta
+﻿Namespace Internal.Model
 
-    Public Property FieldName As String
-    Public Property ValueBefore As String
-    Public Property ValueAfter As String
-End Class
+    Friend Class AuditDelta
+
+        Public Property FieldName As String
+        Public Property ValueBefore As String
+        Public Property ValueAfter As String
+    End Class
+End Namespace

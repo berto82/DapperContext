@@ -1,4 +1,5 @@
-﻿Imports Dapper.Contrib.Extensions
+﻿Imports BertoSoftware.Context.Configuration
+Imports Dapper.Contrib.Extensions
 
 Namespace Model
 
