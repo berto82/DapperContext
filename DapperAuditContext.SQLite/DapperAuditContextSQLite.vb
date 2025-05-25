@@ -1,48 +1,53 @@
 Imports System.IO
 Imports System.Reflection
+Imports BertoSoftware.Context.Configuration
 Imports Microsoft.Data.Sqlite
 
-Public Class DapperAuditContextSQLite
-    Inherits DapperAuditContext
+Namespace Context.Tools.Audit
 
-    Public Sub New()
+    Public Class DapperAuditContextSQLite
+        Inherits DapperAuditContext
 
-        Dim cnString As String = GetConnectionString()
+        Public Sub New()
 
-        Dim cnStringBuilder As New SqliteConnectionStringBuilder(cnString)
+            Dim cnString As String = GetConnectionString()
 
-        Me.Connection = New SqliteConnection(cnString)
-        Me.Connection.ConnectionString = cnStringBuilder.ConnectionString
+            Dim cnStringBuilder As New SqliteConnectionStringBuilder(cnString)
 
-        Me.Connect()
+            Me.Connection = New SqliteConnection(cnString)
+            Me.Connection.ConnectionString = cnStringBuilder.ConnectionString
 
-        If AuditSettings.StoreLogMode = AuditStoreMode.Database Then
-            Dim result = Query("SELECT 1 FROM sqlite_master WHERE type='table' AND name='AuditTable'")
+            Me.Connect()
 
-            If result.Count = 0 Then
-                Dim scriptCreateDB As String = GetFromResources("AuditTable.sql")
-                Execute(scriptCreateDB)
+            If AuditSettings.StoreLogMode = AuditStoreMode.Database Then
+                Dim result = Query("SELECT 1 FROM sqlite_master WHERE type='table' AND name = @p0", New With {.p0 = AuditSettings.TableName})
+
+                If result.Count = 0 Then
+                    Dim scriptCreateDB As String = GetFromResources("AuditTable.sql")
+                    Execute(scriptCreateDB)
+                End If
+
             End If
+        End Sub
 
-        End If
-    End Sub
+        Public Overrides Function DatabaseExist(dbName As String) As Boolean
 
-    Public Overrides Function DatabaseExist(dbName As String) As Boolean
+            Dim result As Boolean
 
-        Dim result As Boolean
+            result = IO.File.Exists(CType(Me.Connection, SqliteConnection).DataSource)
 
-        result = IO.File.Exists(CType(Me.Connection, SqliteConnection).DataSource)
+            Return result
 
-        Return result
-
-    End Function
+        End Function
 
 
-    Private Function GetFromResources(resourceName As String) As String
-        Using s As Stream = Assembly.GetExecutingAssembly.GetManifestResourceStream($"{[GetType].Namespace}.{resourceName}")
-            Using reader As New StreamReader(s)
-                Return reader.ReadToEnd
+        Private Function GetFromResources(resourceName As String) As String
+            Using s As Stream = Assembly.GetExecutingAssembly.GetManifestResourceStream($"{[GetType].Namespace.Split("."c)(0)}.{resourceName}")
+                Using reader As New StreamReader(s)
+                    Return reader.ReadToEnd
+                End Using
             End Using
-        End Using
-    End Function
-End Class
+        End Function
+
+    End Class
+End Namespace

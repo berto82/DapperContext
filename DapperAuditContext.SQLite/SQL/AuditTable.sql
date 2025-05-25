@@ -6,7 +6,7 @@
     KeyFieldID    INTEGER    NOT NULL,
     ActionType    INTEGER    NOT NULL,
     DateTimeStamp REAL       NOT NULL,
-    DataModel     TEXT       NOT NULL,
+    DataModel     TEXT (255) NOT NULL,
     Changes       TEXT       NOT NULL,
     ValueBefore   TEXT       NOT NULL,
     ValueAfter    TEXT       NOT NULL
