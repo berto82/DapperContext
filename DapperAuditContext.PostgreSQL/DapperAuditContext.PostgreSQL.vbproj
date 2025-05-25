@@ -25,12 +25,10 @@
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageIcon>Icon-Dapper-Context.png</PackageIcon>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageReleaseNotes>
-      v0.4.3-beta
+    <PackageReadmeFile>README AUDIT.md</PackageReadmeFile>
+    <PackageReleaseNotes>v0.5.0-beta
 
-      Correct connection method
-    </PackageReleaseNotes>
+Added audit support for PostgreSQL databases</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
