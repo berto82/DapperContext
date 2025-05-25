@@ -1,31 +1,26 @@
-﻿''' <summary>
-''' AuditAttribute is used to mark properties or classes that should be included in the audit trail.
-''' </summary>
-''' <remarks></remarks>
-''' <summary>
-''' AuditAttribute is used to mark properties or classes that should be included in the audit trail.
-''' </summary>
-<AttributeUsage(AttributeTargets.Property Or AttributeTargets.Class, Inherited:=False, AllowMultiple:=False)>
-Public Class AuditAttribute
-    Inherits Attribute
-
-    Public Sub New()
-        _Include = True
-    End Sub
-
+﻿Namespace Context.Configuration
     ''' <summary>
-    ''' Constructor to set the Include property.
+    ''' Audit attribute is used to mark properties or classes that should be included in the audit trail.
     ''' </summary>
-    ''' <param name="include">If true, the property or class will be included in the audit trail.</param>
     ''' <remarks></remarks>
-    ''' <summary>
-    ''' Constructor to set the Include property.
-    ''' </summary>
-    ''' <param name="include">If true, the property or class will be included in the audit trail.</param>
-    Public Sub New(include As Boolean)
-        _Include = include
-    End Sub
+    <AttributeUsage(AttributeTargets.Property Or AttributeTargets.Class, Inherited:=False, AllowMultiple:=False)>
+    Public Class AuditAttribute
+        Inherits Attribute
 
-    Public ReadOnly Property Include As Boolean
+        Public Sub New()
+            _Include = True
+        End Sub
 
-End Class
+        ''' <summary>
+        ''' Constructor to set the Include property.
+        ''' </summary>
+        ''' <param name="include">If true, the property or class will be included in the audit trail.</param>
+        ''' <remarks></remarks>     
+        Public Sub New(include As Boolean)
+            _Include = include
+        End Sub
+
+        Public ReadOnly Property Include As Boolean
+
+    End Class
+End Namespace

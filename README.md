@@ -1,30 +1,22 @@
-![ ](https://i.imgur.com/uDCuPh1.png)
+<img src="https://i.imgur.com/uDCuPh1.png" title="" alt=" " data-align="center">
 
-> NOTE: Documentation is still under development
-
-# DapperContext
-
-A simple collections of functions and method for CRUD operation in Dapper for generic item with or without an integrated audit system.
+<img title="" src="https://img.shields.io/github/license/berto82/DapperContext.svg" alt="GitHub License" data-align="inline"> <img title="" src="https://img.shields.io/nuget/vpre/BertoSoftware.DapperContext.svg" alt="NuGet Version" data-align="inline"> ![NuGet Downloads](https://img.shields.io/nuget/dt/BertoSoftware.DapperContext.svg) ![GitHub Release Date](https://img.shields.io/github/release-date-pre/berto82/DapperContext.svg) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/berto82/DapperContext/master.svg)
 
 ---
 
-## Preface
+# Preface
 
 This utility allows you to speed up CRUD operations with Dapper by writing less code.
 The 'utility already integrates the connection system to various database providers such as:
 
 - SQL Server
 - MySQL / Maria DB
-- Oracle
+- PostgreSQL
 - SQLite
 
 This utility arose from the need to avoid instantiating a connection context each time and perform all CRUD operations without having to write the database access each time; it should better facilitate operations with Dapper.
 
-I also created another project derived from this one, which is called DapperAuditContext.
-This project allows you to add attributes to model classes that allows you to track changes made to that specific table or specific table field.
-The result can be saved automatically to a table within your own database, and the operation is automatic, or saved to a readable text file.
-
-## Information about packages
+# Information about packages
 
 To install the program simply download the nuget package(s) related to your needs.
 
@@ -35,33 +27,31 @@ The packages are these:
   
   - This is the core package that is mandatory for other and **will not work alone**
 
-- **DapperAuditContext**
-  
-  - This is the core audit package that is mandatory only if you need to trail changes and **will not work alone**
-
 - **DapperContext.SqlServer**
   
   - This package allows you to connect to a Microsoft SQL Server and is dependent on the core package.
     With this package you can use all the functions available to you
-
-- **DapperAuditContext.SqlServer** 
-  
-  - Same that DapperContext.SqlServer but with a integated audit system
 
 - **DapperContext.MySql**
   
   - This package allows you to connect to a MySQL / MariaDB and is dependent on the core package.
     With this package you can use all the functions available to you
 
-- **DapperAuditContext.MySql**
+- **DapperContext.PostgreSQL**
   
-  - Same that DapperContext.MySql but with a integated audit system
+  - This package allows you to connect to a PostgreSQL and is dependent on the core package.
+    With this package you can use all the functions available to you
 
-## Getting started
+- **DapperContext.SQLite**
+  
+  - This package allows you to connect to a SQLite and is dependent on the core package.
+    With this package you can use all the functions available to you
 
-### Providers
+# Getting started
 
-#### SQL Server
+## Database providers
+
+### SQL Server
 
 Install sql server package via NuGet
 
@@ -69,43 +59,55 @@ Install sql server package via NuGet
 PM > Install-Package BertoSoftware.DapperContext.SqlServer
 ```
 
-#### MySQL
+### MySQL
 
 ```powershell
 PM > Install-Package BertoSoftware.DapperContext.MySql
 ```
 
-#### SQLite
+### SQLite
 
 ```powershell
 PM > Install-Package BertoSoftware.DapperContext.SQLite
 ```
 
-This package will install also all dependecies regard main core package and specified database connection
+### PostgreSQL
 
-### Configuration
+```powershell
+PM > Install-Package BertoSoftware.DapperContext.PostgreSQL
+```
+
+This packages will install also all dependecies regard main core package and specified database connection
+
+## Configuration
 
 In the main program you can define a settings globally for the project
 
-#### VB.NET
+### VB.NET
 
 ```vbnet
-   DapperContext.Settings = ContextConfiguration.CreateNew.
+Imports BertoSoftware.Context.Configuration
+
+DapperContext.Settings = ContextConfiguration.CreateNew.
          UseSettingsFileMode(SettingFileMode.NET4x).
          WithConnectionName("MyConnection").
          WithCustomConfigurationFile("app1.config").
+         WithCustomConnectionString("MyConnectionString")   
          DisableTransaction.
          Build()
 ```
 
-#### C#
+### C#
 
 ```csharp
-   DapperContext.Settings = ContextConfiguration.CreateNew.
+using BertoSoftware.Context.Configuration;
+
+DapperContext.Settings = ContextConfiguration.CreateNew().
          UseSettingsFileMode(SettingFileMode.NET4x).
          WithConnectionName("MyConnection").
          WithCustomConfigurationFile("app1.config").
-         DisableTransaction.
+         WithCustomConnectionString("MyConnectionString") 
+         DisableTransaction().
          Build();
 ```
 
@@ -117,13 +119,15 @@ You can configure different configuration parameters such as:
 
 With `.UseSettingsFileMode` you can select which configuration file should be loaded to look for the connection string.
 
-- `SettingFileMode.NET4x` load a file *"app.config" *and retrive appropriate connection string.
+- `SettingFileMode.NET4x` load a file *"app.config"* and retrive appropriate connection string.
 
 - `SettingFileMode.NETCore` load a file *"appsettings.json"* and retrive a connection string
 
 With `.WithConnectionName("MyConnection")` will search a name of connection string you provide into parameter, if this settings is omitted will search a connection string with name *"DefaultConnection"*
 
 With `.WithCustomConfigurationFile("app1.config")` will search a file settings you provide into parameter, if this settings is omitted will search a default file like *"app.config"* or *"appsettings.json"*
+
+With `.WithCustomConnectionString("MyConnectionString")` will use a custom connection you provide into parameter and this will be a priority on other parameter
 
 With `.DisableTransaction` will disable automatic SQL transaction
 
@@ -133,7 +137,9 @@ You can terminate settings with `.Build()` method
 
 Create a model class that respect the same on your database
 
-### VB.NET
+### Database Model
+
+#### VB.NET
 
 ```vbnet
 Imports Dapper.Contrib.Extensions
@@ -152,7 +158,7 @@ Namespace Model
 End Namespace
 ```
 
-### C#
+#### C#
 
 ```cs
 using Dapper.Contrib.Extensions;
@@ -172,157 +178,243 @@ namespace Model
 }
 ```
 
-### Console
+### Application
+
+You can configure a global setting once time into your start module program, like a Console app, Windows Forms, ASP.NET etc.
+
+Otherwhere a default settings will be loaded
+
+In this example, will take a look what how do a connection with SQL Server:
+
+On package manager you have to install `BertoSoftware.DapperContext.SqlServer` to connect a SQL Server instance.
+
+You can use a local variable with a simple declaration or you can use a using statement for automatic dispose item.
 
 #### VB.NET
 
 ```vbnet
-Imports BertoSoftware
+Imports BertoSoftware.Context.Configuration
 
 Module Program
   Sub Main(args As String())
 
-     DapperContext.Settings = ContextConfiguration.CreateNew().UseSettingsFileMode(SettingFileMode.NetCore).Build()
+    'Configure context setting or leave default
+    '***Uncomment this line if you want to configure settings
+    DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NETCore).Build
 
-    'Create a record
-    Using ctx As New DapperContextSqlServer
-
-        Dim person As New Model.Person With {
-            .Name = "John",
-            .Surname = "Doe"
-        }
-
-        ctx.InsertOrUpdate(person)
-
-    End Using
-
-    'Get a single record
-    Using ctx As New DapperContextSqlServer
-
-        Dim person As Model.Person = ctx.Get(Of Model.Person)(1)
-
-        Console.WriteLine(String.Join(" | ", {person.ID, person.Name, person.Surname}))
-
-    End Using
-
-    'Get all record
-    Using ctx As New DapperContextSqlServer
-
-        Dim lstPerson As List(Of Model.Person) = ctx.GetAll(Of Model.Person).ToList
-
-        lstPerson.ForEach(Sub(x) Console.WriteLine(String.Join(" | ", {x.ID, x.Name, x.Surname})))
-
-    End Using
-
-    'Update a record
-    Using ctx As New DapperContextSqlServer
-
-        Dim person As Model.Person = ctx.Get(Of Model.Person)(1)
-
-        person.Surname = "Butt"
-
-        ctx.InsertOrUpdate(person)
-
-        Console.WriteLine(String.Join(" | ", {person.ID, person.Name, person.Surname}))
-
-    End Using
-
-    'Delete a record
-    Using ctx As New DapperContextSqlServer
-
-        Dim person As Model.Person = ctx.Get(Of Model.Person)(1)
-
-        ctx.Delete(person)
-    End Using
-
-    'Delete all record
-    Using ctx As New DapperContextSqlServer
-        ctx.DeleteAll(Of Model.Person)()
-    End Using
-
- End Sub
+  End Sub
 End Module
+```
+
+```vbnet
+Imports BertoSoftware.Context.Tools
+
+Dim ctx As New DapperContextSqlServer
+
+'Your code
+
+ctx.Dispose()
+
+
+Using ctx As New DapperContextSqlServer
+'Your code    
+End Using
+```
+
+In following examples, declaration will be omitted
+
+##### Insert a record
+
+```vbnet
+Private Function InsertRecord() As Long
+    'Create a record
+    Dim person As New Model.Person With {
+              .Name = "John",
+              .Surname = "Doe"
+          }
+
+    Return CLng(ctx.InsertOrUpdate(person))
+
+End Function
+```
+
+##### Get a single record
+
+```vbnet
+Private Function GetRecordByID(id As Object) As Model.Person
+    'Get a single record
+    Dim person As Model.Person = ctx.Get(Of Model.Person)(id)
+
+    Return person
+
+End Function
+```
+
+##### Get all record
+
+```vbnet
+Private Function GetAllRecords() As List(Of Model.Person)
+     'Get all record
+     Dim lstPerson As List(Of Model.Person) = ctx.GetAll(Of Model.Person).ToList
+
+     Return lstPerson
+
+End Function
+```
+
+##### Update a record
+
+```vbnet
+Public Function UpdateRecord(person As Model.Person) As Boolean
+    'Update a record
+     person.Surname = "Butt"
+
+     Return CBool(ctx.InsertOrUpdate(person))
+
+End Function
+```
+
+##### Delete single record
+
+```vbnet
+Public Function DeleteRecord(person As Model.Person) As Boolean
+    'Delete a record
+     Return ctx.Delete(person)
+End Function
+```
+
+##### Delete all record
+
+```vbnet
+Public Function DeleteAllRecords() As Boolean
+    'Delete all record
+     Return ctx.DeleteAll(Of Model.Person)()
+End Function
 ```
 
 #### C#
 
 ```csharp
-using BertoSoftware;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using BertoSoftware.Configuration;
 
 class Program
 {
     static void Main(string[] args)
     {
+        //Configure context setting or leave default
+        //***Uncomment this line if you want to configure settings
         DapperContext.Settings = ContextConfiguration.CreateNew().UseSettingsFileMode(SettingFileMode.NetCore).Build();
 
-        // Create a record
-        using (var ctx = new DapperContextSqlServer())
-        {
-            var person = new Model.Person
-            {
-                Name = "John",
-                Surname = "Doe"
-            };
-
-            ctx.InsertOrUpdate(person);
-        }
-
-        // Get a single record
-        using (var ctx = new DapperContextSqlServer())
-        {
-            var person = ctx.Get<Model.Person>(1);
-            Console.WriteLine(string.Join(" | ", new[] { person.ID, person.Name, person.Surname }));
-        }
-
-        // Get all records
-        using (var ctx = new DapperContextSqlServer())
-        {
-            var lstPerson = ctx.GetAll<Model.Person>().ToList();
-            lstPerson.ForEach(x => Console.WriteLine(string.Join(" | ", new[] { x.ID, x.Name, x.Surname })));
-        }
-
-        // Update a record
-        using (var ctx = new DapperContextSqlServer())
-        {
-            var person = ctx.Get<Model.Person>(1);
-            person.Surname = "Butt";
-            ctx.InsertOrUpdate(person);
-            Console.WriteLine(string.Join(" | ", new[] { person.ID, person.Name, person.Surname }));
-        }
-
-        // Delete a record
-        using (var ctx = new DapperContextSqlServer())
-        {
-            var person = ctx.Get<Model.Person>(1);
-            ctx.Delete(person);
-        }
-
-        // Delete all records
-        using (var ctx = new DapperContextSqlServer())
-        {
-            ctx.DeleteAll<Model.Person>();
-        }
     }
 }
 ```
+
+```csharp
+using BertoSoftware.Context.Tools
+
+var ctx = new DapperContextSqlServer;
+
+//your code
+
+ctx.Dispose();
+
+using (var ctx = new DapperContextSqlServer())
+{
+//your code    
+}
+```
+
+In following examples, declaration will be omitted
+
+##### Insert a record
+
+```csharp
+private long InsertRecord()
+{
+    // Create a record
+    var person = new Model.Person()
+    {
+        Name = "John",
+        Surname = "Doe"
+    };
+
+    return (long)ctx.InsertOrUpdate(person);
+
+}
+```
+
+##### Get a single record
+
+```csharp
+private Model.Person GetRecordByID(object id)
+{
+    // Get a single record
+    Model.Person person = ctx.Get<Model.Person>(id);
+
+    return person;
+
+}
+```
+
+##### Get all record
+
+```csharp
+private List<Model.Person> GetAllRecords()
+{
+    // Get all record
+    List<Model.Person> lstPerson = ctx.GetAll<Model.Person>.ToList;
+
+    return lstPerson;
+
+}
+```
+
+##### Update a record
+
+```csharp
+public bool UpdateRecord(Model.Person person)
+{
+    // Update a record
+    person.Surname = "Butt";
+
+    return (bool)ctx.InsertOrUpdate(person);
+
+}
+```
+
+##### Delete single record
+
+```csharp
+public bool DeleteRecord(Model.Person person)
+{
+    // Delete a record
+    return ctx.Delete(person);
+}
+```
+
+##### Delete all record
+
+```csharp
+public bool DeleteAllRecords()
+{
+    // Delete all record
+    return ctx.DeleteAll<Model.Person>();
+}
+```
+
+# Other packages
 
 This example is provided with `DapperContext.SQLServer` installed package but you can change the class `DapperContextSqlServer` with your appropriate.
 
 The classes avaiabile are these:
 
-| Package name                          | Classes                              |
-|:------------------------------------- |:------------------------------------ |
-| BertoSoftware.DapperContext.SqlServer | BertoSoftware.DapperContextSqlServer |
-| BertoSoftware.DapperContext.MySql     | BertoSoftware.DapperContextMySql     |
-| BertoSoftware.DapperContext.SQLite    | BertoSoftware.DapperContextSQLite    |
+| Package name                           | Classes                               | NuGet                                                                                                                                                                                    |
+|:-------------------------------------- |:------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| BertoSoftware.DapperContext.SqlServer  | BertoSoftware.DapperContextSqlServer  | ![NuGet Downloads](https://img.shields.io/nuget/dt/BertoSoftware.DapperContext.SqlServer.svg?link=https%3A%2F%2Fwww.nuget.org%2Fpackages%2FBertoSoftware.DapperAuditContext.SqlServer)   |
+| BertoSoftware.DapperContext.MySql      | BertoSoftware.DapperContextMySql      | ![NuGet Downloads](https://img.shields.io/nuget/dt/BertoSoftware.DapperContext.MySql.svg?link=https%3A%2F%2Fwww.nuget.org%2Fpackages%2FBertoSoftware.DapperAuditContext.MySql)           |
+| BertoSoftware.DapperContext.SQLite     | BertoSoftware.DapperContextSQLite     | ![NuGet Downloads](https://img.shields.io/nuget/dt/BertoSoftware.DapperContext.SQLite.svg?link=https%3A%2F%2Fwww.nuget.org%2Fpackages%2FBertoSoftware.DapperAuditContext.SQLite)         |
+| BertoSoftware.DapperContext.PostgreSQL | BertoSoftware.DapperContextPostgreSQL | ![NuGet Downloads](https://img.shields.io/nuget/dt/BertoSoftware.DapperContext.PostgreSQL.svg?link=https%3A%2F%2Fwww.nuget.org%2Fpackages%2FBertoSoftware.DapperAuditContext.PostgreSQL) |
 
----
+# Feedback
 
-![](https://i.imgur.com/0wKgRot.png)
-
-# DapperAuditContext
-
-> Documentation soon avaiable
+Please let me a feedback about your opinion, some issues or some missing feature to implement in future, I'll be happy to hear you.

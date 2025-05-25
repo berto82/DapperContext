@@ -11,15 +11,15 @@
     <Version>0.4.3-beta</Version>
     <FileVersion>0.4.3</FileVersion>
     <AssemblyVersion>0.4.3</AssemblyVersion>
-    <PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperAuditContext.SqlServer</PackageProjectUrl>
+    <PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperAuditContext.PostgreSQL</PackageProjectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageTags>dapper;orm;dbcontext;audit;sql server</PackageTags>
+    <PackageTags>dapper;orm;dbcontext;audit;postgreSQL;npgsql</PackageTags>
     <RepositoryUrl>https://github.com/berto82/DapperContext</RepositoryUrl>
     <IncludeSymbols>True</IncludeSymbols>
     <Authors>Roberto Faccani</Authors>
     <Company>Roberto Faccani</Company>
     <PackageId>$(RootNamespace).$(AssemblyName)</PackageId>
-	<AssemblyName>$(RootNamespace).$(MSBuildProjectName)</AssemblyName>
+    <AssemblyName>$(RootNamespace).$(MSBuildProjectName)</AssemblyName>
     <RepositoryType>git</RepositoryType>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
@@ -28,7 +28,7 @@
     <PackageReadmeFile>README AUDIT.md</PackageReadmeFile>
     <PackageReleaseNotes>v0.5.0-beta
 
-Various fix and improvements</PackageReleaseNotes>
+Added audit support for PostgreSQL databases</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -51,8 +51,12 @@ Various fix and improvements</PackageReleaseNotes>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DapperAuditContext\DapperAuditContext.vbproj" />
-    <ProjectReference Include="..\DapperContext.SqlServer\DapperContext.SqlServer.vbproj" />
+    <PackageReference Include="Npgsql" Version="8.0.7" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DapperAuditContext\DapperAuditContext.vbproj" />
+  </ItemGroup>
+  
+  
 </Project>

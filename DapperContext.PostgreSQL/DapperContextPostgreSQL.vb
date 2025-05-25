@@ -1,30 +1,20 @@
 Imports System.Data
-Imports System.Data.Common
 Imports Dapper
-Imports Microsoft.Data.SqlClient
+Imports Npgsql
 
-Namespace Context.Tools
-    Public Class DapperContextSqlServer
+Namespace Context.Tools.Audit
+
+    Public Class DapperContextPostgreSQL
         Inherits DapperContext
 
         Public Sub New()
             Try
                 Dim cnString As String = GetConnectionString()
 
-                Dim cnStringBuilder As New DbConnectionStringBuilder
+                Dim cnStringBuilder As New NpgsqlConnectionStringBuilder(cnString)
                 cnStringBuilder.ConnectionString = cnString
 
-                Dim efConnectionString As Object = Nothing
-
-                If cnStringBuilder.TryGetValue("provider connection string", efConnectionString) = True Then
-                    cnStringBuilder.ConnectionString = CStr(efConnectionString)
-                End If
-
-                If cnStringBuilder.ContainsKey("TrustServerCertificate") = False Then
-                    cnStringBuilder.Add("TrustServerCertificate", True)
-                End If
-
-                Me.Connection = New SqlConnection
+                Me.Connection = New NpgsqlConnection
                 Me.Connection.ConnectionString = cnStringBuilder.ConnectionString
 
                 Me.Connect()
@@ -42,7 +32,7 @@ Namespace Context.Tools
             If Settings.EnableTransaction = True Then
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                     Try
-                        result = Me.Connection.Query(Of String)("SELECT name FROM master.sys.databases WHERE name = @p0", New With {.p0 = dbName}, transaction).FirstOrDefault
+                        result = Me.Connection.Query(Of String)("select datname from pg_database where datname = @p0", New With {.p0 = dbName}, transaction).FirstOrDefault
                         transaction.Commit()
 
                         Return result <> String.Empty
@@ -53,7 +43,7 @@ Namespace Context.Tools
                 End Using
             Else
                 Try
-                    result = Me.Connection.Query(Of String)("SELECT name FROM master.sys.databases WHERE name = @p0", New With {.p0 = dbName}).FirstOrDefault
+                    result = Me.Connection.Query(Of String)("select datname from pg_database where datname = @p0", New With {.p0 = dbName}).FirstOrDefault
                 Catch ex As Exception
                     Throw
                 End Try
@@ -62,6 +52,5 @@ Namespace Context.Tools
             Return False
 
         End Function
-
     End Class
 End Namespace

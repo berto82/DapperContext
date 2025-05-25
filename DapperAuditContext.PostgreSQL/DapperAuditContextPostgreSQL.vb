@@ -1,41 +1,28 @@
 Imports System.Data
-Imports System.Data.Common
 Imports System.IO
 Imports System.Reflection
 Imports BertoSoftware.Context.Configuration
 Imports Dapper
-Imports Microsoft.Data.SqlClient
+Imports Npgsql
 
 Namespace Context.Tools.Audit
-
-    Public Class DapperAuditContextSqlServer
+    Public Class DapperAuditContextPostgreSQL
         Inherits DapperAuditContext
 
         Public Sub New()
-
             Try
                 Dim cnString As String = GetConnectionString()
 
-                Dim cnStringBuilder As New DbConnectionStringBuilder
+                Dim cnStringBuilder As New NpgsqlConnectionStringBuilder(cnString)
                 cnStringBuilder.ConnectionString = cnString
 
-                Dim efConnectionString As Object = Nothing
-
-                If cnStringBuilder.TryGetValue("provider connection string", efConnectionString) = True Then
-                    cnStringBuilder.ConnectionString = CStr(efConnectionString)
-                End If
-
-                If cnStringBuilder.ContainsKey("TrustServerCertificate") = False Then
-                    cnStringBuilder.Add("TrustServerCertificate", True)
-                End If
-
-                Me.Connection = New SqlConnection
+                Me.Connection = New NpgsqlConnection
                 Me.Connection.ConnectionString = cnStringBuilder.ConnectionString
 
                 Me.Connect()
 
                 If AuditSettings.StoreLogMode = AuditStoreMode.Database Then
-                    Dim result = Query("SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE' AND TABLE_NAME= @p0", New With {.p0 = AuditSettings.TableName})
+                    Dim result = Query($"SELECT * FROM pg_tables WHERE schemaname = 'public' AND tablename = @p0", New With {.p0 = AuditSettings.TableName})
 
                     If result.Count = 0 Then
                         Dim scriptCreateDB As String = GetFromResources("AuditTable.sql")
@@ -43,6 +30,7 @@ Namespace Context.Tools.Audit
                     End If
 
                 End If
+
 
             Catch ex As Exception
                 Throw
@@ -57,7 +45,7 @@ Namespace Context.Tools.Audit
             If Settings.EnableTransaction = True Then
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                     Try
-                        result = Me.Connection.Query(Of String)("SELECT name FROM master.sys.databases WHERE name = @p0", New With {.p0 = dbName}, transaction).FirstOrDefault
+                        result = Me.Connection.Query(Of String)("select datname from pg_database where datname = @p0", New With {.p0 = dbName}, transaction).FirstOrDefault
                         transaction.Commit()
 
                         Return result <> String.Empty
@@ -68,7 +56,7 @@ Namespace Context.Tools.Audit
                 End Using
             Else
                 Try
-                    result = Me.Connection.Query(Of String)("SELECT name FROM master.sys.databases WHERE name = @p0", New With {.p0 = dbName}).FirstOrDefault
+                    result = Me.Connection.Query(Of String)("select datname from pg_database where datname = @p0", New With {.p0 = dbName}).FirstOrDefault
                 Catch ex As Exception
                     Throw
                 End Try
@@ -85,6 +73,7 @@ Namespace Context.Tools.Audit
                 End Using
             End Using
         End Function
-    End Class
 
+
+    End Class
 End Namespace
