@@ -221,7 +221,7 @@ Namespace Context.Tools.Audit
                 Dim propAttr As AuditAttribute = CType(prop.GetCustomAttributes(GetType(AuditAttribute), True), AuditAttribute()).FirstOrDefault
 
                 If propAttr IsNot Nothing Then
-                    If propAttr.Include = False Then
+                    If Not propAttr.Include Then
                         compObjects.Config.MembersToIgnore.Add(prop.Name)
                     End If
                 End If

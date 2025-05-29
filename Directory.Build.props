@@ -1,5 +1,16 @@
 ﻿<Project>
   <PropertyGroup>
+    <RootNamespace>BertoSoftware</RootNamespace>
+    <TargetFrameworks>net48;net8.0;net9.0</TargetFrameworks>
+    <OptionStrict>On</OptionStrict>
+    <Copyright>Roberto Faccani</Copyright>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <RepositoryUrl>https://github.com/berto82/DapperContext</RepositoryUrl>
+    <IncludeSymbols>True</IncludeSymbols>
+    <Authors>Roberto Faccani</Authors>
+    <Company>Roberto Faccani</Company>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>

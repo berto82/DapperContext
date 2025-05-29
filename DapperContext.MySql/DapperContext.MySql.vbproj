@@ -8,9 +8,9 @@
 		<Title>DapperContext.MySql</Title>
 		<Description>A simple collections of functions and method for CRUD operation in Dapper for generic item</Description>
 		<Copyright>Roberto Faccani</Copyright>
-		<Version>0.5.0-beta</Version>
-		<FileVersion>0.5.0</FileVersion>
-		<AssemblyVersion>0.5.0</AssemblyVersion>
+		<Version>0.6.0-rc1</Version>
+		<FileVersion>0.6.0</FileVersion>
+		<AssemblyVersion>0.6.0</AssemblyVersion>
 		<PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperContext.MySql</PackageProjectUrl>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<PackageTags>dapper;orm;dbcontext;mysql;mariadb</PackageTags>
@@ -26,9 +26,9 @@
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageIcon>Icon-Dapper-Context.png</PackageIcon>
-		<PackageReleaseNotes>v0.5.0-beta
+		<PackageReleaseNotes>v0.6.0-rc1
 
-Various fix and improvements</PackageReleaseNotes>
+Minor bug fix</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<ItemGroup>
