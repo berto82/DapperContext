@@ -1,4 +1,4 @@
-![k](https://imgur.com/0wKgRot.png)
+![Banner](https://i.imgur.com/0wKgRot.png)
 
 ![GithHub License](https://img.shields.io/github/license/berto82/DapperContext.svg) ![NuGet Version](https://img.shields.io/nuget/v/BertoSoftware.DapperAuditContext.svg) ![NuGet Downloads](https://img.shields.io/nuget/dt/BertoSoftware.DapperAuditContext.svg) ![GitHub Release Date](https://img.shields.io/github/release-date-pre/berto82/DapperContext.svg) ![GitHub last commit](https://img.shields.io/github/last-commit/berto82/DapperContext.svg)
 
@@ -103,7 +103,7 @@ DapperAuditContext.AuditSettings = AuditConfiguration.CreateNew.
          Build()
 ```
 
-### C#
+### C\#
 
 ```csharp
 using BertoSoftware.Context.Configuration;
@@ -173,7 +173,7 @@ Namespace Model
 End Namespace
 ```
 
-#### C#
+#### C\#
 
 ```cs
 using BertoSoftware.Context.Configuration;
@@ -311,7 +311,7 @@ Public Function DeleteAllRecords() As Boolean
 End Function
 ```
 
-#### C#
+#### C\#
 
 ```csharp
 using BertoSoftware.Context.Configuration;

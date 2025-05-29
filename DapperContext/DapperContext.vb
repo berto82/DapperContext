@@ -42,7 +42,7 @@ Namespace Context.Tools
                 Try
                     Me.Connection.Open()
                 Catch ex As Exception
-                    Throw
+                    Throw ex
                 End Try
             End If
         End Sub
@@ -52,7 +52,7 @@ Namespace Context.Tools
                 Try
                     Me.Connection.Close()
                 Catch ex As Exception
-                    Throw
+                    Throw ex
                 End Try
             End If
         End Sub
@@ -105,7 +105,7 @@ Namespace Context.Tools
 
                 End Select
             Catch ex As Exception
-                Throw
+                Throw ex
             End Try
 
             Return cnString
@@ -142,7 +142,7 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction = True Then
+            If _Settings.EnableTransaction Then
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                     Try
                         result = Me.Connection.Get(Of TEntity)(id, transaction)
@@ -182,7 +182,7 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction = True Then
+            If _Settings.EnableTransaction Then
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
 
                     Try
@@ -222,7 +222,7 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction = True Then
+            If _Settings.EnableTransaction Then
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
 
                     Try
@@ -262,7 +262,7 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction = True Then
+            If _Settings.EnableTransaction Then
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
 
                     Try
@@ -303,20 +303,18 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction = True Then
+            If _Settings.EnableTransaction Then
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
 
                     Try
                         Dim isNew As Boolean = False
-
-                        Dim entityType As Type = entity.GetType
                         Dim keyValue As Object = DapperContext.GetKeyFieldValue(entity)
 
                         If CInt(keyValue) = 0 Then
                             isNew = True
                         End If
 
-                        If isNew = True Then
+                        If isNew Then
                             result = Me.Connection.Insert(entity, transaction)
                         Else
                             result = Me.Connection.Update(entity, transaction)
@@ -334,15 +332,13 @@ Namespace Context.Tools
             Else
                 Try
                     Dim isNew As Boolean = False
-
-                    Dim entityType As Type = entity.GetType
                     Dim keyValue As Object = DapperContext.GetKeyFieldValue(entity)
 
                     If CInt(keyValue) = 0 Then
                         isNew = True
                     End If
 
-                    If isNew = True Then
+                    If isNew Then
                         result = Me.Connection.Insert(entity)
                     Else
                         result = Me.Connection.Update(entity)
@@ -373,20 +369,18 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction = True Then
+            If _Settings.EnableTransaction Then
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
 
                     Try
                         Dim isNew As Boolean = False
-
-                        Dim entityType As Type = entity.GetType
                         Dim keyValue As Object = DapperContext.GetKeyFieldValue(entity)
 
                         If CInt(keyValue) = 0 Then
                             isNew = True
                         End If
 
-                        If isNew = True Then
+                        If isNew Then
                             result = Await Me.Connection.InsertAsync(entity, transaction)
                         Else
                             result = Await Me.Connection.UpdateAsync(entity, transaction)
@@ -404,15 +398,13 @@ Namespace Context.Tools
             Else
                 Try
                     Dim isNew As Boolean = False
-
-                    Dim entityType As Type = entity.GetType
                     Dim keyValue As Object = DapperContext.GetKeyFieldValue(entity)
 
                     If CInt(keyValue) = 0 Then
                         isNew = True
                     End If
 
-                    If isNew = True Then
+                    If isNew Then
                         result = Await Me.Connection.InsertAsync(entity)
                     Else
                         result = Await Me.Connection.UpdateAsync(entity)
@@ -441,7 +433,7 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction = True Then
+            If _Settings.EnableTransaction Then
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                     Try
                         result = Me.Connection.Delete(entity, transaction)
@@ -479,7 +471,7 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction = True Then
+            If _Settings.EnableTransaction Then
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
 
                     Try
@@ -517,7 +509,7 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction = True Then
+            If _Settings.EnableTransaction Then
 
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                     Try
@@ -556,7 +548,7 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction = True Then
+            If _Settings.EnableTransaction Then
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                     Try
                         result = Await Me.Connection.DeleteAllAsync(Of TEntity)(transaction)
@@ -589,12 +581,12 @@ Namespace Context.Tools
         ''' <param name="param"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function Execute(sql As String, Optional param As Object = Nothing) As Integer
+        Public Overridable Function Execute(sql As String, Optional param As Object = Nothing) As Integer
             Dim result As Integer
 
             Me.Connect()
 
-            If _Settings.EnableTransaction = True Then
+            If _Settings.EnableTransaction Then
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                     Try
                         result = Me.Connection.Execute(sql, param, transaction)
@@ -627,12 +619,12 @@ Namespace Context.Tools
         ''' <param name="param"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Async Function ExecuteAsync(sql As String, Optional param As Object = Nothing) As Task(Of Integer)
+        Public Overridable Async Function ExecuteAsync(sql As String, Optional param As Object = Nothing) As Task(Of Integer)
             Dim result As Integer
 
             Me.Connect()
 
-            If _Settings.EnableTransaction = True Then
+            If _Settings.EnableTransaction Then
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                     Try
                         result = Await Me.Connection.ExecuteAsync(sql, param, transaction)
@@ -665,12 +657,12 @@ Namespace Context.Tools
         ''' <param name="param"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function ExecuteScalar(sql As String, Optional param As Object = Nothing) As Object
+        Public Overridable Function ExecuteScalar(sql As String, Optional param As Object = Nothing) As Object
             Dim result As Object
 
             Me.Connect()
 
-            If _Settings.EnableTransaction = True Then
+            If _Settings.EnableTransaction Then
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                     Try
                         result = Me.Connection.ExecuteScalar(sql, param, transaction)
@@ -699,16 +691,56 @@ Namespace Context.Tools
         ''' <summary>
         ''' Execute a SQL command and return a single value.
         ''' </summary>
+        ''' <typeparam name="T"></typeparam>
         ''' <param name="sql"></param>
         ''' <param name="param"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Async Function ExecuteScalarAsync(sql As String, Optional param As Object = Nothing) As Task(Of Object)
+        Public Overridable Function ExecuteScalar(Of T)(sql As String, Optional param As Object = Nothing) As T
+
+            Dim result As T
+
+            Me.Connect()
+
+            If _Settings.EnableTransaction Then
+                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+                    Try
+                        result = Me.Connection.ExecuteScalar(Of T)(sql, param, transaction)
+                        transaction.Commit()
+                    Catch ex As Exception
+                        transaction.Rollback()
+                        Me.Disconnect()
+                        Throw
+                    End Try
+                End Using
+            Else
+                Try
+                    result = Me.Connection.ExecuteScalar(Of T)(sql, param)
+                Catch ex As Exception
+                    Me.Disconnect()
+                    Throw
+                End Try
+            End If
+
+            Me.Disconnect()
+
+            Return result
+
+        End Function
+
+        ''' <summary>
+        ''' Execute a SQL command and return a single value.
+        ''' </summary>
+        ''' <param name="sql"></param>
+        ''' <param name="param"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Overridable Async Function ExecuteScalarAsync(sql As String, Optional param As Object = Nothing) As Task(Of Object)
             Dim result As Object
 
             Me.Connect()
 
-            If _Settings.EnableTransaction = True Then
+            If _Settings.EnableTransaction Then
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                     Try
                         result = Await Me.Connection.ExecuteScalarAsync(sql, param, transaction)
@@ -742,53 +774,13 @@ Namespace Context.Tools
         ''' <param name="param"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function ExecuteScalar(Of T)(sql As String, Optional param As Object = Nothing) As T
+        Public Overridable Async Function ExecuteScalarAsync(Of T)(sql As String, Optional param As Object = Nothing) As Task(Of T)
 
             Dim result As T
 
             Me.Connect()
 
-            If _Settings.EnableTransaction = True Then
-                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
-                    Try
-                        result = Me.Connection.ExecuteScalar(Of T)(sql, param, transaction)
-                        transaction.Commit()
-                    Catch ex As Exception
-                        transaction.Rollback()
-                        Me.Disconnect()
-                        Throw
-                    End Try
-                End Using
-            Else
-                Try
-                    result = Me.Connection.ExecuteScalar(Of T)(sql, param)
-                Catch ex As Exception
-                    Me.Disconnect()
-                    Throw
-                End Try
-            End If
-
-            Me.Disconnect()
-
-            Return result
-
-        End Function
-
-        ''' <summary>
-        ''' Execute a SQL command and return a single value.
-        ''' </summary>
-        ''' <typeparam name="T"></typeparam>
-        ''' <param name="sql"></param>
-        ''' <param name="param"></param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Async Function ExecuteScalarAsync(Of T)(sql As String, Optional param As Object = Nothing) As Task(Of T)
-
-            Dim result As T
-
-            Me.Connect()
-
-            If _Settings.EnableTransaction = True Then
+            If _Settings.EnableTransaction Then
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                     Try
                         result = Await Me.Connection.ExecuteScalarAsync(Of T)(sql, param, transaction)
@@ -814,44 +806,7 @@ Namespace Context.Tools
 
         End Function
 
-        ''' <summary>
-        ''' Execute a SQL command and return a collection of objects.
-        ''' </summary>
-        ''' <param name="sql"></param>
-        ''' <param name="param"></param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Function Query(sql As String, Optional param As Object = Nothing) As IEnumerable(Of Object)
 
-            Dim result As IEnumerable(Of Object)
-
-            Me.Connect()
-
-            If _Settings.EnableTransaction = True Then
-                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
-                    Try
-                        result = Me.Connection.Query(sql, param, transaction)
-                        transaction.Commit()
-                    Catch ex As Exception
-                        transaction.Rollback()
-                        Me.Disconnect()
-                        Throw
-                    End Try
-                End Using
-            Else
-                Try
-                    result = Me.Connection.Query(sql, param)
-                Catch ex As Exception
-                    Me.Disconnect()
-                    Throw
-                End Try
-            End If
-
-            Me.Disconnect()
-
-            Return result
-
-        End Function
 
         ''' <summary>
         ''' Execute a SQL command and return a collection of objects.
@@ -860,13 +815,13 @@ Namespace Context.Tools
         ''' <param name="param"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Async Function QueryAsync(sql As String, Optional param As Object = Nothing) As Task(Of IEnumerable(Of Object))
+        Public Overridable Async Function QueryAsync(sql As String, Optional param As Object = Nothing) As Task(Of IEnumerable(Of Object))
 
             Dim result As IEnumerable(Of Object)
 
             Me.Connect()
 
-            If _Settings.EnableTransaction = True Then
+            If _Settings.EnableTransaction Then
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                     Try
                         result = Await Me.Connection.QueryAsync(sql, param, transaction)
@@ -900,53 +855,13 @@ Namespace Context.Tools
         ''' <param name="param"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Function Query(Of T As Class)(sql As String, Optional param As Object = Nothing) As IEnumerable(Of T)
+        Public Overridable Async Function QueryAsync(Of T As Class)(sql As String, Optional param As Object = Nothing) As Task(Of IEnumerable(Of T))
 
             Dim result As IEnumerable(Of T)
 
             Me.Connect()
 
-            If _Settings.EnableTransaction = True Then
-                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
-                    Try
-                        result = Me.Connection.Query(Of T)(sql, param, transaction)
-                        transaction.Commit()
-                    Catch ex As Exception
-                        transaction.Rollback()
-                        Me.Disconnect()
-                        Throw
-                    End Try
-                End Using
-            Else
-                Try
-                    result = Me.Connection.Query(Of T)(sql, param)
-                Catch ex As Exception
-                    Me.Disconnect()
-                    Throw
-                End Try
-            End If
-
-            Me.Disconnect()
-
-            Return result
-
-        End Function
-
-        ''' <summary>
-        ''' Execute a SQL command and return a collection of objects.
-        ''' </summary>
-        ''' <typeparam name="T"></typeparam>
-        ''' <param name="sql"></param>
-        ''' <param name="param"></param>
-        ''' <returns></returns>
-        ''' <remarks></remarks>
-        Public Async Function QueryAsync(Of T As Class)(sql As String, Optional param As Object = Nothing) As Task(Of IEnumerable(Of T))
-
-            Dim result As IEnumerable(Of T)
-
-            Me.Connect()
-
-            If _Settings.EnableTransaction = True Then
+            If _Settings.EnableTransaction Then
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                     Try
                         result = Await Me.Connection.QueryAsync(Of T)(sql, param, transaction)
@@ -972,10 +887,91 @@ Namespace Context.Tools
 
         End Function
 
+        ''' <summary>
+        ''' Execute a SQL command and return a collection of objects.
+        ''' </summary>
+        ''' <param name="sql"></param>
+        ''' <param name="param"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Overridable Function Query(sql As String, Optional param As Object = Nothing) As IEnumerable(Of Object)
+
+            Dim result As IEnumerable(Of Object)
+
+            Me.Connect()
+
+            If _Settings.EnableTransaction Then
+                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+                    Try
+                        result = Me.Connection.Query(sql, param, transaction)
+                        transaction.Commit()
+                    Catch ex As Exception
+                        transaction.Rollback()
+                        Me.Disconnect()
+                        Throw
+                    End Try
+                End Using
+            Else
+                Try
+                    result = Me.Connection.Query(sql, param)
+                Catch ex As Exception
+                    Me.Disconnect()
+                    Throw
+                End Try
+            End If
+
+            Me.Disconnect()
+
+            Return result
+
+        End Function
+
+        ''' <summary>
+        ''' Execute a SQL command and return a collection of objects.
+        ''' </summary>
+        ''' <typeparam name="T"></typeparam>
+        ''' <param name="sql"></param>
+        ''' <param name="param"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Overridable Function Query(Of T As Class)(sql As String, Optional param As Object = Nothing) As IEnumerable(Of T)
+
+            Dim result As IEnumerable(Of T)
+
+            Me.Connect()
+
+            If _Settings.EnableTransaction Then
+                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+                    Try
+                        result = Me.Connection.Query(Of T)(sql, param, transaction)
+                        transaction.Commit()
+                    Catch ex As Exception
+                        transaction.Rollback()
+                        Me.Disconnect()
+                        Throw
+                    End Try
+                End Using
+            Else
+                Try
+                    result = Me.Connection.Query(Of T)(sql, param)
+                Catch ex As Exception
+                    Me.Disconnect()
+                    Throw
+                End Try
+            End If
+
+            Me.Disconnect()
+
+            Return result
+
+        End Function
+
+
+
         Protected Friend Shared Function GetKeyFieldValue(Of TEntity As Class)(entity As TEntity) As Object
 
             If entity Is Nothing Then
-                Throw New Exception("Entity was not found")
+                Throw New ArgumentException("Entity was not found")
             End If
 
             Dim entityType As Type = entity.GetType
@@ -1000,7 +996,6 @@ Namespace Context.Tools
         Protected Overridable Sub Dispose(disposing As Boolean)
             If Not disposedValue Then
                 If disposing Then
-                    ' TODO: eliminare lo stato gestito (oggetti gestiti)
                     If Me.Connection.State = ConnectionState.Open Then
                         Me.Connection.Close()
                     End If
@@ -1008,13 +1003,10 @@ Namespace Context.Tools
                     Me.Connection.Dispose()
                 End If
 
-                ' TODO: liberare risorse non gestite (oggetti non gestiti) ed eseguire l'override del finalizzatore
-                ' TODO: impostare campi di grandi dimensioni su Null
                 disposedValue = True
             End If
         End Sub
 
-        ' ' TODO: eseguire l'override del finalizzatore solo se 'Dispose(disposing As Boolean)' contiene codice per liberare risorse non gestite
         ' Protected Overrides Sub Finalize()
         '     ' Non modificare questo codice. Inserire il codice di pulizia nel metodo 'Dispose(disposing As Boolean)'
         '     Dispose(disposing:=False)
