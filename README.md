@@ -1,6 +1,6 @@
-<img src="https://i.imgur.com/uDCuPh1.png" title="" alt=" " data-align="center">
+![Banner](https://i.imgur.com/uDCuPh1.png)
 
-<img title="" src="https://img.shields.io/github/license/berto82/DapperContext.svg" alt="GitHub License" data-align="inline"> <img title="" src="https://img.shields.io/nuget/vpre/BertoSoftware.DapperContext.svg" alt="NuGet Version" data-align="inline"> ![NuGet Downloads](https://img.shields.io/nuget/dt/BertoSoftware.DapperContext.svg) ![GitHub Release Date](https://img.shields.io/github/release-date-pre/berto82/DapperContext.svg) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/berto82/DapperContext/master.svg)
+![GitHub License](https://img.shields.io/github/license/berto82/DapperContext.svg) ![NuGet Version](https://img.shields.io/nuget/vpre/BertoSoftware.DapperContext.svg) ![NuGet Downloads](https://img.shields.io/nuget/dt/BertoSoftware.DapperContext.svg) ![GitHub Release Date](https://img.shields.io/github/release-date-pre/berto82/DapperContext.svg) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/berto82/DapperContext/master.svg)
 
 ---
 
@@ -97,7 +97,7 @@ DapperContext.Settings = ContextConfiguration.CreateNew.
          Build()
 ```
 
-### C#
+### C\#
 
 ```csharp
 using BertoSoftware.Context.Configuration;
@@ -158,7 +158,7 @@ Namespace Model
 End Namespace
 ```
 
-#### C#
+#### C\#
 
 ```cs
 using Dapper.Contrib.Extensions;
@@ -292,7 +292,7 @@ Public Function DeleteAllRecords() As Boolean
 End Function
 ```
 
-#### C#
+#### C\#
 
 ```csharp
 using BertoSoftware.Configuration;
