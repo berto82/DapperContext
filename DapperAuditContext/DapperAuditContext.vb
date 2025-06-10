@@ -12,11 +12,6 @@ Namespace Context.Tools.Audit
     ''' The audit trail is stored in the AuditTable table in the database.
     ''' </summary>
     ''' <remarks></remarks>
-    ''' <summary>
-    ''' DapperAuditContext is a DapperContext that creates an audit trail of all changes to the database.
-    ''' It uses the KellermanSoftware.CompareNetObjects library to compare objects and create a list of changes.
-    ''' The audit trail is stored in the AuditTable table in the database.
-    ''' </summary>
     Public MustInherit Class DapperAuditContext
         Inherits DapperContext
 
@@ -26,7 +21,17 @@ Namespace Context.Tools.Audit
             Delete
         End Enum
 
+        ''' <summary>
+        ''' AuditSettings is the configuration for the audit trail.
+        ''' It is used to determine how the audit trail is stored and where it is stored.
+        ''' </summary>
+        ''' <remarks></remarks>
         Public Shared Property AuditSettings As AuditConfiguration
+        ''' <summary>
+        ''' DisableAudit is a flag that can be set to true to disable the audit trail.
+        ''' This is useful for performance reasons when the audit trail is not needed.
+        ''' </summary>
+        ''' <remarks></remarks>     
         Public Shared Property DisableAudit As Boolean
 
         Protected Friend Sub New()
@@ -44,12 +49,6 @@ Namespace Context.Tools.Audit
         ''' <param name="entity"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        ''' <summary>
-        ''' Insert or Update the entity and create an audit trail.
-        ''' </summary>
-        ''' <typeparam name="TEntity"></typeparam>
-        ''' <param name="entity"></param>
-        ''' <returns></returns>
         Public Overrides Function InsertOrUpdate(Of TEntity As Class)(entity As TEntity) As Object
 
             Dim result As Object
@@ -75,12 +74,6 @@ Namespace Context.Tools.Audit
         ''' <param name="entity"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        ''' <summary>
-        ''' Insert or Update the entity and create an audit trail.
-        ''' </summary>
-        ''' <typeparam name="TEntity"></typeparam>
-        ''' <param name="entity"></param>
-        ''' <returns></returns>
         Public Overrides Async Function InsertOrUpdateAsync(Of TEntity As Class)(entity As TEntity) As Task(Of Object)
 
             Dim result As Object
@@ -106,12 +99,6 @@ Namespace Context.Tools.Audit
         ''' <param name="entity"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        ''' <summary>
-        ''' Delete the entity and create an audit trail.
-        ''' </summary>
-        ''' <typeparam name="TEntity"></typeparam>
-        ''' <param name="entity"></param>
-        ''' <returns></returns>
         Public Overrides Function Delete(Of TEntity As Class)(entity As TEntity) As Boolean
 
             Dim result As Boolean
@@ -132,12 +119,6 @@ Namespace Context.Tools.Audit
         ''' <param name="entity"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        ''' <summary>
-        ''' Delete the entity and create an audit trail.
-        ''' </summary>
-        ''' <typeparam name="TEntity"></typeparam>
-        ''' <param name="entity"></param>
-        ''' <returns></returns>
         Public Overrides Async Function DeleteAsync(Of TEntity As Class)(entity As TEntity) As Task(Of Boolean)
 
             Dim result As Boolean
@@ -157,11 +138,6 @@ Namespace Context.Tools.Audit
         ''' <typeparam name="TEntity"></typeparam>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        ''' <summary>
-        ''' Delete all entities of the specified type and create an audit trail.
-        ''' </summary>
-        ''' <typeparam name="TEntity"></typeparam>
-        ''' <returns></returns>
         Public Overrides Function DeleteAll(Of TEntity As Class)() As Boolean
             Dim result As Boolean
 
@@ -180,11 +156,6 @@ Namespace Context.Tools.Audit
         ''' <typeparam name="TEntity"></typeparam>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        ''' <summary>
-        ''' Delete all entities of the specified type and create an audit trail.
-        ''' </summary>
-        ''' <typeparam name="TEntity"></typeparam>
-        ''' <returns></returns>
         Public Overrides Async Function DeleteAllAsync(Of TEntity As Class)() As Task(Of Boolean)
             Dim result As Boolean
 
@@ -309,7 +280,6 @@ Namespace Context.Tools.Audit
                     IO.File.WriteAllText(fullPath, resultString)
 
             End Select
-
 
         End Sub
 

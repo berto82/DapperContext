@@ -50,6 +50,12 @@ Namespace Context.Tools.Audit
 
         End Sub
 
+        ''' <summary>
+        ''' Check if the database exists.
+        ''' </summary>
+        ''' <param name="dbName">The name of the database to check.</param>
+        ''' <returns>True if the database exists, otherwise False.</returns>
+        ''' <remarks>Uses information_schema to check for the existence of the database.</remarks>
         Public Overrides Function DatabaseExist(dbName As String) As Boolean
 
             Dim result As String

@@ -966,8 +966,6 @@ Namespace Context.Tools
 
         End Function
 
-
-
         Protected Friend Shared Function GetKeyFieldValue(Of TEntity As Class)(entity As TEntity) As Object
 
             If entity Is Nothing Then
