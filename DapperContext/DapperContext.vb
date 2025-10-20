@@ -142,26 +142,13 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction Then
-                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
-                    Try
-                        result = Me.Connection.Get(Of TEntity)(id, transaction)
-                        transaction.Commit()
-                    Catch ex As Exception
-                        transaction.Rollback()
-                        Me.Disconnect()
-                        Throw
-                    End Try
+            Try
+                result = Me.Connection.Get(Of TEntity)(id)
+            Catch ex As Exception
+                Me.Disconnect()
+                Throw
+            End Try
 
-                End Using
-            Else
-                Try
-                    result = Me.Connection.Get(Of TEntity)(id)
-                Catch ex As Exception
-                    Me.Disconnect()
-                    Throw
-                End Try
-            End If
 
             Me.Disconnect()
 
@@ -182,27 +169,14 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction Then
-                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
 
-                    Try
-                        result = Await Me.Connection.GetAsync(Of TEntity)(id, transaction)
-                        transaction.Commit()
-                    Catch ex As Exception
-                        transaction.Rollback()
-                        Me.Disconnect()
-                        Throw
-                    End Try
+            Try
+                result = Await Me.Connection.GetAsync(Of TEntity)(id)
+            Catch ex As Exception
+                Me.Disconnect()
+                Throw
+            End Try
 
-                End Using
-            Else
-                Try
-                    result = Await Me.Connection.GetAsync(Of TEntity)(id)
-                Catch ex As Exception
-                    Me.Disconnect()
-                    Throw
-                End Try
-            End If
 
             Me.Disconnect()
 
@@ -222,27 +196,13 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction Then
-                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+            Try
+                result = Me.Connection.GetAll(Of TEntity)
+            Catch ex As Exception
+                Me.Disconnect()
+                Throw
+            End Try
 
-                    Try
-                        result = Me.Connection.GetAll(Of TEntity)(transaction)
-                        transaction.Commit()
-                    Catch ex As Exception
-                        transaction.Rollback()
-                        Me.Disconnect()
-                        Throw
-                    End Try
-
-                End Using
-            Else
-                Try
-                    result = Me.Connection.GetAll(Of TEntity)
-                Catch ex As Exception
-                    Me.Disconnect()
-                    Throw
-                End Try
-            End If
 
             Me.Disconnect()
 
@@ -262,27 +222,13 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction Then
-                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+            Try
+                result = Await Me.Connection.GetAllAsync(Of TEntity)
+            Catch ex As Exception
+                Me.Disconnect()
+                Throw
+            End Try
 
-                    Try
-                        result = Await Me.Connection.GetAllAsync(Of TEntity)(transaction)
-                        transaction.Commit()
-                    Catch ex As Exception
-                        transaction.Rollback()
-                        Me.Disconnect()
-                        Throw
-                    End Try
-
-                End Using
-            Else
-                Try
-                    result = Await Me.Connection.GetAllAsync(Of TEntity)
-                Catch ex As Exception
-                    Me.Disconnect()
-                    Throw
-                End Try
-            End If
 
             Me.Disconnect()
 
@@ -303,12 +249,12 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction Then
-                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
+            If _Settings.TransactionEnabled Then
+                Using transaction As IDbTransaction = Me.Connection.BeginTransaction()
 
                     Try
                         Dim isNew As Boolean = False
-                        Dim keyValue As Object = DapperContext.GetKeyFieldValue(entity)
+                        Dim keyValue As Object = GetKeyFieldValue(entity)
 
                         If CInt(keyValue) = 0 Then
                             isNew = True
@@ -332,7 +278,7 @@ Namespace Context.Tools
             Else
                 Try
                     Dim isNew As Boolean = False
-                    Dim keyValue As Object = DapperContext.GetKeyFieldValue(entity)
+                    Dim keyValue As Object = GetKeyFieldValue(entity)
 
                     If CInt(keyValue) = 0 Then
                         isNew = True
@@ -369,12 +315,12 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction Then
+            If _Settings.TransactionEnabled Then
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
 
                     Try
                         Dim isNew As Boolean = False
-                        Dim keyValue As Object = DapperContext.GetKeyFieldValue(entity)
+                        Dim keyValue As Object = GetKeyFieldValue(entity)
 
                         If CInt(keyValue) = 0 Then
                             isNew = True
@@ -433,7 +379,7 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction Then
+            If _Settings.TransactionEnabled Then
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                     Try
                         result = Me.Connection.Delete(entity, transaction)
@@ -471,7 +417,7 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction Then
+            If _Settings.TransactionEnabled Then
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
 
                     Try
@@ -509,7 +455,7 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction Then
+            If _Settings.TransactionEnabled Then
 
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                     Try
@@ -548,7 +494,7 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction Then
+            If _Settings.TransactionEnabled Then
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                     Try
                         result = Await Me.Connection.DeleteAllAsync(Of TEntity)(transaction)
@@ -586,7 +532,7 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction Then
+            If _Settings.TransactionEnabled Then
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                     Try
                         result = Me.Connection.Execute(sql, param, transaction)
@@ -624,7 +570,7 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction Then
+            If _Settings.TransactionEnabled Then
                 Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                     Try
                         result = Await Me.Connection.ExecuteAsync(sql, param, transaction)
@@ -662,25 +608,12 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction Then
-                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
-                    Try
-                        result = Me.Connection.ExecuteScalar(sql, param, transaction)
-                        transaction.Commit()
-                    Catch ex As Exception
-                        transaction.Rollback()
-                        Me.Disconnect()
-                        Throw
-                    End Try
-                End Using
-            Else
-                Try
-                    result = Me.Connection.ExecuteScalar(sql, param)
-                Catch ex As Exception
-                    Me.Disconnect()
-                    Throw
-                End Try
-            End If
+            Try
+                result = Me.Connection.ExecuteScalar(sql, param)
+            Catch ex As Exception
+                Me.Disconnect()
+                Throw
+            End Try
 
             Me.Disconnect()
 
@@ -702,25 +635,12 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction Then
-                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
-                    Try
-                        result = Me.Connection.ExecuteScalar(Of T)(sql, param, transaction)
-                        transaction.Commit()
-                    Catch ex As Exception
-                        transaction.Rollback()
-                        Me.Disconnect()
-                        Throw
-                    End Try
-                End Using
-            Else
-                Try
-                    result = Me.Connection.ExecuteScalar(Of T)(sql, param)
-                Catch ex As Exception
-                    Me.Disconnect()
-                    Throw
-                End Try
-            End If
+            Try
+                result = Me.Connection.ExecuteScalar(Of T)(sql, param)
+            Catch ex As Exception
+                Me.Disconnect()
+                Throw
+            End Try
 
             Me.Disconnect()
 
@@ -740,25 +660,12 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction Then
-                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
-                    Try
-                        result = Await Me.Connection.ExecuteScalarAsync(sql, param, transaction)
-                        transaction.Commit()
-                    Catch ex As Exception
-                        transaction.Rollback()
-                        Me.Disconnect()
-                        Throw
-                    End Try
-                End Using
-            Else
-                Try
-                    result = Await Me.Connection.ExecuteScalarAsync(sql, param)
-                Catch ex As Exception
-                    Me.Disconnect()
-                    Throw
-                End Try
-            End If
+            Try
+                result = Await Me.Connection.ExecuteScalarAsync(sql, param)
+            Catch ex As Exception
+                Me.Disconnect()
+                Throw
+            End Try
 
             Me.Disconnect()
 
@@ -780,25 +687,12 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction Then
-                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
-                    Try
-                        result = Await Me.Connection.ExecuteScalarAsync(Of T)(sql, param, transaction)
-                        transaction.Commit()
-                    Catch ex As Exception
-                        transaction.Rollback()
-                        Me.Disconnect()
-                        Throw
-                    End Try
-                End Using
-            Else
-                Try
-                    result = Await Me.Connection.ExecuteScalarAsync(Of T)(sql, param)
-                Catch ex As Exception
-                    Me.Disconnect()
-                    Throw
-                End Try
-            End If
+            Try
+                result = Await Me.Connection.ExecuteScalarAsync(Of T)(sql, param)
+            Catch ex As Exception
+                Me.Disconnect()
+                Throw
+            End Try
 
             Me.Disconnect()
 
@@ -821,25 +715,13 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction Then
-                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
-                    Try
-                        result = Await Me.Connection.QueryAsync(sql, param, transaction)
-                        transaction.Commit()
-                    Catch ex As Exception
-                        transaction.Rollback()
-                        Me.Disconnect()
-                        Throw
-                    End Try
-                End Using
-            Else
-                Try
-                    result = Await Me.Connection.QueryAsync(sql, param)
-                Catch ex As Exception
-                    Me.Disconnect()
-                    Throw
-                End Try
-            End If
+            Try
+                result = Await Me.Connection.QueryAsync(sql, param)
+            Catch ex As Exception
+                Me.Disconnect()
+                Throw
+            End Try
+
 
             Me.Disconnect()
 
@@ -861,25 +743,12 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction Then
-                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
-                    Try
-                        result = Await Me.Connection.QueryAsync(Of T)(sql, param, transaction)
-                        transaction.Commit()
-                    Catch ex As Exception
-                        transaction.Rollback()
-                        Me.Disconnect()
-                        Throw
-                    End Try
-                End Using
-            Else
-                Try
-                    result = Await Me.Connection.QueryAsync(Of T)(sql, param)
-                Catch ex As Exception
-                    Me.Disconnect()
-                    Throw
-                End Try
-            End If
+            Try
+                result = Await Me.Connection.QueryAsync(Of T)(sql, param)
+            Catch ex As Exception
+                Me.Disconnect()
+                Throw
+            End Try
 
             Me.Disconnect()
 
@@ -900,25 +769,12 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction Then
-                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
-                    Try
-                        result = Me.Connection.Query(sql, param, transaction)
-                        transaction.Commit()
-                    Catch ex As Exception
-                        transaction.Rollback()
-                        Me.Disconnect()
-                        Throw
-                    End Try
-                End Using
-            Else
-                Try
-                    result = Me.Connection.Query(sql, param)
-                Catch ex As Exception
-                    Me.Disconnect()
-                    Throw
-                End Try
-            End If
+            Try
+                result = Me.Connection.Query(sql, param)
+            Catch ex As Exception
+                Me.Disconnect()
+                Throw
+            End Try
 
             Me.Disconnect()
 
@@ -940,25 +796,14 @@ Namespace Context.Tools
 
             Me.Connect()
 
-            If _Settings.EnableTransaction Then
-                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
-                    Try
-                        result = Me.Connection.Query(Of T)(sql, param, transaction)
-                        transaction.Commit()
-                    Catch ex As Exception
-                        transaction.Rollback()
-                        Me.Disconnect()
-                        Throw
-                    End Try
-                End Using
-            Else
-                Try
-                    result = Me.Connection.Query(Of T)(sql, param)
-                Catch ex As Exception
-                    Me.Disconnect()
-                    Throw
-                End Try
-            End If
+
+            Try
+                result = Me.Connection.Query(Of T)(sql, param)
+            Catch ex As Exception
+                Me.Disconnect()
+                Throw
+            End Try
+
 
             Me.Disconnect()
 
