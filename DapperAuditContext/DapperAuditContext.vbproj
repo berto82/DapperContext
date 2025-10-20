@@ -11,7 +11,7 @@
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageId>$(RootNamespace).$(AssemblyName)</PackageId>
     <AssemblyName>$(RootNamespace).$(MSBuildProjectName)</AssemblyName>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperAuditContext</PackageProjectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageTags>dapper;orm;dbcontext;audit</PackageTags>
@@ -25,8 +25,8 @@ Added missing intellisense documentation
 
 Release version</PackageReleaseNotes>
     <RepositoryType>git</RepositoryType>
-    <FileVersion>1.0.1</FileVersion>
-    <AssemblyVersion>1.0.1</AssemblyVersion>
+    <FileVersion>1.0.2</FileVersion>
+    <AssemblyVersion>1.0.2</AssemblyVersion>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageIcon>Icon-Dapper-Context.png</PackageIcon>
   </PropertyGroup>
@@ -45,7 +45,7 @@ Release version</PackageReleaseNotes>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CompareNETObjects" Version="4.83.0" />
+    <PackageReference Include="CompareNETObjects" Version="4.84.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DapperContext\DapperContext.vbproj" />

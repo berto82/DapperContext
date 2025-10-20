@@ -6,14 +6,14 @@
         Public ReadOnly Property CustomConfigurationFile As String
         Public ReadOnly Property ConnectionName As String
         Public ReadOnly Property ConnectionString As String
-        Public ReadOnly Property EnableTransaction As Boolean
+        Public ReadOnly Property TransactionEnabled As Boolean
 
         Private Sub New()
             _SettingsMode = SettingFileMode.NETCore
             _CustomConfigurationFile = String.Empty
             _ConnectionName = "DefaultConnection"
             _ConnectionString = String.Empty
-            _EnableTransaction = True
+            _TransactionEnabled = True
         End Sub
 
         ''' <summary>
@@ -44,8 +44,13 @@
             Return Me
         End Function
 
+        Public Function EnableTransaction() As IContextConfigurationBuilder Implements IContextConfigurationBuilder.EnableTransaction
+            _TransactionEnabled = False
+            Return Me
+        End Function
+
         Public Function DisableTransaction() As IContextConfigurationBuilder Implements IContextConfigurationBuilder.DisableTransaction
-            _EnableTransaction = False
+            _TransactionEnabled = False
             Return Me
         End Function
 
