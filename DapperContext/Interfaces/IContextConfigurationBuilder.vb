@@ -38,6 +38,12 @@
         Function WithCustomConnectionString(connectionstring As String) As IContextConfigurationBuilder
 
         ''' <summary>
+        ''' Enable transaction on Dapper (if omitted, will considered True)
+        ''' </summary>
+        ''' <returns></returns>
+        Function EnableTransaction() As IContextConfigurationBuilder
+
+        ''' <summary>
         ''' Disable transaction on Dapper
         ''' </summary>
         ''' <returns></returns>
