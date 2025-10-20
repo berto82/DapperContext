@@ -45,7 +45,7 @@ Release version</PackageReleaseNotes>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CompareNETObjects" Version="4.83.0" />
+    <PackageReference Include="CompareNETObjects" Version="4.84.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DapperContext\DapperContext.vbproj" />

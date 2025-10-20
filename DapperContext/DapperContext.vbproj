@@ -52,7 +52,7 @@ Release version</PackageReleaseNotes>
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.66" />
     <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.5" />
-    <PackageReference Include="microsoft.extensions.configuration.Json" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.10" />
+    <PackageReference Include="microsoft.extensions.configuration.Json" Version="9.0.10" />
   </ItemGroup>
 </Project>
