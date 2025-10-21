@@ -26,13 +26,6 @@
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<PackageIcon>Icon-Dapper-Context.png</PackageIcon>
 		<PackageReadmeFile>README AUDIT.md</PackageReadmeFile>
-    <PackageReleaseNotes>
-      v1.0.0
-
-      Added missing intellisense documentation
-
-      Release version
-    </PackageReleaseNotes>
 	</PropertyGroup>
 
 	<ItemGroup>
