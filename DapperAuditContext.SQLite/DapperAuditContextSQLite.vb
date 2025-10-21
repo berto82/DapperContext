@@ -37,13 +37,7 @@ Namespace Context.Tools.Audit
         ''' <returns>True if the database exists, otherwise False.</returns>
         ''' <remarks>Uses information_schema to check for the existence of the database.</remarks>
         Public Overrides Function DatabaseExist(dbName As String) As Boolean
-
-            Dim result As Boolean
-
-            result = IO.File.Exists(CType(Me.Connection, SqliteConnection).DataSource)
-
-            Return result
-
+            Return IO.File.Exists(CType(Me.Connection, SqliteConnection).DataSource)
         End Function
 
 

@@ -14,5 +14,9 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<PackageReleaseNotes>v1.0.3
+
+	 Minor bug fix
+	</PackageReleaseNotes>
   </PropertyGroup>
 </Project>

@@ -30,15 +30,11 @@ Namespace Context.Tools
         ''' <returns>True if the database exists, otherwise False.</returns>
         ''' <remarks>Uses information_schema to check for the existence of the database.</remarks>
         Public Overrides Function DatabaseExist(dbName As String) As Boolean
-
-            Dim result As String
-
             Try
-                result = Me.Connection.Query(Of String)("SELECT schema_name FROM infomrmation_schema.schemata WHERE schema_name = @p0", New With {.p0 = dbName}).FirstOrDefault
+                Return Me.Connection.Query(Of String)("SELECT schema_name FROM infomrmation_schema.schemata WHERE schema_name = @p0", New With {.p0 = dbName}).Count > 0
             Catch ex As Exception
                 Throw
             End Try
-
 
             Return False
 
