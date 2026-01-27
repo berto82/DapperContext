@@ -2,15 +2,15 @@
 
   <PropertyGroup>
     <RootNamespace>BertoSoftware</RootNamespace>
-    <TargetFrameworks>net48;net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>net48;net8.0;net9.0;net10.0</TargetFrameworks>
     <OptionStrict>On</OptionStrict>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>DapperAuditContext.SqlServer</Title>
     <Description>A simple collections of functions and method for CRUD operation in Dapper for generic item with an integrated audit system</Description>
     <Copyright>Roberto Faccani</Copyright>
-    <Version>1.0.3</Version>
-    <FileVersion>1.0.3</FileVersion>
-    <AssemblyVersion>1.0.3</AssemblyVersion>
+    <Version>1.0.4.0</Version>
+    <FileVersion>1.0.4.0</FileVersion>
+    <AssemblyVersion>1.0.4.0</AssemblyVersion>
     <PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperAuditContext.PostgreSQL</PackageProjectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageTags>dapper;orm;dbcontext;audit;postgreSQL;npgsql</PackageTags>

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <RootNamespace>BertoSoftware</RootNamespace>
-    <TargetFrameworks>net48;net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>net48;net8.0;net9.0;net10.0</TargetFrameworks>
     <OptionStrict>On</OptionStrict>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>DapperContext</Title>
@@ -12,7 +12,7 @@
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageId>$(RootNamespace).$(AssemblyName)</PackageId>
     <AssemblyName>$(RootNamespace).$(MSBuildProjectName)</AssemblyName>
-    <Version>1.0.3</Version>
+    <Version>1.0.4.0</Version>
     <PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperContext</PackageProjectUrl>
     <PackageTags>dapper;orm;dbcontext;</PackageTags>
     <RepositoryUrl>https://github.com/berto82/DapperContext</RepositoryUrl>
@@ -20,8 +20,8 @@
     <Authors>Roberto Faccani</Authors>
     <Company>Roberto Faccani</Company>
     <RepositoryType>git</RepositoryType>
-    <FileVersion>1.0.3</FileVersion>
-    <AssemblyVersion>1.0.3</AssemblyVersion>
+    <FileVersion>1.0.4.0</FileVersion>
+    <AssemblyVersion>1.0.4.0</AssemblyVersion>
     <ApplicationIcon>Icon-DapperContext.ico</ApplicationIcon>
     <PackageIcon>Icon-Dapper-Context.png</PackageIcon>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -47,7 +47,7 @@
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.66" />
     <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.10" />
-    <PackageReference Include="microsoft.extensions.configuration.Json" Version="9.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.2" />
+    <PackageReference Include="microsoft.extensions.configuration.Json" Version="10.0.2" />
   </ItemGroup>
 </Project>

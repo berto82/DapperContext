@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <RootNamespace>BertoSoftware</RootNamespace>
-    <TargetFrameworks>net48;net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>net48;net8.0;net9.0;net10.0</TargetFrameworks>
     <OptionStrict>On</OptionStrict>
     <Title>DapperAuditContext</Title>
     <Description>A simple collections of functions and method for CRUD operation in Dapper for generic item with an integrated audit system.</Description>
@@ -11,7 +11,7 @@
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageId>$(RootNamespace).$(AssemblyName)</PackageId>
     <AssemblyName>$(RootNamespace).$(MSBuildProjectName)</AssemblyName>
-    <Version>1.0.3</Version>
+    <Version>1.0.4.0</Version>
     <PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperAuditContext</PackageProjectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageTags>dapper;orm;dbcontext;audit</PackageTags>
@@ -20,8 +20,8 @@
     <Authors>Roberto Faccani</Authors>
     <Company>Roberto Faccani</Company>
     <RepositoryType>git</RepositoryType>
-    <FileVersion>1.0.3</FileVersion>
-    <AssemblyVersion>1.0.3</AssemblyVersion>
+    <FileVersion>1.0.4.0</FileVersion>
+    <AssemblyVersion>1.0.4.0</AssemblyVersion>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageIcon>Icon-Dapper-Context.png</PackageIcon>
   </PropertyGroup>
