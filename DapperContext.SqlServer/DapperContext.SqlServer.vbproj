@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<RootNamespace>BertoSoftware</RootNamespace>
-		<TargetFrameworks>net48;net8.0;net9.0</TargetFrameworks>
+		<TargetFrameworks>net48;net8.0;net9.0;net10.0</TargetFrameworks>
 		<OptionStrict>On</OptionStrict>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>DapperContext.SqlServer</Title>
@@ -44,7 +44,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.2" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
 	</ItemGroup>
 
 	<ItemGroup>

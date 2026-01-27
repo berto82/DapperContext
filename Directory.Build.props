@@ -14,9 +14,11 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-	<PackageReleaseNotes>v1.0.3
-
-	 Minor bug fix
+	<PackageReleaseNotes>
+		v1.0.4
+		Fix a problem with cyclic references when an entity has a property that references another entity that in turn references the first entity.
+		Added support for .NET 10.0
+		Updated dependencies to latest versions.
 	</PackageReleaseNotes>
   </PropertyGroup>
 </Project>
