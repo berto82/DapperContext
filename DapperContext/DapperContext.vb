@@ -796,14 +796,12 @@ Namespace Context.Tools
 
             Me.Connect()
 
-
             Try
                 result = Me.Connection.Query(Of T)(sql, param)
             Catch ex As Exception
                 Me.Disconnect()
                 Throw
             End Try
-
 
             Me.Disconnect()
 
@@ -821,12 +819,13 @@ Namespace Context.Tools
             Dim keyValue As Object = Nothing
 
             For Each prop As PropertyInfo In entityType.GetProperties
-                Dim keyAttribute As Attribute = prop.GetCustomAttribute(Of KeyAttribute)()
+                Dim keyAttribute As Attribute = prop.GetCustomAttribute(Of KeyAttribute)
 
                 If keyAttribute IsNot Nothing Then
                     keyValue = prop.GetValue(entity)
                     Exit For
                 End If
+
             Next
 
             Return keyValue

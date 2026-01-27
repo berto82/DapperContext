@@ -99,9 +99,11 @@ Module Program
 
     Private Sub ExecuteCRUDOperation()
 
-        Dim insertedRecordID As Long = InsertRecord()
+        Dim insertedLocationID As Long = InsertLocationRecord()
+        Dim inserterPersonID As Long = InsertPersonRecord()
 
-        Dim person As Model.Person = GetRecordByID(insertedRecordID)
+        Dim person As Model.Person = GetRecordByID(inserterPersonID)
+        person.LocationID = CInt(insertedLocationID)
 
         Console.WriteLine(String.Join(" | ", {person.ID, person.Name, person.Surname}))
 
@@ -135,13 +137,23 @@ Module Program
 
     End Function
 
-    Private Function InsertRecord() As Long
+    Private Function InsertLocationRecord() As Long
+        'Create a record
+
+        Dim location As New Model.Location With {
+                .Name = "London"
+            }
+
+        Return CLng(ctx.InsertOrUpdate(location))
+
+    End Function
+
+    Private Function InsertPersonRecord() As Long
         'Create a record
         Dim person As New Model.Person With {
                 .Name = "John",
                 .Surname = "Doe"
             }
-
         Return CLng(ctx.InsertOrUpdate(person))
 
     End Function

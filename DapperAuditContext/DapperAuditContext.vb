@@ -3,6 +3,7 @@ Imports System.Reflection
 Imports System.Text
 Imports BertoSoftware.Context.Configuration
 Imports BertoSoftware.Internal.Model
+Imports Dapper.Contrib.Extensions
 Imports KellermanSoftware.CompareNetObjects
 
 Namespace Context.Tools.Audit
@@ -174,27 +175,38 @@ Namespace Context.Tools.Audit
                 Return
             End If
 
+            Dim jsonOptions As New Json.JsonSerializerOptions With {
+                .IgnoreReadOnlyProperties = True,
+                .IgnoreReadOnlyFields = True,
+                .ReferenceHandler = Json.Serialization.ReferenceHandler.IgnoreCycles
+            }
+
             Dim compObjects As New CompareLogic
             compObjects.Config.IgnoreCollectionOrder = True
             compObjects.Config.MaxDifferences = 99
 
-            Dim classAttr As AuditAttribute = CType(newObject.GetType().GetCustomAttributes(GetType(AuditAttribute), True), AuditAttribute()).FirstOrDefault
+            Dim auditAttr As AuditAttribute = newObject.GetType().GetCustomAttribute(Of AuditAttribute)
 
-            If classAttr Is Nothing Then
+            If auditAttr Is Nothing Then
                 Return
             End If
 
-            If classAttr.Include = False Then
+            If auditAttr.Include = False Then
                 Return
             End If
 
             For Each prop As PropertyInfo In newObject.GetType().GetProperties
-                Dim propAttr As AuditAttribute = CType(prop.GetCustomAttributes(GetType(AuditAttribute), True), AuditAttribute()).FirstOrDefault
+                Dim propAttr As AuditAttribute = prop.GetCustomAttribute(Of AuditAttribute)
+                Dim computedAttr As ComputedAttribute = prop.GetCustomAttribute(Of ComputedAttribute)
 
                 If propAttr IsNot Nothing Then
                     If Not propAttr.Include Then
                         compObjects.Config.MembersToIgnore.Add(prop.Name)
                     End If
+                End If
+
+                If computedAttr IsNot Nothing Then
+                    compObjects.Config.MembersToIgnore.Add(prop.Name)
                 End If
             Next
 
@@ -218,9 +230,9 @@ Namespace Context.Tools.Audit
             audit.KeyFieldID = keyFieldID
 
             If AuditSettings.StoreLogMode <> AuditStoreMode.JSON Then
-                audit.ValueBefore = Text.Json.JsonSerializer.Serialize(oldObject)
-                audit.ValueAfter = Text.Json.JsonSerializer.Serialize(newObject)
-                audit.Changes = Text.Json.JsonSerializer.Serialize(deltaList)
+                audit.ValueBefore = Text.Json.JsonSerializer.Serialize(oldObject, jsonOptions)
+                audit.ValueAfter = Text.Json.JsonSerializer.Serialize(newObject, jsonOptions)
+                audit.Changes = Text.Json.JsonSerializer.Serialize(deltaList, jsonOptions)
             Else
                 audit.ValueBefore = oldObject
                 audit.ValueAfter = newObject
@@ -275,7 +287,7 @@ Namespace Context.Tools.Audit
 
                     lstAudit.Add(audit)
 
-                    Dim resultString As String = Json.JsonSerializer.Serialize(lstAudit)
+                    Dim resultString As String = Json.JsonSerializer.Serialize(lstAudit, jsonOptions)
 
                     IO.File.WriteAllText(fullPath, resultString)
 
