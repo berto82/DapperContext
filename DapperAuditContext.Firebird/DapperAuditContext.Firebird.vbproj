@@ -1,0 +1,58 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>BertoSoftware</RootNamespace>
+    <TargetFrameworks>net48;net8.0;net9.0;net10.0</TargetFrameworks>
+    <OptionStrict>On</OptionStrict>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>DapperAuditContext.Firebird</Title>
+    <Description>A simple collections of functions and method for CRUD operation in Dapper for generic item with an integrated audit system</Description>
+    <Copyright>Roberto Faccani</Copyright>
+    <Version>1.0.4.0</Version>
+    <FileVersion>1.0.4.0</FileVersion>
+    <AssemblyVersion>1.0.4.0</AssemblyVersion>
+    <PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperAuditContext.MySql</PackageProjectUrl>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageTags>dapper;orm;dbcontext;audit;firebird</PackageTags>
+    <RepositoryUrl>https://github.com/berto82/DapperAuditContext</RepositoryUrl>
+    <IncludeSymbols>True</IncludeSymbols>
+    <Authors>Roberto Faccani</Authors>
+    <Company>Roberto Faccani</Company>
+    <PackageId>$(RootNamespace).$(AssemblyName)</PackageId>
+    <AssemblyName>$(RootNamespace).$(MSBuildProjectName)</AssemblyName>
+    <RepositoryType>git</RepositoryType>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageReadmeFile>README AUDIT.md</PackageReadmeFile>
+    <PackageIcon>Icon-Dapper-Context.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="SQL\AuditTable.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\Icon-Dapper-Context.png" Link="Icon-Dapper-Context.png">
+      <PackagePath>\</PackagePath>
+      <Pack>True</Pack>
+    </None>
+    <None Include="..\LICENSE.txt" Link="LICENSE.txt">
+      <PackagePath>\</PackagePath>
+      <Pack>True</Pack>
+    </None>
+    <None Include="..\README AUDIT.md" Link="README AUDIT.md">
+      <PackagePath>\</PackagePath>
+      <Pack>True</Pack>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="10.3.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DapperAuditContext\DapperAuditContext.vbproj" />
+  </ItemGroup>
+
+</Project>
