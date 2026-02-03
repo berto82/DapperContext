@@ -11,10 +11,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DapperAuditContext.Firebird\DapperAuditContext.Firebird.vbproj" />
     <ProjectReference Include="..\DapperAuditContext.MySql\DapperAuditContext.MySql.vbproj" />
     <ProjectReference Include="..\DapperAuditContext.PostgreSQL\DapperAuditContext.PostgreSQL.vbproj" />
     <ProjectReference Include="..\DapperAuditContext.SQLite\DapperAuditContext.SQLite.vbproj" />
     <ProjectReference Include="..\DapperAuditContext.SqlServer\DapperAuditContext.SqlServer.vbproj" />
+    <ProjectReference Include="..\DapperContext.Firebird\DapperContext.Firebird.vbproj" />
     <ProjectReference Include="..\DapperContext.MySql\DapperContext.MySql.vbproj" />
     <ProjectReference Include="..\DapperContext.PostgreSQL\DapperContext.PostgreSQL.vbproj" />
     <ProjectReference Include="..\DapperContext.SQLite\DapperContext.SQLite.vbproj" />

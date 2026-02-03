@@ -7,6 +7,15 @@ Module Program
 
     Dim ctx As DapperContext
 
+    Enum ConnectionType
+        SQLServer
+        MySQL
+        SQLite
+        PostgreSQL
+        Firebird
+    End Enum
+
+
     Sub Main(args As String())
 
         Try
@@ -22,33 +31,19 @@ Module Program
             DapperAuditContext.AuditSettings = AuditConfiguration.CreateNew.StoreMode(AuditStoreMode.Database).Build
 
             'SQL Server
-            Console.WriteLine("SQL Server Data Example")
-            DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NETCore).WithConnectionName("DefaultConnection").Build
-            ConnectToSQLServer(enableAudit)
-            ExecuteCRUDOperation()
-            Console.WriteLine("---")
+            Connect(ConnectionType.SQLServer, enableAudit)
 
             'MySQL
-            Console.WriteLine("MySQL Data Example")
-            DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NETCore).WithConnectionName("MySqlConnection").Build
-            ConnectToMySQL(enableAudit)
-            ExecuteCRUDOperation()
-            Console.WriteLine("---")
+            Connect(ConnectionType.MySQL, enableAudit)
 
             'SQLite
-            Console.WriteLine("SQLite Data Example")
-            DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NETCore).WithConnectionName("SQLiteConnection").Build
-            ConnectToSQLite(enableAudit)
-            ExecuteCRUDOperation()
-            Console.WriteLine("---")
+            Connect(ConnectionType.SQLite, enableAudit)
 
             'PostgreSQL
-            'For Postgres tables, check name of table attribute on your model is in lower case, otherwhere will it not found table.
-            Console.WriteLine("PostgreSQL Data Example")
-            DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NETCore).WithConnectionName("PostgreSQLConnection").Build
-            ConnectToPostgreSQL(enableAudit)
-            ExecuteCRUDOperation()
-            Console.WriteLine("---")
+            Connect(ConnectionType.PostgreSQL, enableAudit)
+
+            'Firebird
+            Connect(ConnectionType.Firebird, enableAudit)
 
             If enableAudit = True Then
                 If DapperAuditContext.AuditSettings.StoreLogMode <> AuditStoreMode.Database Then
@@ -62,7 +57,33 @@ Module Program
 
     End Sub
 
+    Private Sub Connect(connectionType As ConnectionType, enableAudit As Boolean)
+
+        Console.WriteLine($"Connecting to {connectionType.ToString()}")
+
+        Select Case connectionType
+            Case ConnectionType.SQLServer
+                ConnectToSQLServer(enableAudit)
+            Case ConnectionType.MySQL
+                ConnectToMySQL(enableAudit)
+            Case ConnectionType.PostgreSQL
+                ConnectToPostgreSQL(enableAudit)
+            Case ConnectionType.SQLite
+                ConnectToSQLite(enableAudit)
+            Case ConnectionType.Firebird
+                ConnectToFirebird(enableAudit)
+        End Select
+
+        ExecuteCRUDOperation()
+
+        Console.WriteLine("---")
+
+    End Sub
+
     Public Sub ConnectToSQLServer(enableAudit As Boolean)
+
+        DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NETCore).WithConnectionName("DefaultConnection").Build
+
         If enableAudit = False Then
             ctx = New DapperContextSqlServer
         Else
@@ -72,6 +93,9 @@ Module Program
     End Sub
 
     Public Sub ConnectToMySQL(enableAudit As Boolean)
+
+        DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NETCore).WithConnectionName("MySqlConnection").Build
+
         If enableAudit = False Then
             ctx = New DapperContextMySql
         Else
@@ -79,15 +103,9 @@ Module Program
         End If
     End Sub
 
-    Public Sub ConnectToPostgreSQL(enableAudit As Boolean)
-        If enableAudit = False Then
-            ctx = New DapperContextPostgreSQL
-        Else
-            ctx = New DapperAuditContextPostgreSQL
-        End If
-    End Sub
-
     Public Sub ConnectToSQLite(enableAudit As Boolean)
+
+        DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NETCore).WithConnectionName("SQLiteConnection").Build
 
         If enableAudit = False Then
             ctx = New DapperContextSQLite
@@ -97,13 +115,33 @@ Module Program
 
     End Sub
 
+    Public Sub ConnectToPostgreSQL(enableAudit As Boolean)
+
+        DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NETCore).WithConnectionName("PostgreSQLConnection").Build
+
+        If enableAudit = False Then
+            ctx = New DapperContextPostgreSQL
+        Else
+            ctx = New DapperAuditContextPostgreSQL
+        End If
+    End Sub
+
+    Public Sub ConnectToFirebird(enableAudit As Boolean)
+
+        DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NETCore).WithConnectionName("FirebirdConnection").Build
+
+        If enableAudit = False Then
+            ctx = New DapperContextFirebird
+        Else
+            ctx = New DapperAuditContextFirebird
+        End If
+    End Sub
+
     Private Sub ExecuteCRUDOperation()
 
-        Dim insertedLocationID As Long = InsertLocationRecord()
         Dim inserterPersonID As Long = InsertPersonRecord()
 
         Dim person As Model.Person = GetRecordByID(inserterPersonID)
-        person.LocationID = CInt(insertedLocationID)
 
         Console.WriteLine(String.Join(" | ", {person.ID, person.Name, person.Surname}))
 
