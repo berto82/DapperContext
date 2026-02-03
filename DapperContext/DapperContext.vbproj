@@ -12,7 +12,7 @@
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageId>$(RootNamespace).$(AssemblyName)</PackageId>
     <AssemblyName>$(RootNamespace).$(MSBuildProjectName)</AssemblyName>
-    <Version>1.0.4.0</Version>
+    <Version>1.1.0.0</Version>
     <PackageProjectUrl>https://www.nuget.org/packages/BertoSoftware.DapperContext</PackageProjectUrl>
     <PackageTags>dapper;orm;dbcontext;</PackageTags>
     <RepositoryUrl>https://github.com/berto82/DapperContext</RepositoryUrl>
@@ -20,8 +20,8 @@
     <Authors>Roberto Faccani</Authors>
     <Company>Roberto Faccani</Company>
     <RepositoryType>git</RepositoryType>
-    <FileVersion>1.0.4.0</FileVersion>
-    <AssemblyVersion>1.0.4.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
     <ApplicationIcon>Icon-DapperContext.ico</ApplicationIcon>
     <PackageIcon>Icon-Dapper-Context.png</PackageIcon>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
