@@ -47,6 +47,11 @@ The packages are these:
   - This package allows you to connect to a SQLite and is dependent on the core package.
     With this package you can use all the functions available to you
 
+- **DapperContext.Firebird**
+  
+  - This package allows you to connect to a Firebird and is dependent on the core package.
+    With this package you can use all the functions available to you
+
 # Getting started
 
 ## Database providers
@@ -75,6 +80,12 @@ PM > Install-Package BertoSoftware.DapperContext.SQLite
 
 ```powershell
 PM > Install-Package BertoSoftware.DapperContext.PostgreSQL
+```
+
+### Firebird
+
+```powershell
+PM > Install-Package BertoSoftware.DapperContext.Firebird
 ```
 
 This packages will install also all dependecies regard main core package and specified database connection
@@ -414,6 +425,7 @@ The classes avaiabile are these:
 | BertoSoftware.DapperContext.MySql      | BertoSoftware.DapperContextMySql      | ![NuGet Downloads](https://img.shields.io/nuget/dt/BertoSoftware.DapperContext.MySql.svg?link=https%3A%2F%2Fwww.nuget.org%2Fpackages%2FBertoSoftware.DapperAuditContext.MySql)           |
 | BertoSoftware.DapperContext.SQLite     | BertoSoftware.DapperContextSQLite     | ![NuGet Downloads](https://img.shields.io/nuget/dt/BertoSoftware.DapperContext.SQLite.svg?link=https%3A%2F%2Fwww.nuget.org%2Fpackages%2FBertoSoftware.DapperAuditContext.SQLite)         |
 | BertoSoftware.DapperContext.PostgreSQL | BertoSoftware.DapperContextPostgreSQL | ![NuGet Downloads](https://img.shields.io/nuget/dt/BertoSoftware.DapperContext.PostgreSQL.svg?link=https%3A%2F%2Fwww.nuget.org%2Fpackages%2FBertoSoftware.DapperAuditContext.PostgreSQL) |
+| BertoSoftware.DapperContext.Firebird   | BertoSoftware.DapperContextFirebird   | ![NuGet Downloads](https://img.shields.io/nuget/dt/BertoSoftware.DapperContext.Firebird.svg?link=https%3A%2F%2Fwww.nuget.org%2Fpackages%2FBertoSoftware.DapperAuditContext.Firebird)     |
 
 # Feedback
 
