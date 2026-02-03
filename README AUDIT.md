@@ -18,6 +18,7 @@ You can implement audit system on these provider, just downloading the specific 
 - MySQL / Maria DB
 - PostgreSQL
 - SQLite
+- Firebird
 
 # Information about packages
 
@@ -53,6 +54,14 @@ You can implement audit system on these provider, just downloading the specific 
     
     This package depend on **DapperContext** core package
 
+- **DapperAuditContext.Firebird**
+  
+  - This package allows you to connect to a Firebird and is dependent on the core package.
+    This package enable audit system and you can use all the functions available to you
+    
+    This package depend on **DapperContext** core package
+
+
 # Getting started
 
 ## Database providers
@@ -81,6 +90,12 @@ PM > Install-Package BertoSoftware.DapperAuditContext.SQLite
 
 ```powershell
 PM > Install-Package BertoSoftware.DapperAuditContext.PostgreSQL
+```
+
+### Firebird
+
+```powershell
+PM > Install-Package BertoSoftware.DapperAuditContext.Firebird
 ```
 
 This packages will install also all dependecies regard main core package and specified database connection
@@ -509,6 +524,7 @@ The classes avaiabile are these:
 | BertoSoftware.DapperAuditContext.MySql      | BertoSoftware.DapperAuditContextMySql      | ![NuGet Downloads](https://img.shields.io/nuget/dt/BertoSoftware.DapperAuditContext.MySql.svg?link=https%3A%2F%2Fwww.nuget.org%2Fpackages%2FBertoSoftware.DapperAuditContext.MySql)           |
 | BertoSoftware.DapperAuditContext.SQLite     | BertoSoftware.DapperAuditContextSQLite     | ![NuGet Downloads](https://img.shields.io/nuget/dt/BertoSoftware.DapperAuditContext.SQLite.svg?link=https%3A%2F%2Fwww.nuget.org%2Fpackages%2FBertoSoftware.DapperAuditContext.SQLite)         |
 | BertoSoftware.DapperAuditContext.PostgreSQL | BertoSoftware.DapperAuditContextPostgreSQL | ![NuGet Downloads](https://img.shields.io/nuget/dt/BertoSoftware.DapperAuditContext.PostgreSQL.svg?link=https%3A%2F%2Fwww.nuget.org%2Fpackages%2FBertoSoftware.DapperAuditContext.PostgreSQL) |
+| BertoSoftware.DapperAuditContext.Firebird   | BertoSoftware.DapperAuditContextFirebird   | ![NuGet Downloads](https://img.shields.io/nuget/dt/BertoSoftware.DapperAuditContext.Firebird.svg?link=https%3A%2F%2Fwww.nuget.org%2Fpackages%2FBertoSoftware.DapperAuditContext.Firebird)     |
 
 # Feedback
 
