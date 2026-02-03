@@ -1,7 +1,7 @@
 ﻿<Project>
   <PropertyGroup>
     <RootNamespace>BertoSoftware</RootNamespace>
-    <TargetFrameworks>net48;net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>net48;net8.0;net9.0;net10.0</TargetFrameworks>
     <OptionStrict>On</OptionStrict>
     <Copyright>Roberto Faccani</Copyright>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -15,10 +15,9 @@
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 	<PackageReleaseNotes>
-		v1.0.4
-		Fix a problem with cyclic references when an entity has a property that references another entity that in turn references the first entity.
-		Added support for .NET 10.0
-		Updated dependencies to latest versions.
-	</PackageReleaseNotes>
+    v1.1.0
+    - Added support for Firebird database.
+    - Simplified example project structure.
+  </PackageReleaseNotes>
   </PropertyGroup>
 </Project>
