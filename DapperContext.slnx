@@ -1,0 +1,40 @@
+<Solution>
+  <Folder Name="/Assets/">
+    <File Path="Icon-Dapper-Context.png" />
+    <File Path="LICENSE.txt" />
+    <File Path="README AUDIT.md" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Core/">
+    <Project Path="DapperAuditContext/DapperAuditContext.vbproj" />
+    <Project Path="DapperContext/DapperContext.vbproj" />
+  </Folder>
+  <Folder Name="/Elementi di soluzione/">
+    <File Path="Directory.Build.props" />
+  </Folder>
+  <Folder Name="/Example/">
+    <Project Path="DapperContextTest/DapperContextExample.vbproj" />
+  </Folder>
+  <Folder Name="/Providers/" />
+  <Folder Name="/Providers/Firebird/">
+    <Project Path="DapperAuditContext.Firebird/DapperAuditContext.Firebird.vbproj" />
+    <Project Path="DapperContext.Firebird/DapperContext.Firebird.vbproj" />
+  </Folder>
+  <Folder Name="/Providers/MySql/">
+    <Project Path="DapperAuditContext.MySql/DapperAuditContext.MySql.vbproj" />
+    <Project Path="DapperContext.MySql/DapperContext.MySql.vbproj" />
+  </Folder>
+  <Folder Name="/Providers/Oracle/" />
+  <Folder Name="/Providers/PostgreSQL/">
+    <Project Path="DapperAuditContext.PostgreSQL/DapperAuditContext.PostgreSQL.vbproj" />
+    <Project Path="DapperContext.PostgreSQL/DapperContext.PostgreSQL.vbproj" />
+  </Folder>
+  <Folder Name="/Providers/SQLite/">
+    <Project Path="DapperAuditContext.SQLite/DapperAuditContext.SQLite.vbproj" />
+    <Project Path="DapperContext.SQLite/DapperContext.SQLite.vbproj" />
+  </Folder>
+  <Folder Name="/Providers/SqlServer/">
+    <Project Path="DapperAuditContext.SqlServer/DapperAuditContext.SqlServer.vbproj" />
+    <Project Path="DapperContext.SqlServer/DapperContext.SqlServer.vbproj" />
+  </Folder>
+</Solution>

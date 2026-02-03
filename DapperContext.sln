@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.2.11415.280 d18.0
+VisualStudioVersion = 18.2.11415.280
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DapperContext", "DapperContext\DapperContext.vbproj", "{0E753C37-F46A-4571-B139-96544037224E}"
 EndProject
@@ -54,6 +54,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{220E62
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Firebird", "Firebird", "{35D7175B-D237-4B54-9D7F-32D1ACD27060}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DapperContext.Firebird", "DapperContext.Firebird\DapperContext.Firebird.vbproj", "{AC3B8B9A-7058-46E3-B469-00B2F8E326F8}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DapperAuditContext.Firebird", "DapperAuditContext.Firebird\DapperAuditContext.Firebird.vbproj", "{6EB75B55-DCC3-41AD-B4E3-9E808FA816CB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -104,6 +110,14 @@ Global
 		{A7A09D2C-E449-4072-951F-A3F0DA1E2396}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7A09D2C-E449-4072-951F-A3F0DA1E2396}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7A09D2C-E449-4072-951F-A3F0DA1E2396}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC3B8B9A-7058-46E3-B469-00B2F8E326F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC3B8B9A-7058-46E3-B469-00B2F8E326F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC3B8B9A-7058-46E3-B469-00B2F8E326F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC3B8B9A-7058-46E3-B469-00B2F8E326F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EB75B55-DCC3-41AD-B4E3-9E808FA816CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EB75B55-DCC3-41AD-B4E3-9E808FA816CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EB75B55-DCC3-41AD-B4E3-9E808FA816CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EB75B55-DCC3-41AD-B4E3-9E808FA816CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -125,6 +139,9 @@ Global
 		{526FB1E5-FFAB-4EC5-899A-7CF1FC1679D0} = {EA6531DF-1D8A-4CDA-A54E-41CF3A21781F}
 		{169D2985-301F-4A3A-AB4D-84A5E66D7E42} = {526FB1E5-FFAB-4EC5-899A-7CF1FC1679D0}
 		{A7A09D2C-E449-4072-951F-A3F0DA1E2396} = {526FB1E5-FFAB-4EC5-899A-7CF1FC1679D0}
+		{35D7175B-D237-4B54-9D7F-32D1ACD27060} = {EA6531DF-1D8A-4CDA-A54E-41CF3A21781F}
+		{AC3B8B9A-7058-46E3-B469-00B2F8E326F8} = {35D7175B-D237-4B54-9D7F-32D1ACD27060}
+		{6EB75B55-DCC3-41AD-B4E3-9E808FA816CB} = {35D7175B-D237-4B54-9D7F-32D1ACD27060}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6D2B34C4-C87D-4B8A-B0F8-DF573C39571D}
