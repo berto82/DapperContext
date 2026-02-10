@@ -15,9 +15,9 @@
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 	<PackageReleaseNotes>
-    v1.1.0
-    - Added support for Firebird database.
-    - Simplified example project structure.
+    v1.1.1
+    - Fix a problem with a custom configuration file that was not correctly loaded.
+    - Update NuGet dependencies to the latest versions.
   </PackageReleaseNotes>
   </PropertyGroup>
 </Project>

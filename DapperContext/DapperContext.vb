@@ -72,7 +72,7 @@ Namespace Context.Tools
                             If _Settings.CustomConfigurationFile = String.Empty Then
                                 doc.Load($"{IO.Directory.GetCurrentDirectory}\{Assembly.GetEntryAssembly.GetName.Name}.exe.config")
                             Else
-                                doc.Load($"{IO.Directory.GetCurrentDirectory}\{_Settings.CustomConfigurationFile}")
+                                doc.Load($"{_Settings.CustomConfigurationFile}")
                             End If
 
                             Dim cnStringNode As XmlNode = doc.SelectSingleNode("//connectionStrings")
@@ -81,7 +81,12 @@ Namespace Context.Tools
                             If configSourceAttribute Is Nothing Then
                                 cnStringNode = cnStringNode.SelectSingleNode($"add[@name=""{_Settings.ConnectionName}""]/@connectionString")
                             Else
-                                doc.Load($"{IO.Directory.GetCurrentDirectory}\{configSourceAttribute.Value}")
+                                If _Settings.CustomConfigurationFile = String.Empty Then
+                                    doc.Load($"{IO.Directory.GetCurrentDirectory}\{configSourceAttribute.Value}")
+                                Else
+                                    doc.Load($"{IO.Path.GetDirectoryName(_Settings.CustomConfigurationFile)}\{configSourceAttribute.Value}")
+                                End If
+
                                 cnStringNode = doc.SelectSingleNode($"//connectionStrings/add[@name=""{_Settings.ConnectionName}""]/@connectionString")
                             End If
 
