@@ -70,7 +70,7 @@ Namespace Context.Tools
                             Dim doc As New XmlDocument
 
                             If _Settings.CustomConfigurationFile = String.Empty Then
-                                doc.Load($"{IO.Directory.GetCurrentDirectory}\{Assembly.GetEntryAssembly.GetName.Name}.exe.config")
+                                doc.Load($"{AppContext.BaseDirectory}{Assembly.GetEntryAssembly.GetName.Name}.exe.config")
                             Else
                                 doc.Load($"{_Settings.CustomConfigurationFile}")
                             End If
@@ -82,7 +82,7 @@ Namespace Context.Tools
                                 cnStringNode = cnStringNode.SelectSingleNode($"add[@name=""{_Settings.ConnectionName}""]/@connectionString")
                             Else
                                 If _Settings.CustomConfigurationFile = String.Empty Then
-                                    doc.Load($"{IO.Directory.GetCurrentDirectory}\{configSourceAttribute.Value}")
+                                    doc.Load($"{AppContext.BaseDirectory}{configSourceAttribute.Value}")
                                 Else
                                     doc.Load($"{IO.Path.GetDirectoryName(_Settings.CustomConfigurationFile)}\{configSourceAttribute.Value}")
                                 End If
@@ -99,9 +99,9 @@ Namespace Context.Tools
 
                         If _Settings.ConnectionString = String.Empty Then
                             If _Settings.CustomConfigurationFile = String.Empty Then
-                                cnString = New ConfigurationBuilder().SetBasePath(IO.Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build.GetConnectionString(_Settings.ConnectionName)
+                                cnString = New ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").Build.GetConnectionString(_Settings.ConnectionName)
                             Else
-                                cnString = New ConfigurationBuilder().SetBasePath(IO.Directory.GetCurrentDirectory()).AddJsonFile(_Settings.CustomConfigurationFile).Build.GetConnectionString(_Settings.ConnectionName)
+                                cnString = New ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile(_Settings.CustomConfigurationFile).Build.GetConnectionString(_Settings.ConnectionName)
                             End If
                         Else
                             cnString = _Settings.ConnectionString
