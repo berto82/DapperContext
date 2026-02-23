@@ -15,9 +15,8 @@
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 	<PackageReleaseNotes>
-    v1.1.1
-    - Fix a problem with a custom configuration file that was not correctly loaded.
-    - Update NuGet dependencies to the latest versions.
+    v1.1.2
+    - Fix loading setting from custom directory.
   </PackageReleaseNotes>
   </PropertyGroup>
 </Project>
