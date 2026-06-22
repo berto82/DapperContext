@@ -1,9 +1,9 @@
-Imports System.IO
+﻿Imports System.IO
 Imports BertoSoftware.Context.Configuration
 Imports BertoSoftware.Context.Tools
 Imports BertoSoftware.Context.Tools.Audit
 
-Module Program
+Public Class DataExample
 
     Dim ctx As DapperContext
 
@@ -15,49 +15,7 @@ Module Program
         Firebird
     End Enum
 
-
-    Sub Main(args As String())
-
-        Try
-            'Enable or disable audit
-            Dim enableAudit As Boolean = True
-
-            'Configure context setting or leave default
-            '***Uncomment this line if you want to configure settings
-            'DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NETCore).Build
-
-            'Configure audit setting or leave default
-            '***Uncomment this line if you want to configure settings
-            DapperAuditContext.AuditSettings = AuditConfiguration.CreateNew.StoreMode(AuditStoreMode.Database).Build
-
-            'SQL Server
-            Connect(ConnectionType.SQLServer, enableAudit)
-
-            'MySQL
-            Connect(ConnectionType.MySQL, enableAudit)
-
-            'SQLite
-            Connect(ConnectionType.SQLite, enableAudit)
-
-            'PostgreSQL
-            Connect(ConnectionType.PostgreSQL, enableAudit)
-
-            'Firebird
-            Connect(ConnectionType.Firebird, enableAudit)
-
-            If enableAudit = True Then
-                If DapperAuditContext.AuditSettings.StoreLogMode <> AuditStoreMode.Database Then
-                    ReadLogFile()
-                End If
-            End If
-
-        Catch ex As Exception
-            Console.WriteLine(ex.Message)
-        End Try
-
-    End Sub
-
-    Private Sub Connect(connectionType As ConnectionType, enableAudit As Boolean)
+    Public Sub ConnectAndExecute(connectionType As ConnectionType, enableAudit As Boolean)
 
         Console.WriteLine($"Connecting to {connectionType.ToString()}")
 
@@ -80,7 +38,7 @@ Module Program
 
     End Sub
 
-    Public Sub ConnectToSQLServer(enableAudit As Boolean)
+    Private Sub ConnectToSQLServer(enableAudit As Boolean)
 
         DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NETCore).WithConnectionName("DefaultConnection").Build
 
@@ -92,7 +50,7 @@ Module Program
 
     End Sub
 
-    Public Sub ConnectToMySQL(enableAudit As Boolean)
+    Private Sub ConnectToMySQL(enableAudit As Boolean)
 
         DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NETCore).WithConnectionName("MySqlConnection").Build
 
@@ -103,7 +61,7 @@ Module Program
         End If
     End Sub
 
-    Public Sub ConnectToSQLite(enableAudit As Boolean)
+    Private Sub ConnectToSQLite(enableAudit As Boolean)
 
         DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NETCore).WithConnectionName("SQLiteConnection").Build
 
@@ -115,7 +73,7 @@ Module Program
 
     End Sub
 
-    Public Sub ConnectToPostgreSQL(enableAudit As Boolean)
+    Private Sub ConnectToPostgreSQL(enableAudit As Boolean)
 
         DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NETCore).WithConnectionName("PostgreSQLConnection").Build
 
@@ -126,7 +84,7 @@ Module Program
         End If
     End Sub
 
-    Public Sub ConnectToFirebird(enableAudit As Boolean)
+    Private Sub ConnectToFirebird(enableAudit As Boolean)
 
         DapperContext.Settings = ContextConfiguration.CreateNew.UseSettingsFileMode(SettingFileMode.NETCore).WithConnectionName("FirebirdConnection").Build
 
@@ -137,11 +95,12 @@ Module Program
         End If
     End Sub
 
+
     Private Sub ExecuteCRUDOperation()
 
-        Dim inserterPersonID As Long = InsertPersonRecord()
+        Dim personID As Long = InsertPersonRecord()
 
-        Dim person As Model.Person = GetRecordByID(inserterPersonID)
+        Dim person As Model.Person = GetRecordByID(personID)
 
         Console.WriteLine(String.Join(" | ", {person.ID, person.Name, person.Surname}))
 
@@ -156,6 +115,8 @@ Module Program
         DeleteRecord(person)
 
         DeleteAllRecords()
+
+        ctx.Dispose()
 
     End Sub
 
@@ -182,7 +143,7 @@ Module Program
                 .Name = "London"
             }
 
-        Return CLng(ctx.InsertOrUpdate(location))
+        Return ctx.InsertOrUpdate(location)
 
     End Function
 
@@ -192,25 +153,25 @@ Module Program
                 .Name = "John",
                 .Surname = "Doe"
             }
-        Return CLng(ctx.InsertOrUpdate(person))
+        Return ctx.InsertOrUpdate(person)
 
     End Function
 
-    Public Function UpdateRecord(person As Model.Person) As Boolean
+    Private Function UpdateRecord(person As Model.Person) As Long
 
         'Update a record
         person.Surname = "Butt"
 
-        Return CBool(ctx.InsertOrUpdate(person))
+        Return ctx.InsertOrUpdate(person)
 
     End Function
 
-    Public Function DeleteRecord(person As Model.Person) As Boolean
+    Private Function DeleteRecord(person As Model.Person) As Boolean
         'Delete a record
         Return ctx.Delete(person)
     End Function
 
-    Public Function DeleteAllRecords() As Boolean
+    Private Function DeleteAllRecords() As Boolean
         'Delete all record
         Return ctx.DeleteAll(Of Model.Person)()
     End Function
@@ -218,10 +179,13 @@ Module Program
     Public Sub ReadLogFile()
         'Show audit record
         Dim logFile As String = Path.Combine(DapperAuditContext.AuditSettings.Path, DapperAuditContext.AuditSettings.FileName)
+
+        If IO.File.Exists(logFile) = False Then
+            Console.WriteLine("Log file not found")
+            Return
+        End If
+
         Dim auditLog As String = IO.File.ReadAllText(logFile)
         Console.Write(auditLog)
-
     End Sub
-
-
-End Module
+End Class
