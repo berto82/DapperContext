@@ -45,7 +45,7 @@
         End Function
 
         Public Function EnableTransaction() As IContextConfigurationBuilder Implements IContextConfigurationBuilder.EnableTransaction
-            _TransactionEnabled = False
+            _TransactionEnabled = True
             Return Me
         End Function
 
