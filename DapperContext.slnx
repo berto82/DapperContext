@@ -12,9 +12,6 @@
   <Folder Name="/Elementi di soluzione/">
     <File Path="Directory.Build.props" />
   </Folder>
-  <Folder Name="/Example/">
-    <Project Path="DapperContextTest/DapperContextExample.vbproj" />
-  </Folder>
   <Folder Name="/Providers/" />
   <Folder Name="/Providers/Firebird/">
     <Project Path="DapperAuditContext.Firebird/DapperAuditContext.Firebird.vbproj" />
@@ -36,5 +33,8 @@
   <Folder Name="/Providers/SqlServer/">
     <Project Path="DapperAuditContext.SqlServer/DapperAuditContext.SqlServer.vbproj" />
     <Project Path="DapperContext.SqlServer/DapperContext.SqlServer.vbproj" />
+  </Folder>
+  <Folder Name="/UnitTest/">
+    <Project Path="DapperContextUnitTest/DapperContextUnitTest.vbproj" Id="eb7bdb56-c2c5-4cef-be4c-174e351f4d10" />
   </Folder>
 </Solution>

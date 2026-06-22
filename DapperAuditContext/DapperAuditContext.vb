@@ -50,9 +50,9 @@ Namespace Context.Tools.Audit
         ''' <param name="entity"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Overrides Function InsertOrUpdate(Of TEntity As Class)(entity As TEntity) As Object
+        Public Overrides Function InsertOrUpdate(Of TEntity As Class)(entity As TEntity) As Long
 
-            Dim result As Object
+            Dim result As Long
             Dim keyValue As Object = GetKeyFieldValue(entity)
 
             If CLng(keyValue) = 0 Then
@@ -60,7 +60,8 @@ Namespace Context.Tools.Audit
                 CreateAuditTrail(AuditActionType.Create, CLng(result), Activator.CreateInstance(Of TEntity), entity)
             Else
                 Dim dbRec As TEntity = [Get](Of TEntity)(keyValue)
-                result = MyBase.InsertOrUpdate(entity)
+                MyBase.InsertOrUpdate(entity)
+                result = CLng(keyValue)
                 CreateAuditTrail(AuditActionType.Update, CLng(keyValue), dbRec, entity)
             End If
 
@@ -75,9 +76,9 @@ Namespace Context.Tools.Audit
         ''' <param name="entity"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Public Overrides Async Function InsertOrUpdateAsync(Of TEntity As Class)(entity As TEntity) As Task(Of Object)
+        Public Overrides Async Function InsertOrUpdateAsync(Of TEntity As Class)(entity As TEntity) As Task(Of Long)
 
-            Dim result As Object
+            Dim result As Long
             Dim keyValue As Object = GetKeyFieldValue(entity)
 
             If CInt(keyValue) = 0 Then
@@ -85,7 +86,8 @@ Namespace Context.Tools.Audit
                 CreateAuditTrail(AuditActionType.Create, CLng(result), Activator.CreateInstance(Of TEntity), entity)
             Else
                 Dim dbRec As TEntity = Await GetAsync(Of TEntity)(keyValue)
-                result = Await MyBase.InsertOrUpdateAsync(entity)
+                Await MyBase.InsertOrUpdateAsync(entity)
+                result = CLng(keyValue)
                 CreateAuditTrail(AuditActionType.Update, CLng(keyValue), dbRec, entity)
             End If
 
@@ -145,7 +147,7 @@ Namespace Context.Tools.Audit
             Dim dbRec As IEnumerable(Of TEntity) = GetAll(Of TEntity)()
             result = MyBase.DeleteAll(Of TEntity)()
 
-            dbRec.ToList.ForEach(Sub(x) CreateAuditTrail(AuditActionType.Delete, CInt(GetKeyFieldValue(x)), dbRec, Activator.CreateInstance(Of TEntity)))
+            dbRec.ToList.ForEach(Sub(x) CreateAuditTrail(AuditActionType.Delete, CInt(GetKeyFieldValue(x)), x, Activator.CreateInstance(Of TEntity)))
 
             Return result
 
@@ -163,7 +165,7 @@ Namespace Context.Tools.Audit
             Dim dbRec As IEnumerable(Of TEntity) = Await GetAllAsync(Of TEntity)()
             result = Await MyBase.DeleteAllAsync(Of TEntity)()
 
-            dbRec.ToList.ForEach(Sub(x) CreateAuditTrail(AuditActionType.Delete, CInt(GetKeyFieldValue(x)), dbRec, Activator.CreateInstance(Of TEntity)))
+            dbRec.ToList.ForEach(Sub(x) CreateAuditTrail(AuditActionType.Delete, CInt(GetKeyFieldValue(x)), x, Activator.CreateInstance(Of TEntity)))
 
             Return result
 
@@ -296,7 +298,7 @@ Namespace Context.Tools.Audit
         End Sub
 
         Private Function GetCurrentUserName() As String
-            Return $"{Environment.UserDomainName}\{Environment.UserName}"
+            Return AuditSettings.UserResolver.Invoke()
         End Function
 
     End Class
