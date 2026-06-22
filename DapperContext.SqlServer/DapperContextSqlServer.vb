@@ -20,10 +20,6 @@ Namespace Context.Tools
                     cnStringBuilder.ConnectionString = CStr(efConnectionString)
                 End If
 
-                If cnStringBuilder.ContainsKey("TrustServerCertificate") = False Then
-                    cnStringBuilder.Add("TrustServerCertificate", True)
-                End If
-
                 Me.Connection = New SqlConnection
                 Me.Connection.ConnectionString = cnStringBuilder.ConnectionString
 
