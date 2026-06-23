@@ -2,7 +2,6 @@ Imports System.Data
 Imports System.Reflection
 Imports System.Xml
 Imports BertoSoftware.Context.Configuration
-Imports BertoSoftware.Extensions
 Imports Dapper
 Imports Dapper.Contrib.Extensions
 Imports Microsoft.Extensions.Configuration
@@ -146,10 +145,14 @@ Namespace Context.Tools
 
             Dim result As TEntity
 
+            Me.Connect()
+
             Try
-                result = Me.Connection.OpenConnection.Get(Of TEntity)(id)
+                result = Me.Connection.Get(Of TEntity)(id)
             Catch ex As Exception
                 Throw
+            Finally
+                Me.Disconnect()
             End Try
 
             Return result
@@ -167,10 +170,14 @@ Namespace Context.Tools
 
             Dim result As TEntity
 
+            Me.Connect()
+
             Try
-                result = Await Me.Connection.OpenConnection.GetAsync(Of TEntity)(id)
+                result = Await Me.Connection.GetAsync(Of TEntity)(id)
             Catch ex As Exception
                 Throw
+            Finally
+                Me.Disconnect()
             End Try
 
             Return result
@@ -187,10 +194,14 @@ Namespace Context.Tools
 
             Dim result As IEnumerable(Of TEntity)
 
+            Me.Connect()
+
             Try
-                result = Me.Connection.OpenConnection.GetAll(Of TEntity)
+                result = Me.Connection.GetAll(Of TEntity)
             Catch ex As Exception
                 Throw
+            Finally
+                Me.Disconnect()
             End Try
 
             Return result
@@ -207,10 +218,14 @@ Namespace Context.Tools
 
             Dim result As IEnumerable(Of TEntity)
 
+            Me.Connect()
+
             Try
-                result = Await Me.Connection.OpenConnection.GetAllAsync(Of TEntity)
+                result = Await Me.Connection.GetAllAsync(Of TEntity)
             Catch ex As Exception
                 Throw
+            Finally
+                Me.Disconnect()
             End Try
 
             Return result
@@ -234,9 +249,10 @@ Namespace Context.Tools
                 isNew = True
             End If
 
+            Me.Connect()
 
             If _Settings.TransactionEnabled Then
-                Using transaction As IDbTransaction = Me.Connection.OpenConnection.BeginTransaction()
+                Using transaction As IDbTransaction = Me.Connection.BeginTransaction()
 
                     Try
                         If isNew Then
@@ -251,20 +267,24 @@ Namespace Context.Tools
                     Catch ex As Exception
                         transaction.Rollback()
                         Throw
+                    Finally
+                        Me.Disconnect()
                     End Try
 
                 End Using
             Else
                 Try
                     If isNew Then
-                        result = Me.Connection.OpenConnection.Insert(entity)
+                        result = Me.Connection.Insert(entity)
                     Else
-                        Me.Connection.OpenConnection.Update(entity)
+                        Me.Connection.Update(entity)
                         result = CLng(keyValue)
                     End If
 
                 Catch ex As Exception
                     Throw
+                Finally
+                    Me.Disconnect()
                 End Try
             End If
 
@@ -289,8 +309,10 @@ Namespace Context.Tools
                 isNew = True
             End If
 
+            Me.Connect()
+
             If _Settings.TransactionEnabled Then
-                Using transaction As IDbTransaction = Me.Connection.OpenConnection.BeginTransaction
+                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
 
                     Try
                         If isNew Then
@@ -305,19 +327,23 @@ Namespace Context.Tools
                     Catch ex As Exception
                         transaction.Rollback()
                         Throw
+                    Finally
+                        Me.Disconnect()
                     End Try
 
                 End Using
             Else
                 Try
                     If isNew Then
-                        result = Await Me.Connection.OpenConnection.InsertAsync(entity)
+                        result = Await Me.Connection.InsertAsync(entity)
                     Else
-                        Await Me.Connection.OpenConnection.UpdateAsync(entity)
+                        Await Me.Connection.UpdateAsync(entity)
                         result = CLng(keyValue)
                     End If
                 Catch ex As Exception
                     Throw
+                Finally
+                    Me.Disconnect()
                 End Try
             End If
 
@@ -335,21 +361,27 @@ Namespace Context.Tools
         Public Overridable Function Delete(Of TEntity As Class)(entity As TEntity) As Boolean
             Dim result As Boolean
 
+            Me.Connect()
+
             If _Settings.TransactionEnabled Then
-                Using transaction As IDbTransaction = Me.Connection.OpenConnection.BeginTransaction
+                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                     Try
                         result = Me.Connection.Delete(entity, transaction)
                         transaction.Commit()
                     Catch ex As Exception
                         transaction.Rollback()
                         Throw
+                    Finally
+                        Me.Disconnect()
                     End Try
                 End Using
             Else
                 Try
-                    result = Me.Connection.OpenConnection.Delete(entity)
+                    result = Me.Connection.Delete(entity)
                 Catch ex As Exception
                     Throw
+                Finally
+                    Me.Disconnect()
                 End Try
             End If
 
@@ -367,8 +399,10 @@ Namespace Context.Tools
         Public Overridable Async Function DeleteAsync(Of TEntity As Class)(entity As TEntity) As Task(Of Boolean)
             Dim result As Boolean
 
+            Me.Connect()
+
             If _Settings.TransactionEnabled Then
-                Using transaction As IDbTransaction = Me.Connection.OpenConnection.BeginTransaction
+                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
 
                     Try
                         result = Await Me.Connection.DeleteAsync(entity, transaction)
@@ -376,14 +410,18 @@ Namespace Context.Tools
                     Catch ex As Exception
                         transaction.Rollback()
                         Throw
+                    Finally
+                        Me.Disconnect()
                     End Try
 
                 End Using
             Else
                 Try
-                    result = Await Me.Connection.OpenConnection.DeleteAsync(entity)
+                    result = Await Me.Connection.DeleteAsync(entity)
                 Catch ex As Exception
                     Throw
+                Finally
+                    Me.Disconnect()
                 End Try
             End If
 
@@ -401,22 +439,28 @@ Namespace Context.Tools
 
             Dim result As Boolean
 
+            Me.Connect()
+
             If _Settings.TransactionEnabled Then
 
-                Using transaction As IDbTransaction = Me.Connection.OpenConnection.BeginTransaction
+                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                     Try
                         result = Me.Connection.DeleteAll(Of TEntity)(transaction)
                         transaction.Commit()
                     Catch ex As Exception
                         transaction.Rollback()
                         Throw
+                    Finally
+                        Me.Disconnect()
                     End Try
                 End Using
             Else
                 Try
-                    result = Me.Connection.OpenConnection.DeleteAll(Of TEntity)
+                    result = Me.Connection.DeleteAll(Of TEntity)
                 Catch ex As Exception
                     Throw
+                Finally
+                    Me.Disconnect()
                 End Try
             End If
 
@@ -435,21 +479,27 @@ Namespace Context.Tools
 
             Dim result As Boolean
 
+            Me.Connect()
+
             If _Settings.TransactionEnabled Then
-                Using transaction As IDbTransaction = Me.Connection.OpenConnection.BeginTransaction
+                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                     Try
                         result = Await Me.Connection.DeleteAllAsync(Of TEntity)(transaction)
                         transaction.Commit()
                     Catch ex As Exception
                         transaction.Rollback()
                         Throw
+                    Finally
+                        Me.Disconnect()
                     End Try
                 End Using
             Else
                 Try
-                    result = Await Me.Connection.OpenConnection.DeleteAllAsync(Of TEntity)
+                    result = Await Me.Connection.DeleteAllAsync(Of TEntity)
                 Catch ex As Exception
                     Throw
+                Finally
+                    Me.Disconnect()
                 End Try
             End If
 
@@ -467,14 +517,18 @@ Namespace Context.Tools
         Public Overridable Function Execute(sql As String, Optional param As Object = Nothing) As Integer
             Dim result As Integer
 
+            Me.Connect()
+
             If _Settings.TransactionEnabled Then
-                Using transaction As IDbTransaction = Me.Connection.OpenConnection.BeginTransaction
+                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                     Try
                         result = Me.Connection.Execute(sql, param, transaction)
                         transaction.Commit()
                     Catch ex As Exception
                         transaction.Rollback()
                         Throw
+                    Finally
+                        Me.Disconnect()
                     End Try
                 End Using
             Else
@@ -482,6 +536,8 @@ Namespace Context.Tools
                     result = Me.Connection.Execute(sql, param)
                 Catch ex As Exception
                     Throw
+                Finally
+                    Me.Disconnect()
                 End Try
             End If
 
@@ -499,21 +555,27 @@ Namespace Context.Tools
         Public Overridable Async Function ExecuteAsync(sql As String, Optional param As Object = Nothing) As Task(Of Integer)
             Dim result As Integer
 
+            Me.Connect()
+
             If _Settings.TransactionEnabled Then
-                Using transaction As IDbTransaction = Me.Connection.OpenConnection.BeginTransaction
+                Using transaction As IDbTransaction = Me.Connection.BeginTransaction
                     Try
                         result = Await Me.Connection.ExecuteAsync(sql, param, transaction)
                         transaction.Commit()
                     Catch ex As Exception
                         transaction.Rollback()
                         Throw
+                    Finally
+                        Me.Disconnect()
                     End Try
                 End Using
             Else
                 Try
-                    result = Await Me.Connection.OpenConnection.ExecuteAsync(sql, param)
+                    result = Await Me.Connection.ExecuteAsync(sql, param)
                 Catch ex As Exception
                     Throw
+                Finally
+                    Me.Disconnect()
                 End Try
             End If
 
@@ -531,11 +593,14 @@ Namespace Context.Tools
         Public Overridable Function ExecuteScalar(sql As String, Optional param As Object = Nothing) As Object
             Dim result As Object
 
-            Try
-                result = Me.Connection.OpenConnection.ExecuteScalar(sql, param)
-            Catch ex As Exception
+            Me.Connect()
 
+            Try
+                result = Me.Connection.ExecuteScalar(sql, param)
+            Catch ex As Exception
                 Throw
+            Finally
+                Me.Disconnect()
             End Try
 
             Return result
@@ -554,10 +619,14 @@ Namespace Context.Tools
 
             Dim result As T
 
+            Me.Connect()
+
             Try
-                result = Me.Connection.OpenConnection.ExecuteScalar(Of T)(sql, param)
+                result = Me.Connection.ExecuteScalar(Of T)(sql, param)
             Catch ex As Exception
                 Throw
+            Finally
+                Me.Disconnect()
             End Try
 
             Return result
@@ -574,10 +643,14 @@ Namespace Context.Tools
         Public Overridable Async Function ExecuteScalarAsync(sql As String, Optional param As Object = Nothing) As Task(Of Object)
             Dim result As Object
 
+            Me.Connect()
+
             Try
-                result = Await Me.Connection.OpenConnection.ExecuteScalarAsync(sql, param)
+                result = Await Me.Connection.ExecuteScalarAsync(sql, param)
             Catch ex As Exception
                 Throw
+            Finally
+                Me.Disconnect()
             End Try
 
             Return result
@@ -596,10 +669,14 @@ Namespace Context.Tools
 
             Dim result As T
 
+            Me.Connect()
+
             Try
-                result = Await Me.Connection.OpenConnection.ExecuteScalarAsync(Of T)(sql, param)
+                result = Await Me.Connection.ExecuteScalarAsync(Of T)(sql, param)
             Catch ex As Exception
                 Throw
+            Finally
+                Me.Disconnect()
             End Try
 
             Return result
@@ -617,10 +694,14 @@ Namespace Context.Tools
 
             Dim result As IEnumerable(Of Object)
 
+            Me.Connect()
+
             Try
-                result = Await Me.Connection.OpenConnection.QueryAsync(sql, param)
+                result = Await Me.Connection.QueryAsync(sql, param)
             Catch ex As Exception
                 Throw
+            Finally
+                Me.Disconnect()
             End Try
 
             Return result
@@ -639,10 +720,14 @@ Namespace Context.Tools
 
             Dim result As IEnumerable(Of T)
 
+            Me.Connect()
+
             Try
-                result = Await Me.Connection.OpenConnection.QueryAsync(Of T)(sql, param)
+                result = Await Me.Connection.QueryAsync(Of T)(sql, param)
             Catch ex As Exception
                 Throw
+            Finally
+                Me.Disconnect()
             End Try
 
             Return result
@@ -660,14 +745,15 @@ Namespace Context.Tools
 
             Dim result As IEnumerable(Of Object)
 
-            Try
-                result = Me.Connection.OpenConnection.Query(sql, param)
-            Catch ex As Exception
-                Me.Disconnect()
-                Throw
-            End Try
+            Me.Connect()
 
-            Me.Disconnect()
+            Try
+                result = Me.Connection.Query(sql, param)
+            Catch ex As Exception
+                Throw
+            Finally
+                Me.Disconnect()
+            End Try
 
             Return result
 
@@ -685,10 +771,14 @@ Namespace Context.Tools
 
             Dim result As IEnumerable(Of T)
 
+            Me.Connect()
+
             Try
-                result = Me.Connection.OpenConnection.Query(Of T)(sql, param)
+                result = Me.Connection.Query(Of T)(sql, param)
             Catch ex As Exception
                 Throw
+            Finally
+                Me.Disconnect()
             End Try
 
             Return result
@@ -725,7 +815,7 @@ Namespace Context.Tools
         Protected Overridable Sub Dispose(disposing As Boolean)
             If Not disposedValue Then
                 If disposing Then
-                    Me.Connection.CloseConnection()
+                    Me.Disconnect()
                     Me.Connection.Dispose()
                 End If
 
