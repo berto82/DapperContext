@@ -6,9 +6,9 @@
     <OutputType>Exe</OutputType>
     <IsPackable>false</IsPackable>
     <OptionStrict>On</OptionStrict>
-    <Version>1.1.4</Version>
-    <FileVersion>1.1.4</FileVersion>
-    <AssemblyVersion>1.1.4</AssemblyVersion>
+    <Version>1.2.0</Version>
+    <FileVersion>1.2.0</FileVersion>
+    <AssemblyVersion>1.2.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
