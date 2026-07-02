@@ -1,7 +1,7 @@
+Imports System.Data.SQLite
 Imports System.IO
 Imports System.Reflection
 Imports BertoSoftware.Context.Configuration
-Imports Microsoft.Data.Sqlite
 
 Namespace Context.Tools.Audit
 
@@ -12,9 +12,9 @@ Namespace Context.Tools.Audit
 
             Dim cnString As String = GetConnectionString()
 
-            Dim cnStringBuilder As New SqliteConnectionStringBuilder(cnString)
+            Dim cnStringBuilder As New SQLiteConnectionStringBuilder(cnString)
 
-            Me.Connection = New SqliteConnection(cnString)
+            Me.Connection = New SQLiteConnection(cnString)
             Me.Connection.ConnectionString = cnStringBuilder.ConnectionString
 
             Me.Connect()
@@ -37,7 +37,7 @@ Namespace Context.Tools.Audit
         ''' <returns>True if the database exists, otherwise False.</returns>
         ''' <remarks>Uses information_schema to check for the existence of the database.</remarks>
         Public Overrides Function DatabaseExist(dbName As String) As Boolean
-            Return IO.File.Exists(CType(Me.Connection, SqliteConnection).DataSource)
+            Return IO.File.Exists(CType(Me.Connection, SQLiteConnection).DataSource)
         End Function
 
 
