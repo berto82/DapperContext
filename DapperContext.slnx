@@ -40,7 +40,7 @@
   </Folder>
   <Folder Name="/UnitTest/">
     <Project Path="DapperContextUnitTest/DapperContextUnitTest.vbproj" Id="eb7bdb56-c2c5-4cef-be4c-174e351f4d10">
-      <Platform Solution="Debug|*" Project="x64" />
+      <Platform Project="x64" />
     </Project>
   </Folder>
 </Solution>
