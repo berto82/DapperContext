@@ -17,6 +17,7 @@
 	<PackageReleaseNotes>
 		v1.2.0
 		- Added support for .NET Standard 2.0
+		- Replace Microsoft.Data.SQLite for recent vulnerability in SQLitePCLRaw.lib.e_sqlite3 with System.Data.SQLite nuget package. With this package only x64 platform is supported
 	</PackageReleaseNotes>
   </PropertyGroup>
 </Project>
