@@ -9,7 +9,7 @@
     <Version>1.2.0</Version>
     <FileVersion>1.2.0</FileVersion>
     <AssemblyVersion>1.2.0</AssemblyVersion>
-    <Platforms>AnyCPU;x64</Platforms>
+    <Platforms>AnyCPU</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
