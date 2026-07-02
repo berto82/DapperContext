@@ -1,6 +1,4 @@
-Imports System.Data
-Imports Dapper
-Imports Microsoft.Data.Sqlite
+Imports System.Data.SQLite
 
 Namespace Context.Tools
 
@@ -10,9 +8,9 @@ Namespace Context.Tools
         Public Sub New()
             Dim cnString As String = GetConnectionString()
 
-            Dim cnStringBuilder As New SqliteConnectionStringBuilder(cnString)
+            Dim cnStringBuilder As New SQLiteConnectionStringBuilder(cnString)
 
-            Me.Connection = New SqliteConnection(cnString)
+            Me.Connection = New SQLiteConnection(cnString)
             Me.Connection.ConnectionString = cnStringBuilder.ConnectionString
 
             Me.Connect()
@@ -26,7 +24,7 @@ Namespace Context.Tools
         ''' <returns>True if the database exists, otherwise False.</returns>
         ''' <remarks>Uses information_schema to check for the existence of the database.</remarks>
         Public Overrides Function DatabaseExist(dbName As String) As Boolean
-            Return IO.File.Exists(CType(Me.Connection, SqliteConnection).DataSource)
+            Return IO.File.Exists(CType(Me.Connection, SQLiteConnection).DataSource)
         End Function
     End Class
 End Namespace
